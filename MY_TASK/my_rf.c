@@ -25,8 +25,12 @@
 ***********************************************************/
 
 
-//1使用旧版，0使用新版，旧版串口屏设置是以1mg/m3为单位，新版以0.1mg/m3为单位
-#define __USE_OLD   0
+#ifdef JZQ_V2_6
+	//1使用旧版，0使用新版，旧版串口屏设置是以1mg/m3为单位，新版以0.1mg/m3为单位
+	#define __USE_OLD   0
+#else
+	#define __USE_OLD   1
+#endif
 
 u8 HANDING=0;//手动操作是否在进行
 
@@ -186,39 +190,54 @@ void rf_cjq_to_data (u8 *rf_data)
 	//采集器地址
 	cjqdata->cjqId=(rf_data[2]<<8)|rf_data[3];
 	
-	//温度
-	t.u[0]=rf_data[7+10];
-	t.u[1]=rf_data[7+11];
-	t.u[2]=rf_data[7+12];
-	t.u[3]=rf_data[7+13];
-	cjqdata->temp=t.f;
-	
-	//湿度
-	t.u[0]=rf_data[7+14];
-	t.u[1]=rf_data[7+15];
-	t.u[2]=rf_data[7+16];
-	t.u[3]=rf_data[7+17];
-	cjqdata->humi=t.f;
 
-	//TVOC
-	t.u[0]=rf_data[7+18];
-	t.u[1]=rf_data[7+19];
-	t.u[2]=rf_data[7+20];
-	t.u[3]=rf_data[7+21];
-	cjqdata->tvoc=t.f;
+	if (rf_data[6]>=30)
+	{
 	
-	t.u[0]=rf_data[7+22];
-	t.u[1]=rf_data[7+23];
-	t.u[2]=rf_data[7+24];
-	t.u[3]=rf_data[7+25];
-	cjqdata->co2=t.f;
-	
-	t.u[0]=rf_data[7+26];
-	t.u[1]=rf_data[7+27];
-	t.u[2]=rf_data[7+28];
-	t.u[3]=rf_data[7+29];
-	cjqdata->pm2_5=t.f;
+		//温度
+		t.u[0]=rf_data[7+10];
+		t.u[1]=rf_data[7+11];
+		t.u[2]=rf_data[7+12];
+		t.u[3]=rf_data[7+13];
+		cjqdata->temp=t.f;
+		
+		//湿度
+		t.u[0]=rf_data[7+14];
+		t.u[1]=rf_data[7+15];
+		t.u[2]=rf_data[7+16];
+		t.u[3]=rf_data[7+17];
+		cjqdata->humi=t.f;
 
+		//TVOC
+		t.u[0]=rf_data[7+18];
+		t.u[1]=rf_data[7+19];
+		t.u[2]=rf_data[7+20];
+		t.u[3]=rf_data[7+21];
+		cjqdata->tvoc=t.f;
+		
+		t.u[0]=rf_data[7+22];
+		t.u[1]=rf_data[7+23];
+		t.u[2]=rf_data[7+24];
+		t.u[3]=rf_data[7+25];
+		cjqdata->co2=t.f;
+		
+		t.u[0]=rf_data[7+26];
+		t.u[1]=rf_data[7+27];
+		t.u[2]=rf_data[7+28];
+		t.u[3]=rf_data[7+29];
+		cjqdata->pm2_5=t.f;
+	}
+	else 
+	{
+		//温度
+		cjqdata->temp=rf_data[17]+rf_data[18]/10.0;
+		
+		//湿度
+		cjqdata->humi=rf_data[19]+rf_data[20]/10.0;
+
+		//TVOC
+		cjqdata->tvoc=rf_data[21]+rf_data[22]/10.0;		
+	}
 }
 
 

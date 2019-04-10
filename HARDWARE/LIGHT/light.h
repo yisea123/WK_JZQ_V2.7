@@ -26,7 +26,7 @@
 #define LIGHT6 6
 
 						//灯的个数
-#define LED_NUM  1
+#define LED_NUM  56
 
 
 
@@ -40,6 +40,15 @@ void Run_Light (void);
 void Set_lightdata (u8 *data1);
 		//hoqu亮灯位
 void Get_lightdata (u8 *data1);
+
+
+//亮按键灯
+void key_light (u8 key_num,u8 state);
+
+//按键周围的灯
+void key_around (u8 key_num,u8 state);
+
+
 
 
 void sm16703_reset (void);

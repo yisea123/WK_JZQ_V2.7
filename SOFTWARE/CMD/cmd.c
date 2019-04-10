@@ -45,7 +45,7 @@ void Get_cmd (void (*dataSend) (u8 *data,u16 datalen),u8 *buff)
 	if (buff[0]==0xff&&buff[1]==0xff)
 	{
 		length=((buff[5]<<8)|buff[6])+7;
-		if (length>56) return;
+		//if (length>56) return;  限制数据包大小
 		Get_Crc16(buff,length,crc);
 		if (buff[length]==crc[0]&&buff[length+1]==crc[1])
 		{
@@ -146,7 +146,7 @@ void write_flash (u8 *buff)
 	data_offset=0;
 	in_iap=1;//进入iap模式
 	if (data_buff==0) data_buff=mymalloc(2048);//申请内存
-	for (u16 i=0;i<2048;i++){data_buff[i]=0;}
+	mymemset( data_buff,0,2048);
 	cmd_return(buff,ERR_SUCCESS);
 }
 
@@ -231,7 +231,7 @@ void writting_flash (u8 *buff)
 				}while (cheeckflash (readbuff,data_buff,2048));
 				myfree(readbuff);
 				flash_addr+=2048;
-				for (u16 j=0;j<2048;j++){data_buff[j]=0;}
+				mymemset( data_buff,0,2048);
 			}
 		}
 		if (data_num==data_all)//最后一个数据包
@@ -241,7 +241,7 @@ void writting_flash (u8 *buff)
 				p_Flash_Write(data_buff,flash_addr,data_offset);
 				data_offset=0;
 				flash_addr=0;
-				for (u16 j=0;j<2048;j++){data_buff[j]=0;}
+				mymemset( data_buff,0,2048);
 			}
 
 			in_iap=0;//退出iap

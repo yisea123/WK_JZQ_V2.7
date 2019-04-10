@@ -261,6 +261,15 @@ typedef struct
 #define FATS ((lpfats_fun)((u32*)(0x8040000-1024*16)))
 
 
+#define LOG_PRINTF do{\
+												if (fats_state())\
+												{\
+													FATS->f_printf(\
+												}\
+											}while(0);
+
+
+
 
 u8 fats_init (void);//文件系统初始化，0，成功，非0，失败
 u8 fats_state (void);//是否支持文件系统，1，支持，0，不支持

@@ -76,10 +76,10 @@ void my_lcd (void * t)
 	u8 buf[30]={0};u16 reclen;
 	u16 i=0;
 	u8 meg[MESSEG_DATA]={0};
+	LCD_SetFocus(OSPrioHighRdy); 
 	Relay_Init();
 	LCD_Init(9600);
 	my_lcd_init();
-	LCD_SetFocus(OSPrioHighRdy); 
 	while (1)
 	{
 		delay_ms(30);
@@ -267,7 +267,7 @@ void Time_Set()//休眠时间设置保存
 	u16 time_min; 
 	u16 time_sec; 
 	
-	
+	delay_ms(20);
 			gettime[5]=0x24;
 			LCD_Send_Data(gettime,7);delay_ms(20);
 			LCD_Receive_Data(R_buff,&R_len);
@@ -370,14 +370,18 @@ void Auto_sleep()
 void my_lcd_init (void)
 {
 	RELAY=0;
-	delay_ms(4000);
 	Load_LCD();
+	sleep_ms(1000);
 	lcd_page(PAGE_MAIN);
+	sleep_ms(1000);
+	lcd_page (PAGE_MAIN);
+	sleep_ms(20);
 }
 
 
 void Set_Init(void)//设置初始化
 {
+	delay_ms(20);
 	Load_LCD( );
 	lcd_set_data (WENDU_UP_ADDR,WENDU_UPLIMIT);
 	delay_us(100);
@@ -408,6 +412,7 @@ void Set_Init(void)//设置初始化
 
 void Hand_Set_Init(void)//手动设置初始化按键
 {
+	delay_ms(20);
 	if (KONGTIAO_STATE==1)
 	{
 		lcd_chan_state (WENDU_UP,1);
@@ -749,7 +754,7 @@ void	lcd_messeg_03 (u8 *meg)
 				light[2]=LIGHT_LCD_STATE;
 				send_messeg(LIT_MESSEG,light);
 				LCD_POWER=0;
-				delay_ms(1000);
+				sleep_ms(1000);
 				lcd_page (PAGE_MAIN);
 				delay_ms(30);
 				dd[5]=lcd_light[0];//屏幕亮度
@@ -851,6 +856,7 @@ void Set_Save(void)//设置页面保存
 {
 	u8 buf[20]={0};
 	u16 reclen=0;
+	delay_ms(20);
 	LCD_GET_DATA[5]=WENDU_UP_ADDR;
 	LCD_Send_Data(LCD_GET_DATA,7);
 	delay_ms(20);

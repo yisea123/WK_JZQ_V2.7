@@ -11,6 +11,7 @@
 #include "cmd.h"
 #include "iwdg.h"
 #include "key.h"
+#include "sysinfo.h"
 #include "debug.h"
 
 
@@ -25,7 +26,7 @@ static u8 DBG_IAP=0;
 void my_debug (void)
 {
 	
-	if (net_get_comstate(1)!=SOCK_UDP)
+	if (net_get_comstate(1)==SOCK_CLOSED)
 	{
 		if (udp_init(1,NativeDbgPort))
 		{
@@ -186,9 +187,12 @@ void dbg_info (void)
   sprintf(txtbuff,"%.18s\r\n",getMyName());
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen(txtbuff));
 	
-	ptxt="本程序适配电路板版本：2018-10-22\r\n";
-	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen(ptxt));
-	
+  sprintf(txtbuff,"软件版本：%.18s\r\n",JZQ_SoftVersion);
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen(txtbuff));
+
+  sprintf(txtbuff,"适配硬件版本：%.18s\r\n",JZQ_Version); 
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen(txtbuff));
+
 	sprintf(txtbuff,"本机IP地址：%d.%d.%d.%d\r\n",IP_Addr[0],IP_Addr[1],IP_Addr[2],IP_Addr[3]);
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen(txtbuff));
 
