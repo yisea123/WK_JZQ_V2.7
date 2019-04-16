@@ -60,4 +60,5 @@
 .\objects\wk_jzq_v2_6\key.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\wk_jzq_v2_6\key.o: ..\SOFTWARE\DATA_MAP\data_map.h
 .\objects\wk_jzq_v2_6\key.o: ..\HARDWARE\TIMER\timer.h
+.\objects\wk_jzq_v2_6\key.o: ..\HARDWARE\hard_irq.h
 .\objects\wk_jzq_v2_6\key.o: ..\HARDWARE\KEY\key.h

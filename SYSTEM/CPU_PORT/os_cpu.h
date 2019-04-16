@@ -92,6 +92,11 @@ void       OSPendSV(void);
 OS_CPU_SR GetZeroNum(OS_CPU_SR t);//计算前导零个数
 OS_CPU_SR GetRBIT16(OS_CPU_SR t);//16位的按位反转
 
+
+OS_CPU_SR BlxExternFun (u32 a,u32 b,u32 c,u32 d,u32 addr);
+
+
+
 #if OS_CRITICAL_METHOD == 3u                      /* See OS_CPU_A.ASM                                  */
 		OS_CPU_SR OS_CPU_SR_Save(void);
 		void       OS_CPU_SR_Restore(OS_CPU_SR cpu_sr);

@@ -190,7 +190,10 @@ u16 setWarnTolerance (u16 t);
 
 u16 getWarnTolerance (void);
 
+//是否连接温控服务器
+u16 getWkServerConnect (void);
 
+u16 setWkServerConnect (u16 t);
 
 //------------------------供外部调用的函数End---------------------------
 

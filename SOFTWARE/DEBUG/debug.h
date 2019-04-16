@@ -109,6 +109,14 @@ void dbg_find(u8 *buff);
 
 void dbg_key(u8 *buff);
 
+//内存相关的debug命令
+void dbg_mem (u8 *buff);
+
+//函数调用相关的debug命令
+void dbg_fun (u8 *buff);
+
+
+
 /**********执行指令****************/
 
 

@@ -143,6 +143,14 @@ void dbg_Interpreter(u8 *recvbuff)
 	{
 		dbg_key(recvbuff+8+3); 
 	}
+	else if (samestr((u8*)"mem",recvbuff+8))
+	{
+		dbg_mem(recvbuff+8+3); 
+	}
+	else if (samestr((u8*)"fun",recvbuff+8))
+	{
+		dbg_fun(recvbuff+8+3); 
+	}
 	else
 	{
 		dbg_err(1);
@@ -387,7 +395,10 @@ void dbg_help(void)
 	ptxt="\t输入\"mqtt\"连接到百度云\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
-	ptxt="\t输入\"ntp\"获取网络时间\r\n";
+	ptxt="\t输入\"mem [命令] [参数]\"设置或获取内存值\r\n";
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
+ptxt="\t输入\"ntp\"获取网络时间\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
 	ptxt="\t输入\"oche on\"开启回显\r\n\t输入\"oche off\"关闭回显\r\n";
@@ -1049,6 +1060,103 @@ void dbg_key(u8 *buff)
 }
 
 
+
+
+//内存相关的debug命令
+void dbg_mem (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *ptxt=0;
+	if (*buff++==' ')
+	{
+		u32 addr=0;
+		u32 value=0;
+		if (samestr("set",buff))
+		{
+			buff[14]=0;
+			addr=str2hex((char*)buff+4);
+			value=str2hex((char*)&buff[15]);
+			setMemU32 (value,addr);
+			sprintf (txtbuff,"已设置 %x 地址的值为 %x \r\n",addr,value);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+		}
+		else if (samestr("get",buff))
+		{
+			addr=str2hex((char*)buff+4);
+			value=getMemU32 (addr);
+			sprintf (txtbuff,"地址 %x 的值为 %x \r\n",addr,value);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+		}
+		else if (samestr("sets",buff))
+		{
+		}
+		else if (samestr("gets",buff))
+		{
+		}
+	}
+	else
+	{
+		ptxt="输入\"mem set [addr] [value]\"设置指定地址的u32值\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
+		ptxt="输入\"mem get [addr]\"获取指定地址的32位值\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="输入\"mem sets [addr] [value1,value2...]\"设置指定地址的u8值\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
+		ptxt="输入\"mem gets [addr] [length]\"获取指定地址指定长度的u8值\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="请配合程序对应的map文件调试！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="内存修改命令可能造成严重后果，如非必要请不要操作！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+	}	
+	myfree(txtbuff);
+}
+
+
+//函数调用相关的debug命令
+void dbg_fun (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *ptxt=0;
+	if (*buff++==' ')
+	{
+		u32 addr=0;
+		u32 value=0;
+		u8 *par=0;
+		if (buff[10]==0) 
+		{
+			par=0;
+		}
+		else
+		{
+			buff[10]=0;
+			par=&buff[11];
+		}
+		addr=str2hex((char*)buff);
+		
+		sprintf (txtbuff,"地址 %x 的函数即将执行...\r\n",addr);
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+		
+		value=runFunction(addr,(char *)par); 	
+
+		sprintf (txtbuff,"地址 %x 的函数执行结束，返回值是 %d...\r\n",addr,value);
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+	}
+	else
+	{
+		ptxt="请配合程序对应的map文件调试！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="运行不当的函数或运行非函数地址会造成严重后果，如非必要请不要操作！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+	}
+	myfree(txtbuff);
+}
 
 
 

@@ -23,6 +23,7 @@
         EXPORT  PendSV_Handler
 		EXPORT  GetZeroNum
 		EXPORT  GetRBIT16
+		EXPORT  BlxExternFun
         	
      
 NVIC_INT_CTRL   	EQU     0xE000ED04  ; 中断控制寄存器
@@ -211,6 +212,20 @@ GetRBIT16
 	RBIT    R0, R0
 	LSR		R0, R0,#16
 	BX		LR
+
+
+;运行指定地址的函数
+BlxExternFun
+	PUSH    {R14}
+	PUSH    {R5}
+	LDR		R5,[SP,#0x08]
+	BLX 	R5
+	POP     {R5}
+	POP     {R14}
+	BX  	LR
+
+
+
 
  ALIGN
 

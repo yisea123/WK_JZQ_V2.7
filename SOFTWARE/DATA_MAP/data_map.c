@@ -112,6 +112,7 @@ static cjq_data CJQ_DATA={0};
 
 		config配置信息存储结构：
 			EN_CONFIG[0]~EN_CONFIG[99] 设备配置信息
+			EN_CONFIG[CONFIG_DATA_NUM-36]	是否连接温控服务器
 			EN_CONFIG[CONFIG_DATA_NUM-35]	自动控制报警容差值
 			EN_CONFIG[CONFIG_DATA_NUM-34]	自动获取IP地址开关
 			EN_CONFIG[CONFIG_DATA_NUM-33]~EN_CONFIG[CONFIG_DATA_NUM-24]	本机名称，18个英语字符
@@ -548,6 +549,24 @@ u16 setWarnTolerance (u16 t)
 	}
 }
 
+u16 getWkServerConnect (void)
+{
+	return EN_CONFIG[CONFIG_DATA_NUM-36];//	自动控制报警容差值
+}
+
+//设置值，0成功，1失败
+u16 setWkServerConnect (u16 t)
+{
+	if (t)
+	{
+		EN_CONFIG[CONFIG_DATA_NUM-36]=1;
+	}
+	else
+	{
+		EN_CONFIG[CONFIG_DATA_NUM-36]=0;
+	}
+	return 0;
+}
 
 
 

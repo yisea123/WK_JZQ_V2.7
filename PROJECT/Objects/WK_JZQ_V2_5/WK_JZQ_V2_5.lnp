@@ -90,6 +90,6 @@
 ".\objects\wk_jzq_v2_5\mqttunsubscribeclient.o"
 ".\objects\wk_jzq_v2_5\mqttunsubscribeserver.o"
 --strict --scatter ".\Objects\WK_JZQ_V2_5\WK_JZQ_V2_5.sct"
---summary_stderr --info summarysizes --map --xref --callgraph --symbols
---info sizes --info totals --info unused --info veneers
+--summary_stderr --info summarysizes --symbols
+--info totals
 --list ".\Listings\WK_JZQ_V2_5.map" -o .\Objects\WK_JZQ_V2_5\WK_JZQ_V2_5.axf

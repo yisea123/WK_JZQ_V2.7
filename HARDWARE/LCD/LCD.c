@@ -151,9 +151,10 @@ void LCD_Send_Data(u8 *buf,u8 len)
 void LCD_Receive_Data(u8 *buf,u16 *len)
 {
 	u8 rxlen=USART2_RX_CNT;
-	*len=USART2_RX_CNT;				//默认为0
+	*len=0;				//默认为0
 	if (USART2_IDLE==1)
 	{
+		*len=USART2_RX_CNT;				//默认为0
 		mymemcpy (buf,USART2_RX_BUF,rxlen);
 		mymemset (USART2_RX_BUF,0,rxlen);
 		USART2_RX_CNT=0;

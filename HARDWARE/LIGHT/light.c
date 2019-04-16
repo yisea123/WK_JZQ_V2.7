@@ -150,7 +150,7 @@ void Light_init (void)
 void key_reset (void)
 {
 	KEY_LIGHT=0;
-	delay_us(800);
+	delay_us(1000);
 //	LIGHT_1=1;
 }
 
@@ -240,12 +240,14 @@ void key_send (u8 red ,u8 green,u8 blue)
 void key_senddata (void)
 {
 	u16 i=0;
+	OS_ENTER_ONLYME();
 	key_reset();
 	for (i=0;i<6;i++)
 	{
 		key_send (KEY_COLOR[0][i] ,KEY_COLOR[1][i] ,KEY_COLOR[2][i] );
 	}
 	KEY_LIGHT=0;
+	OS_EXIT_ONLYME();
 }
 
 			//刷新刷新指定缓存区颜色

@@ -28,6 +28,7 @@ uint8_t LCD_SET_DATA[8]      ={0x5A ,0xA5 ,0x05 ,0x82 ,0x00 ,0x14 ,0x00 ,0x00};
 #define  SHIDU_UP_ADDR  0x16
 #define  SHIDU_DOWN_ADDR  0x17
 #define  PM2_5_UP_ADDR  0x18
+#define  QUHAO_ADDR  0x60
 #define  LCD_POWER_HS_ADDR  0x19
 #define  LCD_POWER_SS_ADDR  0x1a
 #define  LCD_POWER_HE_ADDR  0x1b
@@ -392,6 +393,15 @@ void Set_Init(void)//设置初始化
 	lcd_set_data (SHIDU_DOWN_ADDR,SHIDU_DOWNLIMIT);
 	delay_us(100);
 	lcd_set_data (PM2_5_UP_ADDR,JINHUA_UPLIMIT);
+	
+	
+	delay_us(100);
+	u8 set_quhao[20]={0x5A ,0xA5 ,0x00, 0x82 ,0x00 ,0x60 };
+	set_quhao[2]=strlen(getMyName())+3;
+	mymemcpy(&set_quhao[6],getMyName(),set_quhao[2]-3);
+	LCD_Send_Data(set_quhao,set_quhao[2]+3);
+	
+	
 	delay_us(100);
 	lcd_set_data (LCD_POWER_HS_ADDR,LCD_POWER_HS);
 	delay_us(100);
@@ -854,7 +864,7 @@ void lcd_set_data (u8 type,u16 data)
 
 void Set_Save(void)//设置页面保存
 {
-	u8 buf[20]={0};
+	u8 buf[40]={0};
 	u16 reclen=0;
 	delay_ms(20);
 	LCD_GET_DATA[5]=WENDU_UP_ADDR;
@@ -905,7 +915,21 @@ void Set_Save(void)//设置页面保存
 	{
 		JINHUA_UPLIMIT=(buf[7]<<8)|buf[8];
 	}
-		
+
+	reclen=0;
+	LCD_GET_DATA[5]=QUHAO_ADDR;
+	LCD_GET_DATA[6]=5;
+	LCD_Send_Data(LCD_GET_DATA,7);
+	LCD_GET_DATA[6]=1;
+	delay_ms(20);
+	LCD_Receive_Data(buf,&reclen);
+	if(buf[5]==QUHAO_ADDR)
+	{
+		u8 *name=buf+7;
+		while(*name) {if (*name==0xff) {*name=0;break;}name++;}
+		setMyName ((char *)buf+7);
+	}
+	
 		
 		
 	
