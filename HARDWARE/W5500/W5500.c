@@ -190,7 +190,7 @@ void SPI1_Send_Short(unsigned short dat)
 *******************************************************************************/
 void Write_W5500_1Byte(unsigned short reg, unsigned char dat)
 {
-//	OS_ENTER_ONLYME();
+	//OS_ENTER_ONLYME();
 	GPIO_ResetBits(W5500_SCS_PORT, W5500_SCS);//置W5500的SCS为低电平
 
 	SPI1_Send_Short(reg);//通过SPI1写16位寄存器地址
@@ -198,7 +198,7 @@ void Write_W5500_1Byte(unsigned short reg, unsigned char dat)
 	SPI1_Send_Byte(dat);//写1个字节数据
 
 	GPIO_SetBits(W5500_SCS_PORT, W5500_SCS); //置W5500的SCS为高电平
-//	OS_EXIT_ONLYME();
+	//OS_EXIT_ONLYME();
 }
 
 /*******************************************************************************
@@ -259,7 +259,7 @@ void Write_W5500_nByte(unsigned short reg, unsigned char *dat_ptr, unsigned shor
 *******************************************************************************/
 void Write_W5500_SOCK_1Byte(SOCKET s, unsigned short reg, unsigned char dat)
 { 
-//	OS_ENTER_ONLYME();
+	//OS_ENTER_ONLYME();
 	GPIO_ResetBits(W5500_SCS_PORT, W5500_SCS);//置W5500的SCS为低电平	
 		
 	SPI1_Send_Short(reg);//通过SPI1写16位寄存器地址
@@ -267,7 +267,7 @@ void Write_W5500_SOCK_1Byte(SOCKET s, unsigned short reg, unsigned char dat)
 	SPI1_Send_Byte(dat);//写1个字节数据
 
 	GPIO_SetBits(W5500_SCS_PORT, W5500_SCS); //置W5500的SCS为高电平
-//	OS_EXIT_ONLYME();
+	//OS_EXIT_ONLYME();
 }
 
 /*******************************************************************************
@@ -812,6 +812,10 @@ void W5500_IRQ (void)
 	do
 	{
 		temp = Read_W5500_1Byte(IR);//读取中断标志寄存器
+		if (temp)
+		{
+			temp = Read_W5500_1Byte(IR);//这个读取可能会出错，重读确认
+		}
 		Write_W5500_1Byte(IR, (temp&0xf0));//回写清除中断标志
 		NET_STATE|=temp;//保存网络状况
 		temp=Read_W5500_1Byte(SIR);//读取端口中断标志寄存器	

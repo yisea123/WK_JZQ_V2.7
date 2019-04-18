@@ -36,6 +36,8 @@ u16 str2num(u8 *str);
 //提取字符串中的数字，用分隔符point分开,有length个数字
 u8 getnumfstr(u8 *out,u8 *strin,u8 point,u8 length);
 
+u8 str2nums (u8 *out,char *strin,char point);
+
 //hex格式的字符串转为整形 ,小写
 u32 str2hex (char *hexstr);
 														

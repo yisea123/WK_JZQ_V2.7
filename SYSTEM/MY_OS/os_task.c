@@ -66,9 +66,13 @@ INT8U CreateTaskN (void   (*task)(void *p_arg),//任务首地址
 	INT32U myprio=0x80000000>>prio;
 #endif
 	OS_STK *psp;
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
 	
 	
 	OS_STK *ptos=ptos_+tacksize-1;
+	OS_ENTER_CRITICAL();
 	
 	
 	
@@ -92,6 +96,7 @@ INT8U CreateTaskN (void   (*task)(void *p_arg),//任务首地址
 	psp=OSTaskStkInit(task,p_arg,ptos,0);//初始化任务堆栈，返回新栈顶
 	OS_TCBInit (task,psp,prio);
 	TCB_Table[prio].TackUsed=tacksize&0x0000ffff;
+	OS_EXIT_CRITICAL();
 	return 0;
 }
 
@@ -108,8 +113,12 @@ INT8U CreateTask (void   (*task)(void *p_arg),//任务首地址
 #endif
 	OS_STK *psp;
 	
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
 	
 	
+	OS_ENTER_CRITICAL();
 	
 	
 #if TASK_MAX_NUM<=32u
@@ -125,6 +134,7 @@ INT8U CreateTask (void   (*task)(void *p_arg),//任务首地址
 	
 	psp=OSTaskStkInit(task,p_arg,ptos,0);//初始化任务堆栈，返回新栈顶
 	OS_TCBInit (task,psp,prio);
+	OS_EXIT_CRITICAL();
 	return 0;
 }
 

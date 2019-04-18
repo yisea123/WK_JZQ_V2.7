@@ -52,6 +52,36 @@ u8 getnumfstr(u8 *out,u8 *strin,u8 point,u8 length)
 	return 0;
 }
 
+
+u8 str2nums (u8 *out,char *strin,char point)
+{
+	u8 buff[10]={0};
+	u8 i=0;
+	u8 length=1;
+	u8 ret=length;
+	char *in=strin;
+	while(*in)
+	{
+		if ((*in==point)&&(*(in+1))) length++;
+		in++;
+	}
+	ret=length;
+	while (length--)
+	{
+		while ((*strin!=point)&&(*strin!=0))
+		{
+			buff[i++]=*strin++;
+		}
+		buff[i]=0;
+		*out++=str2num(buff);
+		i=0;strin++;			
+	}
+	return ret;
+
+}
+
+
+
 //hex格式的字符串转为整形 ,小写
 u32 str2hex (char *hexstr)
 {
@@ -285,7 +315,7 @@ u32 runFunction (u32 fun_addr,char *Parameters)
 			{
 				par_str[i]++;
 				u8 len=strlen(par_str[i]);
-				*(par_str[i]+len)=0;
+				*(par_str[i]+len-1)=0;
 				par_value[i]=(u32)par_str[i];
 			}
 			else
@@ -301,8 +331,6 @@ u32 runFunction (u32 fun_addr,char *Parameters)
 	myfree(my_par);
 	return ret;
 }
-
-
 
 
 

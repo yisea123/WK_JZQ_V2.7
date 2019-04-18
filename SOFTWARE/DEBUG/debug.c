@@ -383,6 +383,9 @@ void dbg_help(void)
 	ptxt="\t输入\"devconfig\"获取设备配置信息\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
+	ptxt="\t输入\"fun [函数地址] [函数参数]\"执行指定地址的函数\r\n";
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+	
 	ptxt="\t输入\"getip [域名]\"获取域名对应的IP地址\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
@@ -1071,27 +1074,53 @@ void dbg_mem (u8 *buff)
 	{
 		u32 addr=0;
 		u32 value=0;
-		if (samestr("set",buff))
+		if (samestr("sets ",buff))
+		{
+			u8 *ints=mymalloc(64*2);
+			mymemset(ints,0,64*2);
+			buff[15]=0;
+			addr=str2hex((char*)buff+5);
+			value=str2nums (ints,(char*)&buff[16],','); 
+			setMemValue(ints,addr,value);
+			sprintf (txtbuff,"基地址 %#x 的值已修改 \r\n",addr);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+			myfree(ints);
+		}
+		else if (samestr("gets ",buff))
+		{
+			u8 *ints=0;
+			buff[15]=0;
+			addr=str2hex((char*)buff+5);
+			value=str2num (&buff[16]); 
+			ints=mymalloc(value);
+			mymemset(ints,0,value);
+			getMemValue(ints,addr,value);
+			char *inttxtbuff=mymalloc(value*4);
+			char *inttxts=inttxtbuff;
+			for (u8 i=0;i<value;i++)
+			{
+				sprintf (inttxts,"%3d,",ints[i]);
+				inttxts+=strlen(inttxts);
+			}
+			sprintf (txtbuff,"基地址 %#x 的数据是 %s ...\r\n",addr,inttxtbuff);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+			myfree(inttxtbuff);
+		}
+		else if (samestr("set ",buff))
 		{
 			buff[14]=0;
 			addr=str2hex((char*)buff+4);
 			value=str2hex((char*)&buff[15]);
 			setMemU32 (value,addr);
-			sprintf (txtbuff,"已设置 %x 地址的值为 %x \r\n",addr,value);
+			sprintf (txtbuff,"已设置 %#x 地址的值为 %#x \r\n",addr,value);
 			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 		}
-		else if (samestr("get",buff))
+		else if (samestr("get ",buff))
 		{
 			addr=str2hex((char*)buff+4);
 			value=getMemU32 (addr);
-			sprintf (txtbuff,"地址 %x 的值为 %x \r\n",addr,value);
+			sprintf (txtbuff,"地址 %#x 的值为 %#x \r\n",addr,value);
 			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
-		}
-		else if (samestr("sets",buff))
-		{
-		}
-		else if (samestr("gets",buff))
-		{
 		}
 	}
 	else
@@ -1139,12 +1168,12 @@ void dbg_fun (u8 *buff)
 		}
 		addr=str2hex((char*)buff);
 		
-		sprintf (txtbuff,"地址 %x 的函数即将执行...\r\n",addr);
+		sprintf (txtbuff,"地址 %#x 的函数即将执行...\r\n",addr);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 		
 		value=runFunction(addr,(char *)par); 	
 
-		sprintf (txtbuff,"地址 %x 的函数执行结束，返回值是 %d...\r\n",addr,value);
+		sprintf (txtbuff,"地址 %#x 的函数执行结束，返回值是 %#x ...\r\n",addr,value);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 	}
 	else
