@@ -34,6 +34,7 @@ void json_mode (cJSON *root);
 void json_version (cJSON *root);
 void json_startup (cJSON *root);
 void json_startdown (cJSON *root);
+void json_ping (cJSON *root);
 
 
 					//执行上位机的命令之后结果返回

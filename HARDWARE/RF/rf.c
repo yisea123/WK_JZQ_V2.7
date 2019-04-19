@@ -353,7 +353,7 @@ u8 RF_SetChannel(u8 channel)
 	RF_Init(9600);
 	RF_M0=1;
 	RF_M1=1;
-	delay_ms(100);
+	delay_ms(100);  //C0,掉电保存，C2，掉电不保存
 	u8 setdata[]={0xc2,0x00,0x00,0x3a,0x14,0x40};
 	setdata[4]=channel;
 	while(1)

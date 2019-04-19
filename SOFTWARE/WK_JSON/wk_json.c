@@ -221,6 +221,11 @@ void recv_json (u8 *data)
 		json_version (root);
 	}
 	else if (strcmp(cJSON_GetObjectItem(root, "cmd")->valuestring,
+		"ping")==0)
+	{
+		json_ping (root);
+	}
+	else if (strcmp(cJSON_GetObjectItem(root, "cmd")->valuestring,
 		"cmdresult")==0)//上位机的返回信息，暂时不理会
 	{
 	//	json_version (root);
@@ -234,6 +239,29 @@ void recv_json (u8 *data)
 	
 	cJSON_Delete(root);
 }
+
+
+ 
+
+ 
+void json_ping (cJSON *root)
+{
+	char *out1;
+  cJSON *root1;
+  root1 = cJSON_CreateObject();
+	
+	cJSON_AddStringToObject(root1,"cmd","ping");
+	
+							//取得json字符串
+	out1=cJSON_PrintUnformatted(root1);	
+	cJSON_Delete(root1);
+	server_send_data((u8*)out1);//发送数据，自动写入回车换行
+	myfree(out1);
+
+}
+
+
+
 
 
 
