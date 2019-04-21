@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <setjmp.h>
 #include <stm32f10x.h>	    
 
 #include "os_cpu.h"

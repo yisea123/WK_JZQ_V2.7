@@ -128,6 +128,20 @@ u32 str2hex (char *hexstr)
 
 
 
+//去掉字符串的双引号，不支持转义字符
+char *getStr (char *str)
+{
+	str[strlen(str)-1]=0;
+	return str+1;
+}
+
+//提取单引号包含的字符
+char getChar (char *str)
+{
+	return *(str+1);
+}
+
+
 
 
 
@@ -214,7 +228,10 @@ u8 checkStrType (char *str)
 	if (str==0) return 0;
 	if (*str=='\"')
 	{
-		return strTypeStr;
+		if (*(str+strlen(str)-1)=='\"')
+			return strTypeStr;
+		else
+			return strTypeErr;
 	}
 	else if (*str=='\'')
 	{
@@ -234,12 +251,15 @@ u8 checkStrType (char *str)
 			if ((*(str+i)<'0')||((*(str+i)>'9')&&(*(str+i)<'A'))||((*(str+i)>'F')&&(*(str+i)<'a'))
 				||(*(str+i)>'f'))
 			{
-				return strTypeErr;
+				if (str[strlen(str)-1]==')')
+					return strTypeFun;
+				else
+					return strTypeErr;
 			}
 		}
 		return strTypeHex;
 	}
-	else 
+	else if (*str>='0'&&*str<='9')
 	{
 		for (u8 i=0;*(str+i);i++)
 		{
@@ -250,31 +270,109 @@ u8 checkStrType (char *str)
 		}
 		return strTypeNum;
 	}
+	else if ((*str>='a'&&*str<='z')||(*str>='A'&&*str<='Z')||*str=='_')
+	{
+		for (u8 i=0;*(str+i);i++)
+		{
+			if (!((*str>='a'&&*str<='z')||(*str>='A'&&*str<='Z')||*str=='_'))
+			{
+				if (*str=='(')
+					break;
+				else
+					return strTypeErr;
+			}
+		}
+		if (str[strlen(str)-1]!=')')
+			return strTypeErr;
+		else
+			return strTypeFun; 
+	}
+}
+
+//查找函数名的地址
+u32 findFunAddr (char *fun_name)
+{
+	extern fun_list FUN_LIST[];
+	for (u16 i=0;FUN_LIST[i].fun_addr;i++)
+	{
+		if (samestr((u8*)FUN_LIST[i].fun_name,(u8*)fun_name))
+		{
+			return FUN_LIST[i].fun_addr;
+		}
+	}
+	return 0;
 }
 
 
 
 
 
+
+
+
 //运行指定函数,最多可以设置4个参数
-u32 runFunction (u32 fun_addr,char *Parameters)
+u32 runFunction (char *Parameters)
 {
+	u32 fun_addr=0;
+	
+	
+	
+	
+	
 	u32 par_value[4]={0};
 	char *(par_str[4])={0};
 	u8 par_num=0;
 	char *my_par=mymalloc(256);
+	
 	if (my_par==0) return 0;
 	char *par=my_par;
 	u32 ret=0;
-	if (fun_addr==0) 
-	{	
-		myfree(my_par);
-		return 0;
-	}
 	if (Parameters) 
 	{
 		mymemcpy(my_par,Parameters,strlen(Parameters)+1);
-		par_num++;
+		
+		char *fun_addr_str=mymalloc(32);
+		char *fun_addr_str_ptr=fun_addr_str;
+		if (fun_addr_str!=0) 
+		{
+			mymemcpy(fun_addr_str,Parameters,32);
+			while (*fun_addr_str_ptr++) 
+			{
+				if (*fun_addr_str_ptr=='(')
+				{
+					*fun_addr_str_ptr=0;
+					par+=fun_addr_str_ptr-fun_addr_str+1;//使指针指向函数参数处
+					break;
+				}
+			}
+			if (*par=='0')//传的是地址
+			{
+				fun_addr=str2hex(fun_addr_str);
+			}
+			else			//传的函数名
+			{
+				fun_addr=findFunAddr(fun_addr_str);
+			}
+		}
+		myfree(fun_addr_str);
+		if (fun_addr==0) 
+		{	
+			myfree(my_par);
+			return 0;
+		}
+		
+		if (par[strlen(par)-1]==')')
+		{
+			par[strlen(par)-1]=0;//去掉反括号
+		}
+		else
+		{
+			myfree(my_par);
+			return 0;
+		}
+		
+		if (*par)
+			par_num++;
 		par_str[par_num-1]=par;
 		u8 strtype=0;
 		
@@ -301,7 +399,7 @@ u32 runFunction (u32 fun_addr,char *Parameters)
 			strtype=checkStrType(par_str[i]);
 			if (strtype==strTypeChar)
 			{
-				par_value[i]=(u32)*(par_str[i]+1);
+				par_value[i]=(u32)getChar( par_str[i]);
 			}
 			else if (strtype==strTypeHex)
 			{
@@ -313,10 +411,11 @@ u32 runFunction (u32 fun_addr,char *Parameters)
 			}
 			else if (strtype==strTypeStr)
 			{
-				par_str[i]++;
-				u8 len=strlen(par_str[i]);
-				*(par_str[i]+len-1)=0;
-				par_value[i]=(u32)par_str[i];
+				par_value[i]=(u32)getStr( par_str[i]);
+			}
+			else if (strtype==strTypeFun)	
+			{
+				par_value[i]=(u32)runFunction( par_str[i]);
 			}
 			else
 			{

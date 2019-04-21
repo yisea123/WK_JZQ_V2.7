@@ -30,7 +30,7 @@ __align(8) u32 my_iottack[256];
 __align(8) u32 my_idletack[64];
 
 
-
+jmp_buf j;
 
 
 int main(void)
@@ -50,7 +50,6 @@ int main(void)
 //	CreateTask (my_iot, 				0, &my_iottack[255],		 10)	;		
 //	CreateTask (idle_task, 			0, &my_idletack[63],		 31)	;		
 	
-	
 	CreateTaskN (my_topmsg, 			0, my_keytack,128,				0)	;					
 	CreateTaskN (my_lcd, 				0, my_lcdtack,128	,		2)	;	 				
 	CreateTaskN (my_rf_loop, 		0, rf_looptack,	256,		3)	;	 				
@@ -61,7 +60,6 @@ int main(void)
 	CreateTaskN (idle_task, 			0, my_idletack,64,		 31)	;		
 	
 
-	
 	
 	
 	OSStart ( ); 

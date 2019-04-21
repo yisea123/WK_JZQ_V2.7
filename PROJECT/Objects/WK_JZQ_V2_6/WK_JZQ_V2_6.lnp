@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 ".\objects\wk_jzq_v2_6\main.o"
+".\objects\wk_jzq_v2_6\fun_list.o"
 ".\objects\wk_jzq_v2_6\core_cm3.o"
 ".\objects\wk_jzq_v2_6\stm32f10x_it.o"
 ".\objects\wk_jzq_v2_6\system_stm32f10x.o"

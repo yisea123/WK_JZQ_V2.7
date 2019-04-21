@@ -41,7 +41,12 @@ u8 str2nums (u8 *out,char *strin,char point);
 //hex格式的字符串转为整形 ,小写
 u32 str2hex (char *hexstr);
 														
-														
+//去掉字符串的双引号，不支持转义字符
+char *getStr (char *str);
+	
+//提取单引号包含的字符
+char getChar (char *str);
+	
 //复制数据
 void copy_data (u8 *from,u8 *to,u16 length);
 
@@ -53,6 +58,7 @@ enum
 	strTypeStr=2,
 	strTypeNum=3,
 	strTypeHex=4,
+	strTypeFun=5,
 };
 
 
@@ -70,8 +76,19 @@ u32 setMemU32 (u32 value,u32 addr);
 	
 u32 getMemU32 (u32 addr);
 
+
+
+typedef struct 
+{
+	u32 fun_addr;
+	char *fun_name;
+}fun_list;
+
+
+
+
 //运行指定函数,最多可以设置4个参数
-u32 runFunction (u32 fun_addr,char *Parameters);
+u32 runFunction (char *Parameters);
 
 
 #ifdef  __cplusplus

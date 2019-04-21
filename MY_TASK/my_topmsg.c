@@ -47,6 +47,11 @@ void my_topmsg (void *t)
 	soft_timer_10ms=mymalloc(4*10);
 	mymemset(soft_timer_10ms,0,4*10);
 	addTimerIrq10ms(soft_timer_irq);
+	
+	
+
+	
+	
 	while(1)
 	{
 		irq_msg=TaskGetMsg();

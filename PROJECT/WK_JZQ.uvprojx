@@ -413,6 +413,11 @@
               <FileType>1</FileType>
               <FilePath>..\USER\main.c</FilePath>
             </File>
+            <File>
+              <FileName>fun_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\fun_list.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1314,6 +1319,11 @@
               <FileType>1</FileType>
               <FilePath>..\USER\main.c</FilePath>
             </File>
+            <File>
+              <FileName>fun_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\fun_list.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1949,7 +1959,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>11</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1963,7 +1973,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
+            <Driver>STLink\ST-LINKIII-KEIL_SWO.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -2214,6 +2224,11 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\USER\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>fun_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\USER\fun_list.c</FilePath>
             </File>
           </Files>
         </Group>

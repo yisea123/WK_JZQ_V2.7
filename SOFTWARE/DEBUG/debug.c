@@ -1156,22 +1156,11 @@ void dbg_fun (u8 *buff)
 	{
 		u32 addr=0;
 		u32 value=0;
-		u8 *par=0;
-		if (buff[10]==0) 
-		{
-			par=0;
-		}
-		else
-		{
-			buff[10]=0;
-			par=&buff[11];
-		}
-		addr=str2hex((char*)buff);
 		
 		sprintf (txtbuff,"地址 %#x 的函数即将执行...\r\n",addr);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 		
-		value=runFunction(addr,(char *)par); 	
+		value=runFunction((char *)buff); 	
 
 		sprintf (txtbuff,"地址 %#x 的函数执行结束，返回值是 %#x ...\r\n",addr,value);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
