@@ -12,6 +12,7 @@
 #include "iwdg.h"
 #include "key.h"
 #include "sysinfo.h"
+#include "cScript.h"
 #include "debug.h"
 
 
@@ -150,6 +151,10 @@ void dbg_Interpreter(u8 *recvbuff)
 	else if (samestr((u8*)"fun",recvbuff+8))
 	{
 		dbg_fun(recvbuff+8+3); 
+	}
+	else if (samestr((u8*)"run",recvbuff+8))
+	{
+		dbg_run(recvbuff+8+3); 
 	}
 	else
 	{
@@ -1154,15 +1159,14 @@ void dbg_fun (u8 *buff)
 	char *ptxt=0;
 	if (*buff++==' ')
 	{
-		u32 addr=0;
 		u32 value=0;
 		
-		sprintf (txtbuff,"地址 %#x 的函数即将执行...\r\n",addr);
+		sprintf (txtbuff,"函数 %s 即将执行...\r\n",buff);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 		
 		value=runFunction((char *)buff); 	
 
-		sprintf (txtbuff,"地址 %#x 的函数执行结束，返回值是 %#x ...\r\n",addr,value);
+		sprintf (txtbuff,"函数 %s 执行结束，返回值是 %#x ...\r\n",buff,value);
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 	}
 	else
@@ -1175,6 +1179,40 @@ void dbg_fun (u8 *buff)
 	}
 	myfree(txtbuff);
 }
+
+
+
+
+
+//执行脚本
+void dbg_run (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *ptxt=0;
+	if (*buff++==' ')
+	{
+		u32 value=0;
+		
+		sprintf (txtbuff,"脚本即将执行 ...\r\n");
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+		
+		value=runCScript((char *)buff); 	
+
+		sprintf (txtbuff,"脚本执行结束 返回值是 %#x ...\r\n",value);
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+	}
+	else
+	{
+		ptxt="请配合程序对应的map文件调试！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="运行不当的函数或运行非函数地址会造成严重后果，如非必要请不要操作！\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+	}
+	myfree(txtbuff);
+}
+
+
 
 
 

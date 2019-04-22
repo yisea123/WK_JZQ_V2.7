@@ -74,6 +74,7 @@ u32 sleep_ms(u16 nms)
 	do{
 		msg|=TaskGetMsg();
 	}while((msg&DELAY_END)==0);
+	return msg;
 } 
 
 

@@ -783,6 +783,11 @@
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\NTP\ntp.c</FilePath>
             </File>
+            <File>
+              <FileName>cScript.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1689,6 +1694,11 @@
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\NTP\ntp.c</FilePath>
             </File>
+            <File>
+              <FileName>cScript.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1959,7 +1969,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>11</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1973,7 +1983,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>STLink\ST-LINKIII-KEIL_SWO.dll</Driver>
+            <Driver>Segger\JL2CM3.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -2013,14 +2023,14 @@
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
             <AdsLLst>1</AdsLLst>
-            <AdsLmap>1</AdsLmap>
-            <AdsLcgr>1</AdsLcgr>
+            <AdsLmap>0</AdsLmap>
+            <AdsLcgr>0</AdsLcgr>
             <AdsLsym>1</AdsLsym>
             <AdsLszi>1</AdsLszi>
             <AdsLtoi>1</AdsLtoi>
-            <AdsLsun>1</AdsLsun>
-            <AdsLven>1</AdsLven>
-            <AdsLsxf>1</AdsLsxf>
+            <AdsLsun>0</AdsLsun>
+            <AdsLven>0</AdsLven>
+            <AdsLsxf>0</AdsLsxf>
             <RvctClst>0</RvctClst>
             <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M3"</AdsCpuType>
@@ -2162,7 +2172,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>1</OneElfS>
+            <OneElfS>0</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -2177,7 +2187,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2594,6 +2604,11 @@
               <FileName>ntp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\NTP\ntp.c</FilePath>
+            </File>
+            <File>
+              <FileName>cScript.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
             </File>
           </Files>
         </Group>

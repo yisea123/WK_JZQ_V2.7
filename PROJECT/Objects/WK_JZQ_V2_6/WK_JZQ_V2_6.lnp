@@ -69,6 +69,7 @@
 ".\objects\wk_jzq_v2_6\cmd.o"
 ".\objects\wk_jzq_v2_6\debug.o"
 ".\objects\wk_jzq_v2_6\ntp.o"
+".\objects\wk_jzq_v2_6\cscript.o"
 ".\objects\wk_jzq_v2_6\my_topmsg.o"
 ".\objects\wk_jzq_v2_6\my_lcd.o"
 ".\objects\wk_jzq_v2_6\my_rf.o"
@@ -91,6 +92,6 @@
 ".\objects\wk_jzq_v2_6\mqttunsubscribeclient.o"
 ".\objects\wk_jzq_v2_6\mqttunsubscribeserver.o"
 --strict --scatter ".\Objects\WK_JZQ_V2_6\WK_JZQ_V2_6.sct"
---summary_stderr --info summarysizes --map --xref --callgraph --symbols
---info sizes --info totals --info unused --info veneers
+--summary_stderr --info summarysizes --symbols
+--info sizes --info totals
 --list ".\Listings\WK_JZQ_V2_6.map" -o .\Objects\WK_JZQ_V2_6\WK_JZQ_V2_6.axf

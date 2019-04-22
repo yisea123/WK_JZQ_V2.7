@@ -5,7 +5,7 @@
 <h2>Tool Versions:</h2>
 IDE-Version: ¦ÌVision V5.14.0.0
 Copyright (C) 2015 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: 1 1, 1, LIC=Y2B2Z-JNPZ8-9Z8WW-QWCE8-UYXSH-CVV8F
+License Information: ran chuan, aa, LIC=MGX63-AAE8U-UKKB6-D65L0-KFD8L-Y1ICA
  
 Tool Versions:
 Toolchain:       MDK-ARM Professional  Version: 5.14.0.0
@@ -17,19 +17,143 @@ Library Manager: ArmAr.exe V5.05 update 1 (build 106)
 Hex Converter:   FromElf.exe V5.05 update 1 (build 106)
 CPU DLL:         SARMCM3.DLL V5.14.0.0
 Dialog DLL:      DCM.DLL V1.13.1.0
-Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.14.0_KEIL
+Target DLL:      Segger\JL2CM3.dll V2.99.13.0
 Dialog DLL:      TARMSTM.dll V1.64.0.0
  
 <h2>Project:</h2>
-D:\Files\GitHub\WK_JZQ_V2.7\PROJECT\WK_JZQ.uvprojx
-Project File Date:  04/20/2019
+F:\´¨~\GitHub\WK_JZQ_V2.7\PROJECT\WK_JZQ.uvprojx
+Project File Date:  04/22/2019
 
 <h2>Output:</h2>
 Build target 'WK_JZQ_V2_6'
-".\Objects\WK_JZQ_V2_6\WK_JZQ_V2_6.axf" - 0 Error(s), 0 Warning(s).
+compiling fun_list.c...
+..\USER\fun_list.c(9): warning:  #1296-D: extended constant initialiser used
+        {(u32)delay_ms,"delay_ms"},
+..\USER\fun_list.c(10): warning:  #1296-D: extended constant initialiser used
+        {(u32)sleep_ms,"sleep_ms"},
+..\USER\fun_list.c(11): warning:  #1296-D: extended constant initialiser used
+        {(u32)delay_us,"delay_us"},
+..\USER\fun_list.c(12): warning:  #1296-D: extended constant initialiser used
+        {(u32)getSysRunTime,"getSysRunTime"},
+..\USER\fun_list.c(14): warning:  #1296-D: extended constant initialiser used
+        {(u32)Load_song,"Load_song"},
+..\USER\fun_list.c(15): warning:  #1296-D: extended constant initialiser used
+        {(u32)Beep_End,"Beep_End"},
+..\USER\fun_list.c(17): warning:  #1296-D: extended constant initialiser used
+        {(u32)RTC_SetTimeBySec,"RTC_SetTimeBySec"},
+..\USER\fun_list.c(18): warning:  #1296-D: extended constant initialiser used
+        {(u32)RTC_GetTimeBySec,"RTC_GetTimeBySec"},
+..\USER\fun_list.c(20): warning:  #1296-D: extended constant initialiser used
+        {(u32)STMFLASH_Write,"STMFLASH_Write"},
+..\USER\fun_list.c(21): warning:  #1296-D: extended constant initialiser used
+        {(u32)STMFLASH_Read,"STMFLASH_Read"},
+..\USER\fun_list.c(23): warning:  #1296-D: extended constant initialiser used
+        {(u32)SPI_Flash_Read,"SPI_Flash_Read"},
+..\USER\fun_list.c(24): warning:  #1296-D: extended constant initialiser used
+        {(u32)SPI_Flash_Write,"SPI_Flash_Write"},
+..\USER\fun_list.c(26): warning:  #1296-D: extended constant initialiser used
+        {(u32)getMemValue,"getMemValue"},
+..\USER\fun_list.c(27): warning:  #1296-D: extended constant initialiser used
+        {(u32)setMemValue,"setMemValue"},
+..\USER\fun_list.c(28): warning:  #1296-D: extended constant initialiser used
+        {(u32)setMemU32,"setMemU32"},
+..\USER\fun_list.c(29): warning:  #1296-D: extended constant initialiser used
+        {(u32)getMemU32,"getMemU32"},
+..\USER\fun_list.c(30): warning:  #1296-D: extended constant initialiser used
+        {(u32)samestr,"samestr"},
+..\USER\fun_list.c(32): warning:  #1296-D: extended constant initialiser used
+        {(u32)mem_perused,"mem_perused"},
+..\USER\fun_list.c(33): warning:  #1296-D: extended constant initialiser used
+        {(u32)mymalloc,"mymalloc"},
+..\USER\fun_list.c(34): warning:  #1296-D: extended constant initialiser used
+        {(u32)myfree,"myfree"},
+..\USER\fun_list.c(35): warning:  #1296-D: extended constant initialiser used
+        {(u32)myrealloc,"myrealloc"},
+..\USER\fun_list.c(37): warning:  #1296-D: extended constant initialiser used
+        {(u32)CheckTaskUsege,"CheckTaskUsege"},
+..\USER\fun_list.c(38): warning:  #1296-D: extended constant initialiser used
+        {(u32)GetTaskSize,"GetTaskSize"},
+..\USER\fun_list.c(39): warning:  #1296-D: extended constant initialiser used
+        {(u32)GetTaskUsed,"GetTaskUsed"},
+..\USER\fun_list.c(40): warning:  #1296-D: extended constant initialiser used
+        {(u32)TaskPend,"TaskPend"},
+..\USER\fun_list.c(41): warning:  #1296-D: extended constant initialiser used
+        {(u32)TaskRepend,"TaskRepend"},
+..\USER\fun_list.c(42): warning:  #1296-D: extended constant initialiser used
+        {(u32)TaskSendMsg,"TaskSendMsg"},
+..\USER\fun_list.c(43): warning:  #1296-D: extended constant initialiser used
+        {(u32)TaskGetMsg,"TaskGetMsg"},
+..\USER\fun_list.c(45): warning:  #1296-D: extended constant initialiser used
+        {(u32)Save_Config,"Save_Config"},
+..\USER\fun_list.c(46): warning:  #1296-D: extended constant initialiser used
+        {(u32)Load_Config,"Load_Config"},
+..\USER\fun_list.c(47): warning:  #1296-D: extended constant initialiser used
+        {(u32)Save_LCD,"Save_LCD"},
+..\USER\fun_list.c(48): warning:  #1296-D: extended constant initialiser used
+        {(u32)Load_LCD,"Load_LCD"},
+..\USER\fun_list.c(49): warning:  #1296-D: extended constant initialiser used
+        {(u32)GetDeviceType,"GetDeviceType"},
+..\USER\fun_list.c: 33 warnings, 0 errors
+compiling relay.c...
+compiling rf.c...
+compiling fats.c...
+compiling stmflash.c...
+compiling timer.c...
+compiling flash.c...
+compiling W5500.c...
+compiling HARD_IRQ.c...
+compiling baidu_iot.c...
+compiling data_map.c...
+compiling data_type.c...
+compiling dhcp.c...
+compiling dns.c...
+compiling enternet.c...
+compiling file.c...
+compiling cJSON.c...
+..\SOFTWARE\JSON\cJSON.c(60): warning:  #1293-D: assignment in condition
+        if (!(copy = (char*)cJSON_malloc(len))) return 0;
+..\SOFTWARE\JSON\cJSON.c(262): warning:  #1293-D: assignment in condition
+        ptr=str;while ((token=*ptr) && ++len) {if (strchr("\"\\\b\f\n\r\t",token)) len++; else if (token<32) len+=5;ptr++;}
+..\SOFTWARE\JSON\cJSON.c(379): warning:  #1293-D: assignment in condition
+                if (!(new_item=cJSON_New_Item())) return 0;     /* memory fail */
+..\SOFTWARE\JSON\cJSON.c(469): warning:  #1293-D: assignment in condition
+                if (!(new_item=cJSON_New_Item()))       return 0; /* memory fail */
+..\SOFTWARE\JSON\cJSON.c: 4 warnings, 0 errors
+compiling ping.c...
+compiling power.c...
+compiling wk_json.c...
+compiling cmd.c...
+compiling debug.c...
+..\SOFTWARE\DEBUG\debug.c(1199): warning:  #223-D: function "runCScript" declared implicitly
+                value=runCScript((char *)buff);         
+..\SOFTWARE\DEBUG\debug.c: 1 warning, 0 errors
+compiling ntp.c...
+compiling cScript.c...
+..\SOFTWARE\CScript\cScript.c(395): warning:  #177-D: variable "strtype" was declared but never referenced
+                u8 strtype=0;
+..\SOFTWARE\CScript\cScript.c(550): warning:  #940-D: missing return statement at end of non-void function "checkStrType"
+  }
+..\SOFTWARE\CScript\cScript.c: 2 warnings, 0 errors
+compiling my_topmsg.c...
+..\MY_TASK\my_topmsg.c(93): warning:  #177-D: variable "state" was declared but never referenced
+  static u8 state[6]={0,0,0,0,0x3f,0};//¶Ì°´×´Ì¬
+..\MY_TASK\my_topmsg.c: 1 warning, 0 errors
+compiling my_lcd.c...
+compiling my_rf.c...
+compiling my_autocontrol.c...
+compiling my_light.c...
+compiling my_cfg.c...
+compiling my_idle.c...
+compiling my_iot.c...
+compiling my_light_new.c...
+compiling my_w5500.c...
+linking...
+Program Size: Code=108754 RO-data=2974 RW-data=820 ZI-data=9144  
+FromELF: creating hex file...
+".\Objects\WK_JZQ_V2_6\WK_JZQ_V2_6.axf" - 0 Error(s), 41 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
-  D:\Files\GitHub\WK_JZQ_V2.7\PROJECT\RTE
+  F:\´¨~\GitHub\WK_JZQ_V2.7\PROJECT\RTE
   D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include
 
 <h2>Collection of Component Files used:</h2>

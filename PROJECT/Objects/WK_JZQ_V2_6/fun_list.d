@@ -60,3 +60,5 @@
 .\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\JSON\cjson.h
 .\objects\wk_jzq_v2_6\fun_list.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\DATA_MAP\data_map.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\CScript\cscript.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\BEEP\beep.h

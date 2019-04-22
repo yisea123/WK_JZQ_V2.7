@@ -31,7 +31,7 @@
 u8 samestr(u8 *str1,u8 *str2);
 		
 //字符串转为整形数字
-u16 str2num(u8 *str);
+u32 str2num(u8 *str);
 		
 //提取字符串中的数字，用分隔符point分开,有length个数字
 u8 getnumfstr(u8 *out,u8 *strin,u8 point,u8 length);
@@ -47,19 +47,14 @@ char *getStr (char *str);
 //提取单引号包含的字符
 char getChar (char *str);
 	
+//找到以a结尾的字符串长度
+u16 strlenByChar (char a,char *inbuff);
+	
+
 //复制数据
 void copy_data (u8 *from,u8 *to,u16 length);
 
 
-enum
-{
-	strTypeErr=0,
-	strTypeChar=1,
-	strTypeStr=2,
-	strTypeNum=3,
-	strTypeHex=4,
-	strTypeFun=5,
-};
 
 
 //校验str的类型
@@ -78,17 +73,10 @@ u32 getMemU32 (u32 addr);
 
 
 
-typedef struct 
-{
-	u32 fun_addr;
-	char *fun_name;
-}fun_list;
 
 
 
 
-//运行指定函数,最多可以设置4个参数
-u32 runFunction (char *Parameters);
 
 
 #ifdef  __cplusplus

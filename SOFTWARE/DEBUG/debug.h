@@ -115,6 +115,8 @@ void dbg_mem (u8 *buff);
 //函数调用相关的debug命令
 void dbg_fun (u8 *buff);
 
+//执行脚本
+void dbg_run (u8 *buff);
 
 
 /**********执行指令****************/

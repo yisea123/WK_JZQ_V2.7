@@ -73,4 +73,5 @@
 .\objects\wk_jzq_v2_6\debug.o: ..\SYSTEM\IWDG\iwdg.h
 .\objects\wk_jzq_v2_6\debug.o: ..\HARDWARE\KEY\key.h
 .\objects\wk_jzq_v2_6\debug.o: ..\USER\sysinfo.h
+.\objects\wk_jzq_v2_6\debug.o: ..\SOFTWARE\CScript\cScript.h
 .\objects\wk_jzq_v2_6\debug.o: ..\SOFTWARE\DEBUG\debug.h
