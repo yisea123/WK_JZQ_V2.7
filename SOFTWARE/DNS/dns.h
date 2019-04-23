@@ -37,7 +37,7 @@
 
 
 
-extern uint8 BUFPUB[1024];
+//extern uint8 BUFPUB[1024];
 
 #define  DNS_RESPONSE_TIMEOUT 3 // 3 seconds
 #define  DNS_RETRY            3//3 times

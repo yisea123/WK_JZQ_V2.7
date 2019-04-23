@@ -62,3 +62,17 @@
 .\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\DATA_MAP\data_map.h
 .\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\CScript\cscript.h
 .\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\BEEP\beep.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\KEY\key.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\LCD\lcd.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\LIGHT\light.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\RELAY\relay.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\RF\rf.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\TIMER\timer.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\hard_irq.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\HARDWARE\W5500\w5500.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\DHCP\dhcp.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\DNS\dns.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\ENTERNET\enternet.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\PING\ping.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\POWER\power.h
+.\objects\wk_jzq_v2_6\fun_list.o: ..\SOFTWARE\NTP\ntp.h

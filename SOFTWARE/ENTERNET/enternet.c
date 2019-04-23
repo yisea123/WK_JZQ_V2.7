@@ -30,6 +30,22 @@ u16 SERVER_PORT=6000;
 
 
 
+void set_ntp_serverip (u8 *ip)
+{
+	mymemcpy (NTP_SERVER,ip,4);
+}
+
+
+void set_dns_serverip (u8 *ip)
+{
+	mymemcpy (DNS_SERVER,ip,4);
+}
+
+
+
+
+
+
 
 
 

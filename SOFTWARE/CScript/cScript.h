@@ -16,6 +16,7 @@ typedef struct
 	u32 varType;
 	void *varValue;
 	char varName[16];
+	u8 arry[32];
 	
 }	cscript_variable;
 
@@ -34,6 +35,7 @@ enum
 {
 	varTypeNum=0,
 	varTypeStr=1,
+	varTypeArry=2,
 };
 		
 
@@ -47,6 +49,7 @@ enum
 	strTypeHex=4,
 	strTypeFun=5,
 	strTypeVar=6,
+	strTypeArry=7,
 };
 
 
@@ -57,8 +60,8 @@ typedef struct
 	char *fun_name;
 }fun_list;
 
-
-
+//运行脚本
+u32 runCScript (char *par);
 
 //查找函数名的地址
 u32 findFunAddr (char *fun_name);

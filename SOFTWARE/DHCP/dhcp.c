@@ -38,7 +38,7 @@ u32 Transaction=4561235;
 
 
 
-
+//static u8 dhcp_socket=0;
 
 
 
@@ -303,6 +303,7 @@ u8 dhcp_ask(dhcp_pack * discover,dhcp_pack * recvdata)
 u8 dhcp_retry(void)
 {
 	dhcp_pack * discover=0;
+	//dhcp_socket=s;
 	discover=mymalloc(sizeof(dhcp_pack)+320);
 	if (discover==0) return 0;
 	u8 * recvdata=0;

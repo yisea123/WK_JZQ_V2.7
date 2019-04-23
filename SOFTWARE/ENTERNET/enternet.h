@@ -34,6 +34,14 @@ typedef struct
 	
 }net_parameters;
 
+
+void set_ntp_serverip (u8 *ip);
+
+void set_dns_serverip (u8 *ip);
+
+
+
+
 //等待TCP发送完成
 u8 net_wailt_sended(u8 socket);
 

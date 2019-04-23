@@ -157,10 +157,75 @@ u16 strlenByChar (char a,char *inbuff)
 			return strlength;
 		}
 	}
-	return 0;
+	return (u16)-1;
 }
 
 
+//找到第一次出现指定字符串的位置
+u16 findStr (char *str,char *tofind)
+{
+	u16 len=0;
+	while (*str)
+	{
+		if (*str==*tofind)
+		{
+			if (samestr((u8*)tofind,(u8*)str))
+			{
+				break;
+			}
+			else
+			{
+				len++;
+			}
+		}
+		else
+		{
+			len++;
+		}
+		str++;
+	}
+	return len;
+}
+
+
+//返回一对闭合字符串的长度
+u16 findPair (char left,char right,char *str)
+{
+	u16 n_len_l=0;
+	u16 n_len_r=0;
+	u16 n_len=0;
+	char *n_str=str;
+	u8 brackets=0;
+	do
+	{
+		n_len_l=strlenByChar(left,n_str);
+		n_len_r=strlenByChar(right,n_str);
+//		if (n_len_l==0) n_len_l=10000;//没有找到指定字符，赋值到一个不可能的值
+//		if (n_len_r==0) n_len_r=10000;
+		if (n_len_l<n_len_r)
+		{
+			brackets++;
+			n_len=n_len_l;
+			n_str+=n_len+1;
+		}
+		else if (n_len_l>n_len_r)
+		{
+			brackets--;
+			n_len=n_len_r;
+			n_str+=n_len+1;
+		}
+		else
+		{
+			break;
+		}
+		if (brackets==0) break;
+		
+	}while(*n_str);
+	if (brackets==0)//闭合的
+		return n_str-str;
+	else
+		return 0;//没有闭合
+}
 
 
 

@@ -3,8 +3,68 @@
 #include "cScript.h"
 
 
+
+/*****************************************************************
+
+				自定义脚本解析器
+				2019.4.23
+				作者：冉川
+				声明字符串变量支持的长度最大为31字节
+				声明数组变量支持最大长度为31字节
+				函数可以传递临时数组，最多支持一个
+				运算式不支持括号重设优先级
+				不支持i++，i--运算
+				脚本解析器同时只能由一个线程运行，
+				关键字：
+					local 定义变量
+					while while循环
+					if else 条件分支
+				语法：
+				每个语句以分号;结尾
+				while 循环 if 分支 都要用大括号{}包括并在右括号后加分号
+				有else的陈if语句只在else分支的右括号加分号
+				变量声明必须有初始值，根据初始值来确定数据类型
+				声明字符串 local a="abcd";
+				声明数组 local b=(1,2,3,4,5);
+				声明整数 local c=520;
+				声明用函数返回值作为初始值的整数 local d=fun();
+				while 循环
+				while (...)
+				{
+					...;
+					...;
+					...;
+				};
+				if 条件语句
+				if (...)
+				{
+					...;
+					...;
+					...;
+				}
+				else
+				{
+					...;
+					...;
+					...;
+				};
+				或
+				if (...)
+				{
+					...;
+					...;
+					...;
+				};
+
+********************************************************************/
+
+
+
 //脚本运行的变量栈
 cscript_stack cScriptStack={0};
+
+static	u8 *Arry=0;//临时数组，一个函数调用只能使用一个临时数组
+
 
 //找到一个分号结尾的字符串并复制
 char* findSemicolon (char *outbuff,char *inbuff);
@@ -48,7 +108,36 @@ char* findSemicolon (char *outbuff,char *inbuff)
 		}
 	}
 	
-	strlength=strlenByChar(';',inbuff);
+	char *n_str=inbuff;
+	int n_len=0;
+	u8 brackets=0;//括号个数
+	if ((samestr((u8*)"while ",(u8*)n_str))||
+			(samestr((u8*)"for ",(u8*)n_str))
+			)
+	{
+		n_str+=findPair('{','}',n_str);
+		strlength=n_str-inbuff;
+	}
+	else if (samestr((u8*)"if ",(u8*)n_str))
+	{
+		n_str+=findPair('{','}',n_str);
+		if (n_str[0]==';')//大括号后有分号，没有分支
+		{
+		}
+		else				//有分支
+		{
+			n_str+=findPair('{','}',n_str);
+		}
+		strlength=n_str-inbuff;
+		
+	}
+	else
+	{
+		strlength=strlenByChar(';',inbuff);
+		if (strlength>100) strlength=0;
+	}
+	
+	
 	mymemcpy(outbuff,inbuff,strlength);
 	outbuff[strlength]=0;
 	inbuff=inbuff+strlength+1;//跳过分号
@@ -60,8 +149,21 @@ char* findSemicolon (char *outbuff,char *inbuff)
 int addVariable (char *name,void *value,u32 type)
 {
 	cscript_variable a={0};
-	mymemcpy( a.varName,name,strlen(name));
-	a.varValue=value;
+	mymemcpy( a.varName,name,strlen(name)+1);
+	if (type==varTypeNum)
+	{
+		a.varValue=value;
+	}
+	else if (type==varTypeStr)
+	{
+		mymemcpy( a.arry,value,strlen((char*)value)+1);
+		//a.varValue=a.arry;
+	}
+	else if (type==varTypeArry)
+	{
+		mymemcpy( a.arry,value,32);
+		//a.varValue=a.arry;
+	}
 	a.varType=type;
 	mymemcpy(&((cscript_variable*)cScriptStack.stack_base)[cScriptStack.offset],&a,sizeof(a));
 	cScriptStack.offset++;
@@ -79,7 +181,20 @@ int cheVariable (char *name,void *value)
 		mymemcpy(&a,&((cscript_variable*)cScriptStack.stack_base)[offset],sizeof(a));//取值
 		if (samestr((u8*)name,(u8*)a.varName))
 		{
-			a.varValue=value;					//修改
+			if (a.varType==varTypeNum)//修改
+			{
+				a.varValue=value;
+			}
+			else if (a.varType==varTypeStr)
+			{
+				mymemcpy( a.arry,value,strlen((char*)value)+1);
+				//a.varValue=a.arry;
+			}
+			else if (a.varType==varTypeArry)
+			{
+				mymemcpy( a.arry,value,32);
+				//a.varValue=a.arry;
+			}
 			mymemcpy(&((cscript_variable*)cScriptStack.stack_base)[offset],&a,sizeof(a));//写入
 			return 1;
 		}
@@ -123,7 +238,14 @@ u32 getVariable (char *name)
 		mymemcpy(&a,&((cscript_variable*)cScriptStack.stack_base)[offset],sizeof(a));
 		if (samestr((u8*)name,(u8*)a.varName))
 		{
-			ret=(u32)a.varValue;
+			if (a.varType!=varTypeNum)
+			{
+				ret=(u32)a.arry;
+			}
+			else
+			{
+				ret=(u32)a.varValue;
+			}
 			break;
 		}
 	}
@@ -139,7 +261,7 @@ u32 alculation (char *buf)
 	u32 ret2=0;
 	char par1[16]={0};
 	char par2[16]={0};
-	if (len=strlenByChar('+',buf),len)
+	if (len=strlenByChar('+',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -147,7 +269,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1+ret2;
 	}
-	else if (len=strlenByChar('-',buf),len)
+	else if (len=strlenByChar('-',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -155,7 +277,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1-ret2;
 	}
-	else if (len=strlenByChar('*',buf),len)
+	else if (len=strlenByChar('*',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -163,7 +285,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1*ret2;
 	}
-	else if (len=strlenByChar('/',buf),len)
+	else if (len=strlenByChar('/',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -171,7 +293,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1/ret2;
 	}
-	else if (len=strlenByChar('%',buf),len)
+	else if (len=strlenByChar('%',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -179,7 +301,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1%ret2;
 	}
-	else if (len=strlenByChar('|',buf),len)
+	else if (len=strlenByChar('|',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -187,7 +309,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1|ret2;
 	}
-	else if (len=strlenByChar('&',buf),len)
+	else if (len=strlenByChar('&',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -195,7 +317,7 @@ u32 alculation (char *buf)
 		ret2=checkCategory(par2);
 		return ret1&ret2;
 	}
-	else if (len=strlenByChar('^',buf),len)
+	else if (len=strlenByChar('^',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -213,6 +335,71 @@ u32 alculation (char *buf)
 
 
 
+
+
+//while循环
+u32 loopWhile (char *str)
+{
+	char *n_str=str+1;//去掉左括号
+	u32 ret=0;
+	char loop_par[32]={0};//循环参数
+	mymemcpy (loop_par,n_str,strlenByChar(')',n_str));//复制循环参数并去掉右括号
+	
+	n_str+=strlenByChar('{',n_str);//定位到左括号处
+	n_str[findPair('{','}',n_str)-1]=0;//去掉右大括号
+	n_str+=1;//去掉左大括号
+	while (checkCategory(loop_par))
+	{
+		ret=runCScript(n_str);//重复调用
+	}
+	return ret;
+}
+
+
+//if判断,不支持else if分支
+u32 judgeIf (char *str)
+{
+	char *n_str1=str+1;//去掉左括号
+	char *n_str2=str+1;
+	u16 str2_offset=0;
+	u32 ret=0;
+	char judge_par[32]={0};//判断参数
+	mymemcpy (judge_par,n_str1,strlenByChar(')',n_str1));//复制判断参数并去掉右括号
+	
+	n_str1+=strlenByChar('{',n_str1);//定位到左括号处
+	str2_offset=findPair('{','}',n_str1);
+	n_str1[str2_offset-1]=0;//去掉右大括号
+	n_str1+=1;//去掉左大括号
+	
+	n_str2+=str2_offset+2;
+	if (*n_str2)
+	{
+		n_str2+=strlenByChar('{',n_str2);//定位到左括号处
+		n_str2[findPair('{','}',n_str2)-1]=0;//去掉右大括号
+		n_str2+=1;//去掉左大括号
+	}
+	
+	if (checkCategory(judge_par))
+	{
+		ret=runCScript(n_str1);//重复调用
+	}
+	else if (*n_str2)
+	{
+		ret=runCScript(n_str2);//重复调用
+	}
+	return ret;
+	
+}
+
+
+
+
+
+
+
+
+
+
 //判定这个条目的类型并执行
 u32 checkCategory (char *str)
 {
@@ -225,22 +412,48 @@ u32 checkCategory (char *str)
 	{
 		str_par=str+6;
 		len=strlenByChar('=',str_par);
+		if (len>2000) len=0;
 		mymemcpy(name,str_par,len);
 		str_par+=len+1;//跳过等号
-		if (checkStrType(str_par)==strTypeStr)
+		u8 var_type=0;
+		if (str_type=checkStrType(str_par),str_type!=strTypeErr)				
 		{
-			addVariable(name,str_par,varTypeStr);//这里如果str指向的内存被释放，会出现bug
+			if (str_type==strTypeStr)
+			{
+				var_type=varTypeStr;
+			}
+			else if (str_type==strTypeNum)
+			{
+				var_type=varTypeNum;
+			}
+			else if (str_type==strTypeHex)
+			{
+				var_type=varTypeNum;
+			}
+			else if (str_type==strTypeFun)
+			{
+				var_type=varTypeNum;
+			}
+			else if (str_type==strTypeArry)
+			{
+				var_type=varTypeArry;
+			}
 		}
-		else if (checkStrType(str_par)==strTypeNum)
-		{
-			addVariable(name,(void *)(u32)str2num((u8 *)str_par),varTypeNum);
-		}
-		else if ((checkStrType(str_par)==strTypeHex))
-		{
-			addVariable(name,(void *)str2hex(str_par),varTypeNum);
-		}
+		addVariable(name,(void *)checkCategory(str_par),var_type);//这里如果str指向的内存被释放，会出现bug
+		
 		ret=getVariable(name);
-	}																								
+	}					
+	else if (samestr((u8*)"while ",(u8*)str))	
+	{
+		ret=loopWhile(str+6);
+	}
+	else if (samestr((u8*)"for ",(u8*)str))	
+	{
+	}
+	else if (samestr((u8*)"if ",(u8*)str))	
+	{
+		ret=judgeIf (str+3);
+	}
 																										//字符串数据类型
 	else if (str_type=checkStrType(str_par),str_type!=strTypeErr)							
 	{
@@ -258,6 +471,11 @@ u32 checkCategory (char *str)
 		}
 		else if (str_type==strTypeStr)
 		{
+			str_par=getStr(str_par);
+			u8 lenstr=strlen(str_par);
+			if (lenstr>32) lenstr=32;
+			mymemcpy(Arry,str_par,lenstr);
+			ret=(u32)Arry;
 		}
 		else if (str_type==strTypeVar)
 		{
@@ -267,12 +485,27 @@ u32 checkCategory (char *str)
 		{
 			ret=(u32)getChar(str_par);				
 		}
+		else if (str_type==strTypeArry)
+		{
+			str_par++;
+			str_par[strlen(str_par)-1]=0;
+			str2nums(Arry,str_par,',');
+			ret=(u32)Arry;
+		}
 	}
-	else if (len=strlenByChar('=',str_par),len)				//是个赋值语句
+	else if (len=strlenByChar('=',str_par),len<2000)				//是个赋值语句
 	{
-		mymemcpy(name,str_par,len);
-		cheVariable(name,(void *)checkCategory(str_par+len+1));
-		ret=getVariable(name);
+		if (str_par[len+1]=='=')			//下一个也是等号
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)==checkCategory(&str_par[len+2]));
+		}
+		else
+		{
+			mymemcpy(name,str_par,len);
+			cheVariable(name,(void *)checkCategory(str_par+len+1));
+			ret=getVariable(name);
+		}
 	}
 	else if (findVariable(str_par))													//显示这个变量
 	{
@@ -295,20 +528,36 @@ u32 checkCategory (char *str)
 /***************************************************
 
 			运行脚本，
+			此为不可重入的函数，不能在多个线程中同时运行脚本
 
 ***************************************************/
+static u8 NumberOfFloors=0;
+ 
 
 u32 runCScript (char *par)
 {
 	u32 ret=0;
 	char *n_par=mymalloc(1024);
 		if (n_par==0) return (u32)-1;
-	cScriptStack.stack_base=mymalloc(1024);
-	if (cScriptStack.stack_base==0)
+	if (NumberOfFloors==0)//第一次进入这里时申请内存
 	{
-		myfree(n_par);
-		return (u32)-2;
+		cScriptStack.stack_base=mymalloc(1024);
+		if (cScriptStack.stack_base==0)
+		{
+			myfree(n_par);
+			return (u32)-2;
+		}
+		Arry=mymalloc (32);
+		{
+			if (Arry==0)
+			{
+				myfree(n_par);
+				myfree(cScriptStack.stack_base);
+				return (u32)-3;
+			}
+		}
 	}
+	NumberOfFloors++;//增加一层调用
 	char *next_par=par;
 	do
 	{
@@ -316,11 +565,16 @@ u32 runCScript (char *par)
 		ret=checkCategory(n_par);//执行
 		
 	}while(*next_par);
-	
 	myfree(n_par);
-	myfree(cScriptStack.stack_base);
-	cScriptStack.stack_base=0;
-	cScriptStack.offset=0;
+	NumberOfFloors--;//减少一层调用
+	if (NumberOfFloors==0)		//最后一层调用时返回
+	{
+		myfree(cScriptStack.stack_base);
+		myfree(Arry);
+		Arry=0;
+		cScriptStack.stack_base=0;
+		cScriptStack.offset=0;
+	}
 	return ret;
 }
 
@@ -395,13 +649,25 @@ u32 runFunction (char *Parameters)
 		u8 strtype=0;
 		
 		//区分函数参数
+		u8 brackets=0;
 		while (*par)
 		{
-			if (*par==',')
+			if (*par=='(')
 			{
-				*par=0;
-				par_num++;
-				par_str[par_num-1]=par+1;
+				brackets++;
+			}
+			else if (*par==')')
+			{
+				brackets--;
+			}
+			if (brackets==0)//
+			{
+				if (*par==',')
+				{
+					*par=0;
+					par_num++;
+					par_str[par_num-1]=par+1;
+				}
 			}
 			par++;
 		}
@@ -414,38 +680,6 @@ u32 runFunction (char *Parameters)
 		//给每个参数赋值
 		for (u8 i=0;i<par_num;i++)
 		{
-			/*
-			strtype=checkStrType(par_str[i]);
-			if (strtype==strTypeChar)
-			{
-				par_value[i]=(u32)getChar( par_str[i]);				
-			}
-			else if (strtype==strTypeHex)
-			{
-				par_value[i]=str2hex(par_str[i]);
-			}
-			else if (strtype==strTypeNum)
-			{
-				par_value[i]=str2num((u8*)par_str[i]);
-			}
-			else if (strtype==strTypeStr)
-			{
-				par_value[i]=(u32)getStr( par_str[i]);
-			}
-			else if (strtype==strTypeFun)	
-			{
-				par_value[i]=(u32)runFunction( par_str[i]);
-			}
-			else if (strtype==strTypeVar)	
-			{
-				par_value[i]=(u32)getVariable(par_str[i]);
-			}
-			else
-			{
-				myfree(my_par);
-				return 0;				
-			}
-			*/
 			par_value[i]=checkCategory(par_str[i]);//校验数据类型
 		}
 	}
@@ -546,6 +780,17 @@ u8 checkStrType (char *str)
 		}
 		else
 			return strTypeFun; 
+	}
+	else if (*str=='(')
+	{
+		if (str[strlen(str)-1]==')')
+		{
+			return strTypeArry;
+		}
+		else
+		{
+			return strTypeErr;
+		}
 	}
 }
 

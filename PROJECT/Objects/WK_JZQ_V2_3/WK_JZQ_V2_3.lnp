@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 ".\objects\wk_jzq_v2_3\main.o"
+".\objects\wk_jzq_v2_3\fun_list.o"
 ".\objects\wk_jzq_v2_3\core_cm3.o"
 ".\objects\wk_jzq_v2_3\stm32f10x_it.o"
 ".\objects\wk_jzq_v2_3\system_stm32f10x.o"
@@ -68,6 +69,7 @@
 ".\objects\wk_jzq_v2_3\cmd.o"
 ".\objects\wk_jzq_v2_3\debug.o"
 ".\objects\wk_jzq_v2_3\ntp.o"
+".\objects\wk_jzq_v2_3\cscript.o"
 ".\objects\wk_jzq_v2_3\my_topmsg.o"
 ".\objects\wk_jzq_v2_3\my_lcd.o"
 ".\objects\wk_jzq_v2_3\my_rf.o"

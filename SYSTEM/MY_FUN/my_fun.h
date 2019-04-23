@@ -51,6 +51,13 @@ char getChar (char *str);
 u16 strlenByChar (char a,char *inbuff);
 	
 
+//找到第一次出现指定字符串的位置
+u16 findStr (char *str,char *tofind);
+
+//返回一对闭合字符串的长度
+u16 findPair (char left,char right,char *str);
+
+
 //复制数据
 void copy_data (u8 *from,u8 *to,u16 length);
 

@@ -18,3 +18,19 @@ void Relay_Init (void)
 
 
 
+
+
+
+void Relay_On (void)
+{
+	RELAY=0;
+}
+void Relay_Off (void)
+{
+	RELAY=1;
+}
+
+
+
+
+

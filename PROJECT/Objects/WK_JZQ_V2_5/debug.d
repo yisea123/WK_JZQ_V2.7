@@ -5,6 +5,7 @@
 .\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
 .\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+.\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\setjmp.h
 .\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include\stm32f10x.h
 .\objects\wk_jzq_v2_5\debug.o: ..\CORE\core_cm3.h
 .\objects\wk_jzq_v2_5\debug.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -72,4 +73,5 @@
 .\objects\wk_jzq_v2_5\debug.o: ..\SYSTEM\IWDG\iwdg.h
 .\objects\wk_jzq_v2_5\debug.o: ..\HARDWARE\KEY\key.h
 .\objects\wk_jzq_v2_5\debug.o: ..\USER\sysinfo.h
+.\objects\wk_jzq_v2_5\debug.o: ..\SOFTWARE\CScript\cScript.h
 .\objects\wk_jzq_v2_5\debug.o: ..\SOFTWARE\DEBUG\debug.h
