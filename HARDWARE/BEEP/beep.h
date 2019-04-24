@@ -19,6 +19,10 @@ typedef struct
 
 void BEEP_Init(void);
 
+
+void Beep_Set_Multiple (u32 multiple);
+
+
 void Beep_Play (jianpu *jianpu_);
 void Beep_End (void);
 

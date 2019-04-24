@@ -388,7 +388,7 @@ void dbg_help(void)
 	ptxt="\t输入\"devconfig\"获取设备配置信息\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
-	ptxt="\t输入\"fun [函数地址] [函数参数]\"执行指定地址的函数\r\n";
+	ptxt="\t输入\"fun [函数地址/函数名](函数参数)\"执行指定地址的函数\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
 	ptxt="\t输入\"getip [域名]\"获取域名对应的IP地址\r\n";
@@ -406,7 +406,7 @@ void dbg_help(void)
 	ptxt="\t输入\"mem [命令] [参数]\"设置或获取内存值\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 
-ptxt="\t输入\"ntp\"获取网络时间\r\n";
+	ptxt="\t输入\"ntp\"获取网络时间\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
 	ptxt="\t输入\"oche on\"开启回显\r\n\t输入\"oche off\"关闭回显\r\n";
@@ -415,6 +415,9 @@ ptxt="\t输入\"ntp\"获取网络时间\r\n";
 	ptxt="\t输入\"ping [IP]\"使集中器 Ping 以[IP]为地址的主机\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 	
+	ptxt="\t输入\"run [脚本]\"运行脚本文件\r\n";
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
 	ptxt="\t输入\"sysinfo\"获取板子信息\r\n";
 	udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 
@@ -568,7 +571,7 @@ void dbg_task (u8 *buff)
 	char *txtbuff=mymalloc(512);
 	if ( samestr((u8*)"getidle",buff))
 	{
-		sprintf(txtbuff,"运行异常的任务：%8X\r\n",getIdleTask());
+		sprintf(txtbuff,"运行异常的任务：%08X\r\n",getIdleTask());
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen(txtbuff));
 		for (u8 i=0;i<TASK_MAX_NUM;i++)
 		{
@@ -1171,11 +1174,22 @@ void dbg_fun (u8 *buff)
 	}
 	else
 	{
-		ptxt="请配合程序对应的map文件调试！\r\n";
+		ptxt="运行不当的函数或运行非函数地址会造成严重后果，请谨慎操作！\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 		
-		ptxt="运行不当的函数或运行非函数地址会造成严重后果，如非必要请不要操作！\r\n";
+		ptxt="调用本机未列出的函数请配合程序对应的map文件！\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+				
+		ptxt="本机支持的函数名列表：\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		for (u16 i=0;ptxt=getFunNameByIndex(i),ptxt;i++)
+		{
+			sprintf (txtbuff,"\t %s \r\n",ptxt);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+			
+		}
+		
 	}
 	myfree(txtbuff);
 }
@@ -1203,18 +1217,71 @@ void dbg_run (u8 *buff)
 	}
 	else
 	{
-		ptxt="请配合程序对应的map文件调试！\r\n";
+		ptxt="脚本支持的函数名与 fun 命令一致，支持函数地址调用\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 		
-		ptxt="运行不当的函数或运行非函数地址会造成严重后果，如非必要请不要操作！\r\n";
+		ptxt="运行不当的函数或运行非函数地址会造成严重后果，请谨慎操作！\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
+		ptxt="声明字符串变量支持的长度最大为31字节\r\n"
+				"声明数组变量支持最大长度为31字节\r\n"
+				"函数可以传递临时数组，最多支持一个\r\n"
+				"运算式不支持括号重设优先级\r\n"
+				"不支持i++，i--运算\r\n"
+				"脚本解析器同时只能由一个线程运行，\r\n"
+				"关键字：\r\n"
+				"	local 定义变量\r\n"
+				"	while while循环\r\n"
+				"	if else 条件分支\r\n"
+				"语法：\r\n"
+				"每个语句以分号;结尾\r\n"
+				"while 循环 if 分支 都要用大括号{}包括并在右括号后加分号\r\n"
+				"有else的陈if语句只在else分支的右括号加分号\r\n"
+				"变量声明必须有初始值，根据初始值来确定数据类型\r\n"
+				"声明字符串 local a=\"abcd\";\r\n"
+				"声明数组 local b=(1,2,3,4,5);\r\n"
+				"声明整数 local c=520;\r\n"
+				"声明用函数返回值作为初始值的整数 local d=fun();\r\n"
+				"while 循环\r\n"
+				"while (...)\r\n"
+				"{\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"};\r\n"
+				"if 条件语句\r\n"
+				"if (...)\r\n"
+				"{\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"}\r\n"
+				"else\r\n"
+				"{\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"};\r\n"
+				"或\r\n"
+				"if (...)\r\n"
+				"{\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"	...;\r\n"
+				"};\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+
 	}
 	myfree(txtbuff);
 }
 
 
-
-
+//dbg打印函数
+void dbg_print (char *str)
+{
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)str,strlen(str));	
+	udp_send(1,DBG_IP,DBG_PORT,(u8*)"\r\n",2);	
+}
 
 
 

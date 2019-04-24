@@ -15,9 +15,12 @@
 #include "ping.h"
 #include "power.h"
 #include "ntp.h"
+#include "debug.h"
 
 
 const fun_list FUN_LIST[]={
+	{(u32)strlen,"strlen"},
+
 	{(u32)delay_ms,"delay_ms"},
 	{(u32)sleep_ms,"sleep_ms"},
 	{(u32)delay_us,"delay_us"},
@@ -96,8 +99,9 @@ const fun_list FUN_LIST[]={
 	{(u32)Lcd_SetHandstate,"Lcd_SetHandstate"},
 	{(u32)getLcdCfgData,"getLcdCfgData"},
 	
-	{(u32)Load_song,"Load_song"},
 	{(u32)Beep_End,"Beep_End"},
+	{(u32)Beep_Set_Multiple,"Beep_Set_Multiple"},
+	{(u32)Load_song,"Load_song"},
 	{(u32)Load_song1,"Load_song1"},
 	{(u32)Load_song2,"Load_song2"},
 	{(u32)Load_song3,"Load_song3"},
@@ -173,26 +177,27 @@ const fun_list FUN_LIST[]={
 	{(u32)ntp_gettime,"ntp_gettime"},
 	
 	{(u32)SysPowerOff,"SysPowerOff"},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
-//	{(u32),""},
+	
+	{(u32)dbg_Interpreter,"dbg_Interpreter"},
+	{(u32)dbg_info,"dbg_info"},
+	{(u32)dbg_err,"dbg_err"},
+	{(u32)dbg_devconfig,"dbg_devconfig"},
+	{(u32)dbg_help,"dbg_help"},
+	{(u32)dbg_reboot,"dbg_reboot"},
+	{(u32)dbg_oche,"dbg_oche"},
+	{(u32)dbg_booting,"dbg_booting"},
+	{(u32)dbg_copydata,"dbg_copydata"},
+	{(u32)dbg_getip,"dbg_getip"},
+	{(u32)dbg_set,"dbg_set"},
+	{(u32)dbg_mqtt,"dbg_mqtt"},
+	{(u32)dbg_task,"dbg_task"},
+	{(u32)dbg_ping,"dbg_ping"},
+	{(u32)dbg_ntp,"dbg_ntp"},
+	{(u32)dbg_whos,"dbg_whos"},
+	{(u32)dbg_find,"dbg_find"},
+	{(u32)dbg_key,"dbg_key"},
+	{(u32)dbg_mem,"dbg_mem"},
+	{(u32)dbg_print,"dbg_print"},
 //	{(u32),""},
 //	{(u32),""},
 //	{(u32),""},

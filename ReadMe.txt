@@ -259,7 +259,24 @@
 	函数里只能使用1个局部数组，变量可以定义为数组
 	数组和字符的长度最大32字节
 	支持while () {}循环 ，if () {}else{}条件语句
-	
+2019.4.24
+	网络对时脚本
+	run local a=0;local b=1;local c=(202,112,10,60);
+	while (b)
+	{
+	a=ntp_gettime(2,c);
+	if (a) {b=0;};
+	};
+	local d=8*3600;
+	d=a+d;
+	d=d-0x83AA7E80;
+	RTC_SetTimeBySec(d);
+	RTC_GetTimeBySec();
+	解决hex格式字符串校验为错误字符串的bug
+	解决特定的if语句写法执行死机的bug
+	解决变量值获取异常的bug
+	添加dbg_print函数，用于脚本打印信息
+	蜂鸣器添加频率设置函数
 
 
 

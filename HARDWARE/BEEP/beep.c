@@ -1231,10 +1231,28 @@ void jianpu_end(jianpu *j)
 }
 
 
+
+static float Multiple=1;
+
+
+void Beep_Set_Multiple (u32 multiple)
+{
+	Multiple=multiple/10.0;
+}
+
+
 void Beep_Play (jianpu *jianpu_)
 {
 	u16 i=0;
 	u16 frequency[8]={0,2615/4,2935/4,3295/4,3490/4,3920/4,4400/4,4940/4};
+	
+	
+	for (u8 m=0;m<8;m++)
+	{
+		frequency[m]=frequency[m]*Multiple;
+	}
+	
+	
 	
 	if (BEEP_BUSY==1) return;//正在播放，返回
 	BEEP_BUSY=1;//设置为忙

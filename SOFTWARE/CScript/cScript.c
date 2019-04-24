@@ -109,8 +109,6 @@ char* findSemicolon (char *outbuff,char *inbuff)
 	}
 	
 	char *n_str=inbuff;
-	int n_len=0;
-	u8 brackets=0;//括号个数
 	if ((samestr((u8*)"while ",(u8*)n_str))||
 			(samestr((u8*)"for ",(u8*)n_str))
 			)
@@ -230,21 +228,21 @@ u32 findVariable (char *name)
 //获取变量
 u32 getVariable (char *name)
 {
-	cscript_variable a={0};
+	cscript_variable *a=0;
 	u16 offset=cScriptStack.offset;
 	u32 ret=0;
 	while(offset--)
 	{
-		mymemcpy(&a,&((cscript_variable*)cScriptStack.stack_base)[offset],sizeof(a));
-		if (samestr((u8*)name,(u8*)a.varName))
+		a=&((cscript_variable*)cScriptStack.stack_base)[offset];
+		if (samestr((u8*)name,(u8*)a->varName))
 		{
-			if (a.varType!=varTypeNum)
+			if (a->varType!=varTypeNum)
 			{
-				ret=(u32)a.arry;
+				ret=(u32)a->arry;
 			}
 			else
 			{
-				ret=(u32)a.varValue;
+				ret=(u32)a->varValue;
 			}
 			break;
 		}
@@ -369,9 +367,9 @@ u32 judgeIf (char *str)
 	n_str1+=strlenByChar('{',n_str1);//定位到左括号处
 	str2_offset=findPair('{','}',n_str1);
 	n_str1[str2_offset-1]=0;//去掉右大括号
+	n_str2=&n_str1[str2_offset];
 	n_str1+=1;//去掉左大括号
 	
-	n_str2+=str2_offset+2;
 	if (*n_str2)
 	{
 		n_str2+=strlenByChar('{',n_str2);//定位到左括号处
@@ -495,10 +493,24 @@ u32 checkCategory (char *str)
 	}
 	else if (len=strlenByChar('=',str_par),len<2000)				//是个赋值语句
 	{
-		if (str_par[len+1]=='=')			//下一个也是等号
+		if (str_par[len+1]=='=')			//下一个也是等号,判断相等
 		{
 			str_par[len]=0;
 			ret=(checkCategory(str_par)==checkCategory(&str_par[len+2]));
+		}
+		else
+		{
+			mymemcpy(name,str_par,len);
+			cheVariable(name,(void *)checkCategory(str_par+len+1));
+			ret=getVariable(name);
+		}
+	}
+	else if (len=strlenByChar('!',str_par),len<2000)				//是个赋值语句
+	{
+		if (str_par[len+1]=='=')			//下一个是等号,判断不相等
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)!=checkCategory(&str_par[len+2]));
 		}
 		else
 		{
@@ -646,7 +658,6 @@ u32 runFunction (char *Parameters)
 		if (*par)
 			par_num++;
 		par_str[par_num-1]=par;
-		u8 strtype=0;
 		
 		//区分函数参数
 		u8 brackets=0;
@@ -732,7 +743,7 @@ u8 checkStrType (char *str)
 	}
 	else if (samestr((u8 *)"0x",(u8*)str))
 	{
-		for (u8 i=0;*(str+i);i++)
+		for (u8 i=2;*(str+i);i++)
 		{
 			if ((*(str+i)<'0')||((*(str+i)>'9')&&(*(str+i)<'A'))||((*(str+i)>'F')&&(*(str+i)<'a'))
 				||(*(str+i)>'f'))
@@ -792,9 +803,19 @@ u8 checkStrType (char *str)
 			return strTypeErr;
 		}
 	}
+	return strTypeErr;
 }
 
 
+
+
+
+//通过索引得到函数名
+char *getFunNameByIndex (u16 index)
+{
+	extern fun_list FUN_LIST[]; 
+	return FUN_LIST[index].fun_name;
+}
 
 
 

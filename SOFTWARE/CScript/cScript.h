@@ -8,7 +8,6 @@
 	extern "C" {
 #endif
 
-
 		
 //变量类型结构体
 typedef struct
@@ -60,6 +59,10 @@ typedef struct
 	char *fun_name;
 }fun_list;
 
+
+
+
+
 //运行脚本
 u32 runCScript (char *par);
 
@@ -69,6 +72,8 @@ u32 findFunAddr (char *fun_name);
 //运行指定函数,最多可以设置4个参数
 u32 runFunction (char *Parameters);
 
+//通过索引得到函数名
+char *getFunNameByIndex (u16 index);
 
 
 #ifdef  __cplusplus

@@ -118,6 +118,9 @@ void dbg_fun (u8 *buff);
 //执行脚本
 void dbg_run (u8 *buff);
 
+//dbg打印函数
+void dbg_print (char *str);
+
 
 /**********执行指令****************/
 
