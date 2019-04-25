@@ -76,3 +76,4 @@
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\PING\ping.h
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\POWER\power.h
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\NTP\ntp.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\DEBUG\debug.h

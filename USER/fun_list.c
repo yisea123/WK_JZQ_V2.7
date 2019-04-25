@@ -28,6 +28,8 @@ const fun_list FUN_LIST[]={
 	
 	{(u32)RTC_SetTimeBySec,"RTC_SetTimeBySec"},
 	{(u32)RTC_GetTimeBySec,"RTC_GetTimeBySec"},
+	{(u32)RTC_Get_Week,"RTC_Get_Week"},
+	{(u32)RTC_Set,"RTC_Set"},
 	
 	{(u32)STMFLASH_Write,"STMFLASH_Write"},
 	{(u32)STMFLASH_Read,"STMFLASH_Read"},
@@ -78,6 +80,7 @@ const fun_list FUN_LIST[]={
 	{(u32)setServerIP,"setServerIP"},
 	{(u32)setServerPort,"setServerPort"},
 	{(u32)setGatewayIP,"setGatewayIP"},
+	{(u32)setSubMask,"setSubMask"},
 	{(u32)addDevAddr,"addDevAddr"},
 	{(u32)delDevAddr,"delDevAddr"},
 	{(u32)clearDev,"clearDev"},

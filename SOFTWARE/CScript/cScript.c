@@ -593,7 +593,6 @@ u32 runCScript (char *par)
 
 
 
-
 //运行指定函数,最多可以设置4个参数
 u32 runFunction (char *Parameters)
 {
@@ -603,8 +602,8 @@ u32 runFunction (char *Parameters)
 	
 	
 	
-	u32 par_value[4]={0};
-	char *(par_str[4])={0};
+	u32 par_value[8]={0};
+	char *(par_str[8])={0};
 	u8 par_num=0;
 	char *my_par=mymalloc(256);
 	
@@ -682,7 +681,7 @@ u32 runFunction (char *Parameters)
 			}
 			par++;
 		}
-		if (par_num>4) 
+		if (par_num>8) 
 		{
 			myfree(my_par);
 			return 0;
@@ -695,7 +694,10 @@ u32 runFunction (char *Parameters)
 		}
 	}
 	
-	ret=BlxExternFun(par_value[0],par_value[1],par_value[2],par_value[3],fun_addr|1);
+	//ret=BlxExternFun(par_value[0],par_value[1],par_value[2],par_value[3],fun_addr|1);
+	ret=BlxExternFun(par_value[0],par_value[1],par_value[2],par_value[3],
+		par_value[4],par_value[5],par_value[6],par_value[7],
+		fun_addr|1);
 	
 	myfree(my_par);
 	return ret;

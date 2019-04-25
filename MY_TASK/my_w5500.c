@@ -8,6 +8,7 @@
 #include "ntp.h"
 #include "power.h"
 #include "hard_irq.h"
+#include "timer.h"
 #include "my_w5500.h"
 
 
@@ -42,8 +43,10 @@ u8 DBG_INTER_STATE=0;
 
 
 
-
-
+//检查服务器数据
+void check_server_data (void);
+static u32 W5500_TIMER=0;
+void w5500_rest_timer_irq (void);
 
 
 
@@ -60,6 +63,9 @@ void my_w5500 (void * t)
 	SOCKET1_SetFocus(OSPrioHighRdy);
 	SOCKET2_SetFocus(OSPrioHighRdy);
 	
+	//添加定时器
+	addTimerIrq10ms(w5500_rest_timer_irq);
+	
 	void sys_test (void);
 	sys_test();
 	
@@ -71,6 +77,10 @@ void my_w5500 (void * t)
 	while(1)
 	{
 		delay_ms(100);
+		
+		//30分钟没有收到服务器消息则重启
+		check_server_data();		
+		
 		if (net_get_phycstate()==0) 
 		{
 			rest_time_w5500++;
@@ -91,13 +101,19 @@ void my_w5500 (void * t)
 		if ((net_check_parameters()==0)||//本机ip地址不合法
 			(checkNetstate(CONFLICT)))//ip冲突
 		{
-			if (dhcp_retry()==TRUE)//自动获取IP地址
+			//if (getDhcpState())		//自动dhcp开
 			{
-				DBG_INTER_STATE=1;
+				if (dhcp_retry()==TRUE)//自动获取IP地址
+				{
+					DBG_INTER_STATE=1;
+				}
+				else
+				{
+					DBG_INTER_STATE=0;
+				}				
 			}
-			else
+			//else
 			{
-				DBG_INTER_STATE=0;
 			}
 		}
 		my_debug ( );		//调试信息输出
@@ -123,6 +139,30 @@ void sys_test (void)
 	myfree(buff);
 }
 
+
+
+//检查服务器数据
+void check_server_data (void)
+{
+	if (checkSocketStateN(0,IR_RECV))
+	{
+		W5500_TIMER=0;
+	}
+	else
+	{
+		if (W5500_TIMER>100*60*30)
+		{
+			SysPowerOff();
+		}
+	}
+}
+
+
+//网络断开计时
+void w5500_rest_timer_irq (void)
+{
+	W5500_TIMER++;
+}
 
 
 
@@ -164,9 +204,13 @@ void wk_client(void)
 				if (check_gateway_fail_time>5)
 				{
 					DBG_INTER_STATE=0;
-					if (dhcp_retry()==TRUE)//自动获取IP地址
+					
+					//if (getDhcpState())
 					{
-						check_gateway_fail_time=0;
+						if (dhcp_retry()==TRUE)//自动获取IP地址
+						{
+							check_gateway_fail_time=0;
+						}
 					}
 				}
 			}

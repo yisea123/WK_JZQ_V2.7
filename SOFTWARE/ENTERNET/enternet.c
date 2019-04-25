@@ -335,11 +335,11 @@ u8 net_check_parameters(void)
 	{
 		return 0;
 	}
-	if (!(IP_Addr[0]||IP_Addr[1]||IP_Addr[2]||IP_Addr[3]) )
+	if (!(IP_Addr[0]&&IP_Addr[1]&&IP_Addr[2]&&IP_Addr[3]))
 	{
 		return 0;
 	}
-	if (!(Gateway_IP[0]||Gateway_IP[1]||Gateway_IP[2]||Gateway_IP[3]) )
+	if (!(Gateway_IP[0]&&Gateway_IP[1]&&Gateway_IP[2]&&Gateway_IP[3])) 
 	{
 		return 0;
 	}
@@ -363,10 +363,6 @@ void net_test(void)
 	extern u16 SERVER_PORT;
 	u16 *Get_MyIP(void);
 	u16 *ipconfig=Get_MyIP();
-	Sub_Mask[0]=255;
-	Sub_Mask[1]=255;
-	Sub_Mask[2]=255;
-	Sub_Mask[3]=0;
 	
 	IP_Addr[0]=*ipconfig++;
 	IP_Addr[1]=*ipconfig++;
@@ -397,6 +393,12 @@ void net_test(void)
 	Gateway_IP[1]=*ipconfig++;
 	Gateway_IP[2]=*ipconfig++;
 	Gateway_IP[3]=*ipconfig++;
+	
+	Sub_Mask[0]=*ipconfig++;
+	Sub_Mask[1]=*ipconfig++;
+	Sub_Mask[2]=*ipconfig++;
+	Sub_Mask[3]=*ipconfig++;
+
 }
 
 

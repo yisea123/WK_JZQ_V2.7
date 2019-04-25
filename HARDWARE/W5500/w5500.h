@@ -359,6 +359,9 @@ void delSocketState (u8 socket,u8 states);
 ************************************************/
 u8 checkSocketState (u8 socket,u8 state);
 
+//查询网络是否有指定状态，有则返回1,，无返回0
+u8 checkSocketStateN (u8 socket,u8 state);
+
 //查询网络状况
 u8 checkNetstate (u8 state);
 

@@ -694,6 +694,15 @@ void dbg_set (u8 *chars)
 			sprintf (txtbuff,"已设置网关IP地址为：%d.%d.%d.%d\r\n",getip[0],getip[1],getip[2],getip[3]);
 			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
 		}
+		else if (samestr((u8*)"submask ",chars))
+		{
+			u8 getip[4]={0};
+			getnumfstr(getip,chars+8,'.',4);
+			setSubMask (getip);
+			Save_Config();
+			sprintf (txtbuff,"已设置子网掩码为：%d.%d.%d.%d\r\n",getip[0],getip[1],getip[2],getip[3]);
+			udp_send(1,DBG_IP,DBG_PORT,(u8*)txtbuff,strlen((const char *)txtbuff));
+		}
 		else if (samestr((u8*)"dbgport ",chars))
 		{
 			u16 port=0;
@@ -824,6 +833,9 @@ void dbg_set (u8 *chars)
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 
 		ptxt="\t输入\"set gatewayip [IP]\"修改集中器的网关IP地址\r\n";
+		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
+		
+		ptxt="\t输入\"set submask [mask]\"修改集中器的子网掩码\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 		
 		ptxt="\t输入\"set dbgport [端口]\"修改集中器的调试端口\r\n";
@@ -1223,52 +1235,7 @@ void dbg_run (u8 *buff)
 		ptxt="运行不当的函数或运行非函数地址会造成严重后果，请谨慎操作！\r\n";
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 
-		ptxt="声明字符串变量支持的长度最大为31字节\r\n"
-				"声明数组变量支持最大长度为31字节\r\n"
-				"函数可以传递临时数组，最多支持一个\r\n"
-				"运算式不支持括号重设优先级\r\n"
-				"不支持i++，i--运算\r\n"
-				"脚本解析器同时只能由一个线程运行，\r\n"
-				"关键字：\r\n"
-				"	local 定义变量\r\n"
-				"	while while循环\r\n"
-				"	if else 条件分支\r\n"
-				"语法：\r\n"
-				"每个语句以分号;结尾\r\n"
-				"while 循环 if 分支 都要用大括号{}包括并在右括号后加分号\r\n"
-				"有else的陈if语句只在else分支的右括号加分号\r\n"
-				"变量声明必须有初始值，根据初始值来确定数据类型\r\n"
-				"声明字符串 local a=\"abcd\";\r\n"
-				"声明数组 local b=(1,2,3,4,5);\r\n"
-				"声明整数 local c=520;\r\n"
-				"声明用函数返回值作为初始值的整数 local d=fun();\r\n"
-				"while 循环\r\n"
-				"while (...)\r\n"
-				"{\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"};\r\n"
-				"if 条件语句\r\n"
-				"if (...)\r\n"
-				"{\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"}\r\n"
-				"else\r\n"
-				"{\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"};\r\n"
-				"或\r\n"
-				"if (...)\r\n"
-				"{\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"	...;\r\n"
-				"};\r\n";
+		ptxt=cScriptHelpTxt ;
 		udp_send(1,DBG_IP,DBG_PORT,(u8*)ptxt,strlen((const char *)ptxt));
 
 	}

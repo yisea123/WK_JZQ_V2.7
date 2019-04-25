@@ -274,6 +274,8 @@ void key_deal (void)
 		}
 		else if (key[5]==PRESS_LONG)//按键6长安
 		{
+			setDhcpState(1);//允许自动dhcp
+			Save_Config();
 		}
 
 }

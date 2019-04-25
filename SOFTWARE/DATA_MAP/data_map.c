@@ -268,12 +268,25 @@ u8 setServerPort (u16 port )
 u8 setGatewayIP (u8 *ip)
 {
 	//网关IP
-	Get_MyIP()[12]=192;
-	Get_MyIP()[13]=168;
-	Get_MyIP()[14]=2;
-	Get_MyIP()[15]=1;
+	Get_MyIP()[12]=ip[0];
+	Get_MyIP()[13]=ip[1];
+	Get_MyIP()[14]=ip[2];
+	Get_MyIP()[15]=ip[3];
 	return 0;
 }
+
+
+//设置子网掩码
+u8 setSubMask (u8 *mask)
+{
+	//网关IP
+	Get_MyIP()[16]=mask[0];
+	Get_MyIP()[17]=mask[1];
+	Get_MyIP()[18]=mask[2];
+	Get_MyIP()[19]=mask[3];
+	return 0;
+}
+
 
 
 

@@ -93,7 +93,8 @@ OS_CPU_SR GetZeroNum(OS_CPU_SR t);//计算前导零个数
 OS_CPU_SR GetRBIT16(OS_CPU_SR t);//16位的按位反转
 
 //跳转至指定地址
-OS_CPU_SR BlxExternFun (u32 a,u32 b,u32 c,u32 d,u32 addr);
+//OS_CPU_SR BlxExternFun (u32 a,u32 b,u32 c,u32 d,u32 addr);
+OS_CPU_SR BlxExternFun (u32 a,u32 b,u32 c,u32 d,u32 e,u32 f,u32 g,u32 h,u32 addr);
 
 
 

@@ -150,6 +150,9 @@ u8 setServerPort (u16 port );
 //设置网关IP地址
 u8 setGatewayIP (u8 *ip);
 
+//设置子网掩码
+u8 setSubMask (u8 *mask);
+
 //添加设备0,成功，1，失败
 u8 addDevAddr ( u8 dev,u16 addr );
 

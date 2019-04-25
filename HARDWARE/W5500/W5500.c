@@ -939,6 +939,19 @@ u8 checkNetstate (u8 state)
 
 }
 
+//查询网络是否有指定状态，有则返回1,，无返回0
+u8 checkSocketStateN (u8 socket,u8 state)
+{
+	if (NET_SOCKET_STATE[socket]&state)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 
 
 

@@ -26,24 +26,34 @@ __align(8) u32 my_iottack[256];
 __align(8) u32 my_idletack[64];
 
 
-jmp_buf j;
+
+
+
+u32 bx_test (u32 a,u32 b,u32 c,u32 d,u32 e,u32 f,u32 g,u32 h)
+{
+	u32 i=0;
+	i=a+b+c+d+e+f+g+h;
+	return i;
+}
+
+
+
+
 
 
 int main(void)
 {	
 	
 	SysPowerOn();
-//	CreateTask (my_topmsg, 			0, &my_keytack[127],				0)	;					
-//	CreateTask (my_lcd, 				0, &my_lcdtack[127],			2)	;	 				
-//	CreateTask (my_rf_loop, 		0, &rf_looptack[255],			3)	;	 				
-//	CreateTask (my_light, 			0, &my_lighttack[127],		4)	;		
-////	CreateTask (my_rf_hand, 		0, &my_rf_handtack[255],	5)	;		
-////	CreateTask (my_rf_deal, 		0, &my_rf_dealtack[63],		6)	;		
-//	CreateTask (my_w5500, 			0, &my_w5500tack[255],		7)	;		
-//	CreateTask (my_autocontrol, 0, &my_autotack[127],			8)	;		
-////	CreateTask (my_cfg, 				0, &my_cfgtack[127],			9)	;		
-//	CreateTask (my_iot, 				0, &my_iottack[255],		 10)	;		
-//	CreateTask (idle_task, 			0, &my_idletack[63],		 31)	;		
+	
+	
+	
+	bx_test(1,2,3,4,5,6,7,8);
+	
+	
+	
+	
+	
 	
 	CreateTaskN (my_topmsg, 			0, my_keytack,		128,				0)	;					
 	CreateTaskN (my_lcd, 					0, my_lcdtack,		128,				2)	;	 				

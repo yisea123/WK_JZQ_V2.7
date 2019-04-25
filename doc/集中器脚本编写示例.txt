@@ -1,4 +1,4 @@
-
+﻿
 集中器支持运行自定义脚本
 
 
@@ -59,13 +59,29 @@
 
 网络对时脚本
 run local a=0;local b=1;local c=(202,112,10,60);
-	while (b)
-	{
+	dns_query(2,"cn.pool.ntp.org",c);
 	a=ntp_gettime(2,c);
-	if (a) {b=0;};
-	};
+	if (a){
 	local d=8*3600;
 	d=a+d;
 	d=d-0x83AA7E80;
-	RTC_SetTimeBySec(d);
-	RTC_GetTimeBySec();
+	RTC_SetTimeBySec(d);};
+	RTC_GetTimeBySec();a;
+
+
+设置网络参数脚本
+run local nativeip=(10,12,13,14);
+	local getwayip=(10,12,13,1);
+	local submask=(255,0,0,0);
+	setNativeIP(nativeip);
+	setGatewayIP(getwayip);
+	setSubMask(submask);
+	Save_Config();
+	dbg_print("已设置，设备自动重启");
+	SysPowerOff();
+	
+	
+	
+	
+	
+	
