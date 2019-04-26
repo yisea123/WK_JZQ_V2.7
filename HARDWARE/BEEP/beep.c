@@ -40,6 +40,8 @@ void BEEP_Init(void)
 
 
 
+
+
 //	×°ÔØÒ»¸ö¸èÇú
 void Load_song(void)
 {
@@ -1336,6 +1338,43 @@ void Beep_Run(void)
 	}
 }
 
+
+
+
+
+static u16 BeepOffTime=0;
+
+
+void Beep_AutoOff_IRQ (void)
+{
+	if (BeepOffTime==0)
+	{
+		BEEP=0;
+		delTimerIrq10ms(Beep_AutoOff_IRQ);
+	}
+	BeepOffTime--;
+}
+
+
+
+
+
+
+
+
+void Beep_On (u16 _10ms)
+{
+	BEEP=1;
+	BeepOffTime=_10ms;
+	addTimerIrq10ms(Beep_AutoOff_IRQ);
+}
+
+
+void Beep_Off (void)
+{
+	BEEP=0;
+	delTimerIrq10ms(Beep_AutoOff_IRQ);
+}
 
 
 

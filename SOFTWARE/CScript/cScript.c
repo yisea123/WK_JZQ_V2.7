@@ -259,7 +259,31 @@ u32 alculation (char *buf)
 	u32 ret2=0;
 	char par1[16]={0};
 	char par2[16]={0};
-	if (len=strlenByChar('+',buf),len<2000)
+	if (len=strlenByChar('|',buf),len<2000)
+	{
+		mymemcpy(par1,buf,len);
+		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
+		ret1=checkCategory(par1);
+		ret2=checkCategory(par2);
+		return ret1|ret2;
+	}
+	else if (len=strlenByChar('&',buf),len<2000)
+	{
+		mymemcpy(par1,buf,len);
+		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
+		ret1=checkCategory(par1);
+		ret2=checkCategory(par2);
+		return ret1&ret2;
+	}
+	else if (len=strlenByChar('^',buf),len<2000)
+	{
+		mymemcpy(par1,buf,len);
+		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
+		ret1=checkCategory(par1);
+		ret2=checkCategory(par2);
+		return ret1^ret2;
+	}
+	else if (len=strlenByChar('+',buf),len<2000)
 	{
 		mymemcpy(par1,buf,len);
 		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
@@ -298,30 +322,6 @@ u32 alculation (char *buf)
 		ret1=checkCategory(par1);
 		ret2=checkCategory(par2);
 		return ret1%ret2;
-	}
-	else if (len=strlenByChar('|',buf),len<2000)
-	{
-		mymemcpy(par1,buf,len);
-		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
-		ret1=checkCategory(par1);
-		ret2=checkCategory(par2);
-		return ret1|ret2;
-	}
-	else if (len=strlenByChar('&',buf),len<2000)
-	{
-		mymemcpy(par1,buf,len);
-		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
-		ret1=checkCategory(par1);
-		ret2=checkCategory(par2);
-		return ret1&ret2;
-	}
-	else if (len=strlenByChar('^',buf),len<2000)
-	{
-		mymemcpy(par1,buf,len);
-		mymemcpy(par2,buf+len+1,strlen(buf+len+1));
-		ret1=checkCategory(par1);
-		ret2=checkCategory(par2);
-		return ret1^ret2;
 	}
 	else
 	{
@@ -473,6 +473,7 @@ u32 checkCategory (char *str)
 			u8 lenstr=strlen(str_par);
 			if (lenstr>32) lenstr=32;
 			mymemcpy(Arry,str_par,lenstr);
+			Arry[lenstr]=0;//½Ø¶Ï×Ö·û´®
 			ret=(u32)Arry;
 		}
 		else if (str_type==strTypeVar)

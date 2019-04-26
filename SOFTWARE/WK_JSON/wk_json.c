@@ -282,16 +282,27 @@ u8 send_json_adddevice (u8 * msg)
 		char *out;
 		cJSON *root;
 		root = cJSON_CreateObject();
-		char *strbuff=mymalloc(64);
+		
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
+		
 		cJSON_AddNumberToObject(root,"devNum",cfg[i]);//设备编号
 		cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());//集中器编号
 		cJSON_AddStringToObject(root,"type","wk");//消息类型温控
 		cJSON_AddStringToObject(root,"devType",(const char *)json_get_devicname(cfg[i+1]&0x00ff));//设备类型
 		cJSON_AddStringToObject(root,"cmd","online");//发送的是上线消息
 
-		sprintf (strbuff,"%d",(cfg[i]<<6)+i);//利用集中器id的唯一性产生唯一的确认编码
+		//sprintf (strbuff,"%d",(cfg[i]<<6)+i);//利用集中器id的唯一性产生唯一的确认编码
+		
+		char *strbuff=mymalloc(64);
+		srand(RTC_GetTimeBySec());
+		sprintf (strbuff,"%d",rand());//产生随机数
 		cJSON_AddStringToObject(root,"cmdNum",strbuff);//发送消息身份确认编码
-
+		myfree(strbuff);
+		
 		if (cfg[i+1]&0x0800)//离线
 		{
 			cJSON_AddStringToObject(root,"devState","offline");//		
@@ -358,7 +369,7 @@ u8 send_json_adddevice (u8 * msg)
 			{
 			}
 		}
-		myfree(strbuff);//无论收没收到上位机返回，都释放内存
+		//myfree(strbuff);//无论收没收到上位机返回，都释放内存
 		k++;
 		if (k>10)
 		{
@@ -404,6 +415,12 @@ void json_return (u8 deviceid,const char * cmdNum,const char *errType)
   cJSON *root,*js_collect;
   root = cJSON_CreateObject();
 	
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
+
 	cJSON_AddNumberToObject(root,"devNum",deviceid);//设备编号
 	cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());//集中器编号
 	cJSON_AddStringToObject(root,"type","wk");
@@ -656,6 +673,12 @@ void json_version (cJSON *root)
   cJSON *root1,*js_collect1;
   root1 = cJSON_CreateObject();
 	
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root1,"devSN",sn_str);
+		myfree(sn_str);
+
 	cJSON_AddNumberToObject(root1,"centerId",Get_MyAddr());
 	cJSON_AddStringToObject(root1,"cmdNum",cJSON_GetObjectItem(root, "cmdNum")->valuestring);
 	cJSON_AddStringToObject(root1,"errorType","0");
@@ -829,13 +852,25 @@ u8 send_json_cj (u8 *msg)
 		id=data->cjqId;
 	}
 	
-
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
+		
 		cJSON_AddNumberToObject(root,"devNum",id);
-		cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());
+		cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());	
 	  cJSON_AddStringToObject(root,"type","wk");
 	  cJSON_AddStringToObject(root,"devType","cjq");//设备类型采集器
 	  cJSON_AddStringToObject(root,"cmd","swap");//数据交换
 
+	  char *strbuff=mymalloc(64);
+		srand(RTC_GetTimeBySec());
+		sprintf (strbuff,"%d",rand());//产生随机数
+		cJSON_AddStringToObject(root,"cmdNum",strbuff);//发送消息身份确认编码
+		myfree(strbuff);
+	
+	
 		if (Lcd_GetHandstate()==0)
 		{
 			cJSON_AddStringToObject(root,"mode","auto");
@@ -900,12 +935,26 @@ u8 send_json_kz (u8 *msg)
 	u16 id;
 	id=(msg[3]<<8)|msg[4];
 
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
 
 	cJSON_AddNumberToObject(root,"devNum",id);
 	cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());
 	cJSON_AddStringToObject(root,"type","wk");
 	cJSON_AddStringToObject(root,"devType",(char *)json_get_devicname(msg[1]));//设备类型采集器
 	cJSON_AddStringToObject(root,"cmd","swap");//数据交换
+	
+	
+		char *strbuff=mymalloc(64);
+		srand(RTC_GetTimeBySec());
+		sprintf (strbuff,"%d",rand());//产生随机数
+		cJSON_AddStringToObject(root,"cmdNum",strbuff);//发送消息身份确认编码
+		myfree(strbuff);
+
+	
 	
 		if (msg[2])//离线
 		{
@@ -992,6 +1041,11 @@ u8 send_json_warn (u8 *msg)
 	u16 id;
 	id=(msg[3]<<8)|msg[4];
 
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
 
 	
 	  cJSON_AddNumberToObject(root,"devNum",id);//报警设备地址
@@ -1001,11 +1055,13 @@ u8 send_json_warn (u8 *msg)
 		cJSON_AddStringToObject(root,"cmd","alarm");
 	
 	
-		char *buff=mymalloc(64);//消息唯一标识
-		sprintf(buff,"%d",CMD_NUM); 
-		cJSON_AddStringToObject(root,"cmdNum",buff);
-	
-		if (Lcd_GetHandstate())
+	  char *strbuff=mymalloc(64);
+		srand(RTC_GetTimeBySec());
+		sprintf (strbuff,"%d",rand());//产生随机数
+		cJSON_AddStringToObject(root,"cmdNum",strbuff);//发送消息身份确认编码
+		myfree(strbuff);
+
+if (Lcd_GetHandstate())
 		{
 			cJSON_AddStringToObject(root,"mode","hand");
 		}
@@ -1025,7 +1081,6 @@ u8 send_json_warn (u8 *msg)
 	out=cJSON_PrintUnformatted(root);	cJSON_Delete(root);
 	server_send_data((u8*)out);//指定Socket(0~7)发送数据处理,端口0发送23字节数据
 	myfree(out);
-	myfree(buff);
 
 //	delay_ms(500);	
 //	if (NET_S0_STATE&IR_RECV)//如果有数据等待接收
@@ -1065,6 +1120,12 @@ u8  send_json_limit (u8 *msg)
 	char *out;
   cJSON *root,*js_collect;
   root = cJSON_CreateObject();
+	
+		char *sn_str=mymalloc(64);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+	  cJSON_AddStringToObject(root,"devSN",sn_str);
+		myfree(sn_str);
 
 	cJSON_AddNumberToObject(root,"devNum",Get_MyAddr());
 	cJSON_AddNumberToObject(root,"centerNum",Get_MyAddr());
@@ -1079,10 +1140,12 @@ u8  send_json_limit (u8 *msg)
 	{
 		cJSON_AddStringToObject(root,"mode","auto");
 	}
-	char *buff=mymalloc(64);//消息唯一标识
-	sprintf(buff,"%d",CMD_NUM); 
-	cJSON_AddStringToObject(root,"cmdNum",buff);
-	cJSON_AddStringToObject(root,"devState","on");
+	
+	  char *strbuff=mymalloc(64);
+		srand(RTC_GetTimeBySec());
+		sprintf (strbuff,"%d",rand());//产生随机数
+		cJSON_AddStringToObject(root,"cmdNum",strbuff);//发送消息身份确认编码
+		myfree(strbuff);
 	
 	
 	cJSON_AddItemToObject(root,"data", js_collect = cJSON_CreateObject());
@@ -1101,7 +1164,6 @@ u8  send_json_limit (u8 *msg)
 	
 	
 		myfree(out);
-		myfree(buff);
 
 
 //	delay_ms(500);	

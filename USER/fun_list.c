@@ -102,6 +102,8 @@ const fun_list FUN_LIST[]={
 	{(u32)Lcd_SetHandstate,"Lcd_SetHandstate"},
 	{(u32)getLcdCfgData,"getLcdCfgData"},
 	
+	{(u32)Beep_On,"Beep_On"},
+	{(u32)Beep_Off,"Beep_Off"},
 	{(u32)Beep_End,"Beep_End"},
 	{(u32)Beep_Set_Multiple,"Beep_Set_Multiple"},
 	{(u32)Load_song,"Load_song"},

@@ -39,6 +39,10 @@ void Load_down(void);
 
 
 
+void Beep_On (u16 _10ms);
+
+void Beep_Off (void);
+
 
 #ifdef  __cplusplus
 	}
