@@ -25,7 +25,12 @@ u8 addSoftTimerIrq10ms (void (*irq)(void));
 		
 //移除指定软件定时器
 u8 delSoftTimerIrq10ms (void (*irq)(void));
-		
+
+//加载默认配置信息
+void load_test_cfg(void);
+
+
+
 /***************供外部任务调用的API End******************/
 		
 		

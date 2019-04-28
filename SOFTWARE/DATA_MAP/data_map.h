@@ -40,6 +40,7 @@ typedef union
 typedef struct
 {
 	u16 cjqId;
+	u16 state;
 	float temp;		//单位℃
 	float humi;		//单位％
 	float tvoc;		//单位ppm
@@ -47,6 +48,18 @@ typedef struct
 	float pm2_5;	//单位mg/m3
 } cjq_data;
 
+
+
+//网络配置相关
+typedef struct
+{
+	u8 nativeIp[4];
+	u16 nativePort;
+	u8 serverIp[4];
+	u16 serverPort;
+	u8 getwayIp[4];
+	u8 subMask[4];
+}int_addr_struct;
 
 
 
@@ -125,8 +138,8 @@ void Set_Device(u8 * data,u16 len);
 //设置ip地址
 void Set_MyIP (u8 *data);
 
-//获取ip地址
-u16 * Get_MyIP (void);
+//获取ip地址结构体
+int_addr_struct * Get_MyIP (void);
 
 //设置本机无线信道
 u8 Set_MyChanel (u8 chanel);

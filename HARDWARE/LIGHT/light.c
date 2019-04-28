@@ -1351,26 +1351,26 @@ void key_around (u8 key_num,u8 state)
 	switch (key_num)
 	{
 		case 1:
-			data[0]&=0x80;
-			data[1]&=0x01;
+			data[0]&=~0x7f;
+			data[1]&=~0x80;
 			data[0]|=tt>>1;
 			data[1]|=tt<<7;
 			break;
 		case 2:
-			data[0]&=0xfe;
-			data[1]&=0x01;
+			data[0]&=~0x80;
+			data[1]&=~0x7f;
 			data[0]|=tt<<7;
 			data[1]|=tt>>1;
 			break;
 		case 3:
-			data[2]&=0xc0;
-			data[3]&=0x03;
+			data[2]&=~0x3f;
+			data[3]&=~0xc0;
 			data[2]|=tt>>2;
 			data[3]|=tt<<6;
 			break;
 		case 4:
-			data[2]&=0x03;
-			data[3]&=0xc0;
+			data[2]&=~0xc0;
+			data[3]&=~0x3f;
 			data[2]|=tt<<6;
 			data[3]|=tt>>2;
 			break;

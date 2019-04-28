@@ -230,12 +230,7 @@ static u8 KEYS[6];
 
 void Key_Init (void)
 {
-#if USE_EXIT==1
-	EXTI_InitTypeDef EXTI_InitStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
-#endif
 
-	GPIO_InitTypeDef GPIO_InitStructure;
 	//初始化KEY0-->GPIOA.13,KEY1-->GPIOA.15  上拉输入
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);//使能PORTA,PORTE时钟
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  
@@ -269,7 +264,7 @@ void KEY_IRQHandler(void)   //
 {
 	static u8 key_time[6];
 	static u8 key_valid[6];
-	u8 keys=0xff;//按键键值，0xff为无按键按下
+//	u8 keys=0xff;//按键键值，0xff为无按键按下
 //	keys=GPIO_ReadInputData(GPIOC)&0x0f;//读取按键信息
 //KEY1																																				
 		if (KEY1==0)

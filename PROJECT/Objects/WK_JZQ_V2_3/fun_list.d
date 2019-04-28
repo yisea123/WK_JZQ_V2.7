@@ -77,3 +77,11 @@
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\POWER\power.h
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\NTP\ntp.h
 .\objects\wk_jzq_v2_3\fun_list.o: ..\SOFTWARE\DEBUG\debug.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_topmsg.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_lcd.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_rf.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_autocontrol.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_light.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_cfg.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_idle.h
+.\objects\wk_jzq_v2_3\fun_list.o: ..\MY_TASK\my_messeg.h

@@ -29,15 +29,6 @@ __align(8) u32 my_idletack[64];
 
 
 
-u32 bx_test (u32 a,u32 b,u32 c,u32 d,u32 e,u32 f,u32 g,u32 h)
-{
-	u32 i=0;
-	i=a+b+c+d+e+f+g+h;
-	return i;
-}
-
-
-
 
 
 
@@ -45,13 +36,6 @@ int main(void)
 {	
 	
 	SysPowerOn();
-	
-	
-	
-	bx_test(1,2,3,4,5,6,7,8);
-	
-	
-	
 	
 	
 	

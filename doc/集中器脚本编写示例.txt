@@ -80,8 +80,58 @@ run local nativeip=(10,12,13,14);
 	dbg_print("已设置，设备自动重启");
 	SysPowerOff();
 	
+关闭自动控制，打开环绕灯脚本
+run TaskPend(8);
+	send_messeg(4,(3,4,2,200,100,50));
 	
-	
+V2.5版本环绕灯按红绿黄闪烁19次
+run local a=20;local b=30;
+	while (a=a-1)
+	{
+	light_setcolor(b,0,0);
+	sleep_ms(1000);
+	light_setcolor(0,b,0);
+	sleep_ms(1000);
+	light_setcolor(b/2,b,0);
+	sleep_ms(1000);
+	};
+
+电路板上的蜂鸣器和lcd屏上的蜂鸣器循环响起
+run local a=10;
+	while (a=a-1)
+	{
+	lcd_beep(2);
+	sleep_ms(1000);
+	Beep_On(10);
+	sleep_ms(1000);
+	};
+
+
+
+V2.3版本键盘环绕灯闪烁
+run local a=1000;local b=30;
+	while (a=a-1)
+	{
+	key_around(1,0);key_around(2,0);key_around(3,0);key_around(4,0);key_around(5,0);key_around(6,0);
+	sleep_ms(20);
+	key_around(1,1);key_around(2,1);key_around(3,1);key_around(4,1);key_around(5,1);key_around(6,1);
+	sleep_ms(20);
+	if (a%2)
+	{
+	Beep_On(10);
+	}
+	};
+
+
+
+
+
+
+
+
+
+
+
 	
 	
 	

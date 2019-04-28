@@ -88,7 +88,7 @@ void light_run (u8 *msg)
 	static u8 light[6]={0};
 	static u8 nolight[6]={0};
 	u8 i=0;
-	while (1)
+	//while (1)
 	{
 		if (msg[0]==4)//¼üÅÌµÆÉÁË¸,¸üĞÂÃüÁî
 		{

@@ -110,7 +110,7 @@ enum
 
 typedef struct 
 {
-	u32 fun_addr;
+	void * fun_addr;
 	char *fun_name;
 }fun_list;
 

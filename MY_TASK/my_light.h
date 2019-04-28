@@ -17,14 +17,14 @@ void key_light (u8 key_num,u8 state);
 //按键周围的灯
 void key_around (u8 key_num,u8 state);
 
-		
+//灯带环绕		
 void led_light (u16 num,u8 state,u8 red,u8 green,u8 blue);
 
 
-			//流水
+//流水
 void led_run (u8 *meg);
 
-						//键盘周围的灯闪烁
+//键盘周围的灯闪烁
 void light_run (u8 *msg);
 
 

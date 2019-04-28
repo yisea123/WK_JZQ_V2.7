@@ -84,10 +84,9 @@ u8 server_data(void)
 	//udp数据有8个字节包头，tcp数据没有
 	if (json_cheek((char *)data))//json数据
 		recv_json(data);
-	else if (data[0]=='-')
+	else
 	{
-		myfree(data);
-		return 1;
+		dbg_Interpreter(data,(void (*)(char*))server_send_data);
 	}
 	
 	 

@@ -715,7 +715,7 @@ u32 findFunAddr (char *fun_name)
 	{
 		if (samestr((u8*)FUN_LIST[i].fun_name,(u8*)fun_name))
 		{
-			return FUN_LIST[i].fun_addr;
+			return (u32)FUN_LIST[i].fun_addr;
 		}
 	}
 	return 0;

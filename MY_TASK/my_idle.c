@@ -27,7 +27,7 @@ void idle_task (void *t)
 					IDLE|=0x80000000>>i;
 					LASTTIME[i]=TCB_Table[i].LastTime;
 					IDLETIMES[i]++;
-					TaskRepend(i);
+					//TaskRepend(i);
 				}
 			}
 			OS_EXIT_CRITICAL();

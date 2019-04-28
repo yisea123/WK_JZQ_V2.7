@@ -57,6 +57,7 @@ void my_rf_loop (void * t)
 	
 	RF_SetChannel(Get_MyChanel()); 
 	Updata_DeviceNum();
+	
 	while (1)
 	{
 		delay_ms(30);//防止没有设备的时候死机

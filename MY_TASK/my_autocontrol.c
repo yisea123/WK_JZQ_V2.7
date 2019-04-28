@@ -78,7 +78,7 @@ void my_autocontrol (void * t)
 		{
 			m_send[0]=3;
 			m_send[1]=5;
-			m_send[3]=200;m_send[4]=0;m_send[5]=0;
+			m_send[3]=100;m_send[4]=0;m_send[5]=0;
 			send_messeg (LIT_MESSEG,m_send);
 			en_warning=0;
 		}
@@ -86,7 +86,7 @@ void my_autocontrol (void * t)
 		{
 			m_send[0]=3;
 			m_send[1]=5;
-			m_send[3]=0;m_send[4]=200;m_send[5]=0;
+			m_send[3]=0;m_send[4]=100;m_send[5]=0;
 			send_messeg (LIT_MESSEG,m_send);
 		}	
 

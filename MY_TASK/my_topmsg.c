@@ -29,7 +29,6 @@ void key_deal (void);
 void taskmsg_deal (u32 msg);
 void soft_timer_irq (void);
 void soft_timer_run (void);
-void load_test_cfg(void);//加载默认配置信息
 
 //本文件局域变量
 void (**soft_timer_10ms) (void)=0;
@@ -41,7 +40,7 @@ void my_topmsg (void *t)
 	u32 irq_msg=0;
 	Key_Init();
 	Load_Config();
-	load_test_cfg(); 
+	load_test_cfg();  
 	//write_config(); //写入配置到文件
 
 	soft_timer_10ms=mymalloc(4*10);
@@ -90,7 +89,7 @@ void my_topmsg (void *t)
 
 
 static u8 key[6]={0};
-static u8 state[6]={0,0,0,0,0x3f,0};//短按状态
+//static u8 state[6]={0,0,0,0,0x3f,0};//短按状态
 static u8 statel[6]={0,0,0,0,1,0};//长安状态
 
 u8 key_color[3][6]={0};
@@ -349,61 +348,45 @@ void load_test_cfg(void)
 		EN_CONFIG[3]=1;
 		EN_CONFIG[4]=3;
 		EN_CONFIG[5]=3;
-		EN_CONFIG[6]=33;
-		EN_CONFIG[7]=1;
-		EN_CONFIG[8]=34;
-		EN_CONFIG[9]=1;
-		EN_CONFIG[10]=35;
-		EN_CONFIG[11]=1;
-		EN_CONFIG[12]=36;
-		EN_CONFIG[13]=1;
+		EN_CONFIG[6]=4;
+		EN_CONFIG[7]=2;
+		EN_CONFIG[8]=5;
+		EN_CONFIG[9]=5;
+		EN_CONFIG[10]=6;
+		EN_CONFIG[11]=6;
 		
-		//本机地址
-		Get_MyIP()[0]=192;
-		Get_MyIP()[1]=168;
-		Get_MyIP()[2]=2;
-		Get_MyIP()[3]=13;
-		
-		//服务器地址
-		Get_MyIP()[6]=192;
-		Get_MyIP()[7]=168;
-		Get_MyIP()[8]=2;
-		Get_MyIP()[9]=56;
 
-		Get_MyIP()[10]=6000>>8;
-		Get_MyIP()[11]=6000&0x00ff;
+		//没有本机名称
+		if (*getMyName()==0)
+		{
+			char *txtbuff=mymalloc(512);
+			sprintf(txtbuff,"%.6s-%02X%02X%02X","WK_JZQ",MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+			setMyName (txtbuff);
+			myfree (txtbuff);
+		}
 		
-		//网关IP
-		Get_MyIP()[12]=192;
-		Get_MyIP()[13]=168;
-		Get_MyIP()[14]=2;
-		Get_MyIP()[15]=1;
-
+		//默认一个超调量
+		if (getAutoCtrlAmount()==0)
+		{
+			setAutoCtrlAmount(2);
+		}
+		
+		if (getWarnTolerance()==0)
+		{
+			setWarnTolerance(2);
+		}
+		
+		//默认一个控制频率
+		if (getAutoCtrlFrequency()==0)
+		{
+			setAutoCtrlFrequency(30);
+		}
+		
+		//开启dhcp
+		setDhcpState(1);
 		Save_Config();
 	}
 	
-	//没有本机名称
-	if (*getMyName()==0)
-	{
-		char *txtbuff=mymalloc(512);
-		sprintf(txtbuff,"%.6s-%02X%02X%02X","WK_JZQ",MCU_SN[9],MCU_SN[10],MCU_SN[11]);
-		setMyName (txtbuff);
-		myfree (txtbuff);
-	}
-	//默认一个超调量
-	if (getAutoCtrlAmount()==0)
-	{
-		setAutoCtrlAmount(2);
-	}
-	if (getWarnTolerance()==0)
-	{
-		setWarnTolerance(2);
-	}
-	//默认一个控制频率
-	if (getAutoCtrlFrequency()==0)
-	{
-		setAutoCtrlFrequency(30);
-	}
 }
 
 

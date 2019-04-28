@@ -71,6 +71,9 @@ INT8U CreateTaskN (void   (*task)(void *p_arg),//任务首地址
 										 u32 tacksize,
                      INT8U    prio);						//任务优先级
 
+										 
+void DeleteTask (u8 pro);
+										 
 
 //校验任务堆栈使用率
 void CheckTaskUsege ( void );

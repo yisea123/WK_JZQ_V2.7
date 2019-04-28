@@ -140,6 +140,27 @@ INT8U CreateTask (void   (*task)(void *p_arg),//任务首地址
 
 
 
+//删除任务
+void DeleteTask (u8 pro)
+{
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
+	INT32U myprio=0x80000000>>pro;
+	OS_ENTER_CRITICAL();
+	TASK_Free&=~myprio;		//取消任务就绪
+	TCB_Table[pro].pTask=0;
+	OS_EXIT_CRITICAL();
+	
+}
+
+
+
+
+
+
+
+
 
 u16 GetTaskSize (u8 prio)
 {

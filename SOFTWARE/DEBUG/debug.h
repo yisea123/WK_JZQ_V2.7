@@ -68,7 +68,7 @@ extern u8 DBG_COPY_TO_S1CK;
 //调试函数调用入口
 void my_debug (void);
 
-void dbg_Interpreter(u8 *);
+void dbg_Interpreter(u8 *recvbuff,void (*sendstr) (char *str));
 
 	//板子信息
 void dbg_info (void);
@@ -121,6 +121,8 @@ void dbg_run (u8 *buff);
 //dbg打印函数
 void dbg_print (char *str);
 
+//udp字符串发送接口
+void dbg_send_udp (char *str);
 
 /**********执行指令****************/
 

@@ -359,45 +359,17 @@ u8 net_check_parameters(void)
 		//调用这个函数之后，再调用net_sysboot_init()
 void net_test(void)
 {
-	extern u8 SERVER_IP[4];
-	extern u16 SERVER_PORT;
-	u16 *Get_MyIP(void);
-	u16 *ipconfig=Get_MyIP();
+	int_addr_struct *ipconfig=Get_MyIP();
 	
-	IP_Addr[0]=*ipconfig++;
-	IP_Addr[1]=*ipconfig++;
-	IP_Addr[2]=*ipconfig++;
-	IP_Addr[3]=*ipconfig++;
-
-//	IP_Addr[0]=192;
-//	IP_Addr[1]=168;
-//	IP_Addr[2]=2;
-//	IP_Addr[3]=125;
-
-
+	mymemcpy(IP_Addr,ipconfig->nativeIp,4);
 	
-	ipconfig++;		//本机端口号
-	ipconfig++;
+	mymemcpy(SERVER_IP,ipconfig->serverIp,4);
 	
+	SERVER_PORT=ipconfig->serverPort;
 	
-	SERVER_IP[0]=*ipconfig++;
-	SERVER_IP[1]=*ipconfig++;
-	SERVER_IP[2]=*ipconfig++;
-	SERVER_IP[3]=*ipconfig++;
+	mymemcpy(Gateway_IP,ipconfig->getwayIp,4);
 	
-	SERVER_PORT=0;
-	SERVER_PORT=(*ipconfig++)<<8;
-	SERVER_PORT|=(*ipconfig++)&0x00ff;
-	
-	Gateway_IP[0]=*ipconfig++;
-	Gateway_IP[1]=*ipconfig++;
-	Gateway_IP[2]=*ipconfig++;
-	Gateway_IP[3]=*ipconfig++;
-	
-	Sub_Mask[0]=*ipconfig++;
-	Sub_Mask[1]=*ipconfig++;
-	Sub_Mask[2]=*ipconfig++;
-	Sub_Mask[3]=*ipconfig++;
+	mymemcpy(Sub_Mask,ipconfig->subMask,4);
 
 }
 
