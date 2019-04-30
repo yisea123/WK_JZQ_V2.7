@@ -71,6 +71,10 @@ u8 key_setcolor (u16 led_num,u8 red ,u8 green,u8 blue);
 void key_light (u8 key_num,u8 state);//按键指示灯
 void key_around (u8 key_num,u8 state);//按键报警灯
 void key_senddata (void);
+
+//取得按键的色彩
+u8 key_getcolor (u16 led_num,u8 *red,u8 *green,u8 *blue);
+
 			//刷新刷新指定缓存区颜色
 void key_senddataby (u8 **colors);
 

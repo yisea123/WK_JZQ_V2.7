@@ -182,7 +182,10 @@ u16 GetTaskUsed (u8 prio)
 	#endif
 	u16 used=0;
 	OS_ENTER_CRITICAL();
-	used=TCB_Table[prio].TackUsed>>16;
+	if (TCB_Table[prio].pTask)
+	{
+		used=TCB_Table[prio].TackUsed>>16;
+	}
 	OS_EXIT_CRITICAL();
 	return used;
 }

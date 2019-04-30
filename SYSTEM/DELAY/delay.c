@@ -144,7 +144,7 @@ void SysTick_Handler (void)
 		}
 	}
 	RunTime_IRQHandler();
-	CheckTaskUsege();
+	//CheckTaskUsege();在这里校验堆栈会占用大量中断时间
 	//cpuBreakIRQ();
 }
 

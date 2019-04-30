@@ -5,6 +5,7 @@
 #include "hard_irq.h"
 #include "w5500.h"
 #include "timer.h"
+#include "light.h"
 #include "my_topmsg.h"
 
 
@@ -46,7 +47,7 @@ void my_topmsg (void *t)
 	soft_timer_10ms=mymalloc(4*10);
 	mymemset(soft_timer_10ms,0,4*10);
 	addTimerIrq10ms(soft_timer_irq);
-	
+	addSoftTimerIrq10ms(CheckTaskUsege);
 	
 
 	
@@ -89,7 +90,7 @@ void my_topmsg (void *t)
 
 
 static u8 key[6]={0};
-//static u8 state[6]={0,0,0,0,0x3f,0};//短按状态
+static u8 state[6]={0,0,0,0,0,0};//按下状态
 static u8 statel[6]={0,0,0,0,1,0};//长安状态
 
 u8 key_color[3][6]={0};
@@ -110,10 +111,18 @@ void key_deal (void)
 			light[1]=1;
 			send_messeg(LCD_MESSEG,light);
 			
-			light[0]=LIGHT_ROUND_LIGHT;
-			light[2]=LIGHT_LIGHT_STOP;
-			light[1]=LIGHT_LIGHT_RUNTO;
-			send_messeg(LIT_MESSEG,light);
+//			light[0]=LIGHT_ROUND_LIGHT;
+//			light[2]=LIGHT_LIGHT_STOP;
+//			light[1]=LIGHT_LIGHT_RUNTO;
+//			send_messeg(LIT_MESSEG,light);//停止灯光按键反馈
+			
+			if (state[i])
+			{
+				key_setcolor(i,key_color[0][i],key_color[1][i],key_color[2][i]);
+				light[0]=LIGHT_UPDATE_KEY;
+				send_messeg(LIT_MESSEG,light);
+				state[i]=0;
+			}
 		}
 		else if (key[i]==PRESS_LONG)
 		{
@@ -121,20 +130,43 @@ void key_deal (void)
 			light[1]=2;
 			send_messeg(LCD_MESSEG,light);
 			
-			light[0]=LIGHT_ROUND_LIGHT;
-			light[2]=LIGHT_LIGHT_STOP;
-			light[1]=LIGHT_LIGHT_RUNTO;
-			send_messeg(LIT_MESSEG,light);
+//			light[0]=LIGHT_ROUND_LIGHT;
+//			light[2]=LIGHT_LIGHT_STOP;
+//			light[1]=LIGHT_LIGHT_RUNTO;
+//			send_messeg(LIT_MESSEG,light);//停止灯光按键反馈
+			if (state[i])
+			{
+				key_setcolor(i,key_color[0][i],key_color[1][i],key_color[2][i]);
+				light[0]=LIGHT_UPDATE_KEY;
+				send_messeg(LIT_MESSEG,light);
+				state[i]=0;
+			}
 		}
 		else if (key[i]==PRESS_DOWN)
 		{
-			light[0]=LIGHT_ROUND_LIGHT;
-			light[2]=LIGHT_LIGHT_STCOR;
-			light[1]=LIGHT_LIGHT_RUNTO;
-			light[3]=255;
-			light[4]=255;
-			light[5]=255;
-			send_messeg(LIT_MESSEG,light);
+//			light[0]=LIGHT_ROUND_LIGHT;
+//			light[2]=LIGHT_LIGHT_STCOR;
+//			light[1]=LIGHT_LIGHT_RUNTO;
+//			light[3]=127;
+//			light[4]=255;
+//			light[5]=255;
+//			send_messeg(LIT_MESSEG,light);//开始灯光带按键反馈
+			
+			if (state[i]==0)
+			{
+				key_getcolor(i,&key_color[0][i],&key_color[1][i],&key_color[2][i]);
+				state[i]=50;
+			}
+			
+			
+			if (state[i]<250)
+				state[i]+=1;
+			{
+				key_setcolor(i,state[i],state[i],state[i]);
+				light[0]=LIGHT_UPDATE_KEY;
+				send_messeg(LIT_MESSEG,light);
+				//key_senddata();
+			}
 		}
 		else
 		{

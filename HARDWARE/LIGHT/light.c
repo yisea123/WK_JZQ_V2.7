@@ -58,59 +58,17 @@ void Light_init (void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 
 	
-				//板子上的灯
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  
   
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;  
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
 	
-		//临时使用这两个脚调光2018.11.23
 	GPIO_Init(GPIOB, &GPIO_InitStructure); //新板子不使用以前的按键灯光2018.11.5
 	LED_R=0;
 	LED_B=0;
 	
 	
-	/********************PWM测试************************/
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);    
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;  
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  	
-		//临时使用这两个脚调光2018.11.23
-	GPIO_Init(GPIOB, &GPIO_InitStructure); //新板子不使用以前的按键灯光2018.11.5
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);    
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;  
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  	
-		//临时使用这两个脚调光2018.11.23
-	GPIO_Init(GPIOD, &GPIO_InitStructure); //新板子不使用以前的按键灯光2018.11.5
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);    
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;  
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  	
-		//临时使用这两个脚调光2018.11.23
-	GPIO_Init(GPIOC, &GPIO_InitStructure); //新板子不使用以前的按键灯光2018.11.5
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);    
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;  
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  	
-		//临时使用这两个脚调光2018.11.23
-	GPIO_Init(GPIOA, &GPIO_InitStructure); //新板子不使用以前的按键灯光2018.11.5
-	
-	/********************PWM测试结束********************/
-				//四周的灯带
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  
-  
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;  
-//  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_6|GPIO_Pin_7;  
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
-	
-	//GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);  
   
@@ -121,14 +79,7 @@ void Light_init (void)
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 
-//	LIGHT_4=0;
-//	LIGHT_3=0;
-//	LIGHT_2=1;
-	LIGHT_1=0;
 
-//	HC595_SendData( );新板子不使用以前的按键灯光2018.11.5
-//	LINGT_EN =0;
-	led_senddata();
 	key_senddata();
 }
 
@@ -151,7 +102,8 @@ void key_reset (void)
 {
 	KEY_LIGHT=0;
 	delay_us(1000);
-//	LIGHT_1=1;
+	//delay_us(1000);
+	//sleep_ms(10);
 }
 
 
@@ -263,6 +215,18 @@ void key_senddataby (u8 **colors)
 }
 
 
+//取得按键的色彩
+u8 key_getcolor (u16 led_num,u8 *red,u8 *green,u8 *blue)
+{
+	if (6<=led_num) return 1;
+	*red=KEY_COLOR[0][led_num];
+	*green=KEY_COLOR[1][led_num];
+	*blue=KEY_COLOR[2][led_num];
+	return 0;
+
+}
+
+
 
 u8 key_setcolor (u16 led_num,u8 red ,u8 green,u8 blue)
 {
@@ -295,7 +259,7 @@ void key_light (u8 key_num,u8 state)
 	{
 		KEY_COLOR[1][key_num-1]=0;
 	}
-	key_senddata();
+	//key_senddata();
 }
 
 			//按键报警灯，红色
@@ -310,7 +274,7 @@ void key_around (u8 key_num,u8 state)
 	{
 		KEY_COLOR[0][key_num-1]=0;
 	}
-	key_senddata();
+	//key_senddata();
 	
 }
 
@@ -457,13 +421,13 @@ void led_setall (u8 red,u8 green,u8 blue)
 
 void led_senddata (void)
 {
-	u16 i=0;
-	sm16703_reset();
-	for (i=0;i<LED_NUM;i++)
-	{
-		sm16703_send (LED_COLOR[0][i] ,LED_COLOR[1][i] ,LED_COLOR[2][i] );
-	}
-	LIGHT_1=0;
+//	u16 i=0;
+//	sm16703_reset();
+//	for (i=0;i<LED_NUM;i++)
+//	{
+//		sm16703_send (LED_COLOR[0][i] ,LED_COLOR[1][i] ,LED_COLOR[2][i] );
+//	}
+//	LIGHT_1=0;
 }
 
 
@@ -899,6 +863,19 @@ void key_senddataby (u8 **colors)
 	}
 	KEY_LIGHT=0;
 }
+
+
+//取得按键的色彩
+u8 key_getcolor (u16 led_num,u8 *red,u8 *green,u8 *blue)
+{
+	if (6<=led_num) return 1;
+	*red=KEY_COLOR[0][led_num];
+	*green=KEY_COLOR[1][led_num];
+	*blue=KEY_COLOR[2][led_num];
+	return 0;
+
+}
+
 
 
 

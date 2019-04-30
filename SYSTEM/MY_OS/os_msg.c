@@ -47,7 +47,15 @@ u8 send_messeg (u8 type,u8 *data)
 	{
 		if (my_messeg[i].msgto==TASK_MAX_NUM) break;
 	}
-	if (i==MESSEG_NUM) return 1;//缓冲区已满
+	if (i==MESSEG_NUM)
+	{
+		for (i=0;i<MESSEG_NUM;i++)//查找有没有空位
+		{
+			my_messeg[i].msgto=TASK_MAX_NUM;	//清空缓冲区
+		}
+		i=0;
+		//return 1;//缓冲区已满
+	}
 	my_messeg[i].msgto=type;
 	
 	my_messeg[i].msgfrom=TASK_MAX_NUM;//加入这两项可以使用新的消息接收函数接收

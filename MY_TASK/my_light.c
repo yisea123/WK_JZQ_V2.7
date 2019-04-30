@@ -2,7 +2,9 @@
 #include "includes.h"
 #include "light.h"
 #include "my_messeg.h"
+#include "my_topmsg.h"
 #include "my_light.h"
+
 /*****************************************
 
 		meg的位定义
@@ -23,6 +25,18 @@
 ***************************************/
 
 
+u8 needUpData=0;
+void sendColorData (void)
+{
+	if (needUpData)
+	{
+		key_senddata();
+		needUpData=0;
+	}
+}
+
+
+
 
 		//灯光任务函数
 void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
@@ -30,6 +44,10 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 	u8 messeg[MESSEG_DATA]={0};
 	u8 mode=0;//纯色还是流水
 	Light_init();
+	
+	//在中断中更新数据
+	addSoftTimerIrq10ms(sendColorData);
+	
 	while (1)
 	{
 		delay_ms(40);
@@ -37,11 +55,11 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 		{
 			if (mode<=4)//流水灯模式
 			{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-				led_run (messeg);
+				//led_run (messeg);
 			}
 			else if (mode==6)//渐变至纯色
 			{
-				light_runto(messeg);  
+				//light_runto(messeg);  
 			}
 		}
 		else 
@@ -49,10 +67,12 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 			if (messeg[0]==LIGHT_WARN_STATE)
 			{
 				key_light (messeg[2],messeg[1]);
+				needUpData=1;
 			}
 			else if (messeg[0]==LIGHT_DEVICE_STATE)
 			{
 				key_around (messeg[2],messeg[1]);
+				needUpData=1;
 			}
 			else if (messeg[0]==LIGHT_ROUND_LIGHT)
 			{
@@ -69,6 +89,11 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 				{
 					light_runto(messeg);  
 				}
+			}
+			else if (messeg[0]==LIGHT_UPDATE_KEY)//更新一次按键灯
+			{
+				//key_senddata();
+				needUpData=1;
 			}
 		}
 	}
