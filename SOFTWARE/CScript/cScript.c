@@ -594,7 +594,7 @@ u32 runCScript (char *par)
 
 
 
-//运行指定函数,最多可以设置4个参数
+//运行指定函数,最多可以设置8个参数
 u32 runFunction (char *Parameters)
 {
 	u32 fun_addr=0;

@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "cscript.h"
 #include "file.h"
 
 //读取SD卡中存储的配置信息，0，成功，1，失败
@@ -106,6 +107,45 @@ u8 read_json(TCHAR *file_name,u8 *buf,u16 buff_size)
 	return 0;//转换完成
 	
 }
+
+
+
+
+//运行系统初始化脚本
+u8 run_sysinit (void)
+{
+	FRESULT ret;
+	UINT real_length=0;
+	char *script_buff=mymalloc(1024);
+	if (fats_state()==0) 
+	{
+		myfree(script_buff);
+		return 1;
+	}
+	ret=FATS->f_open(file,_T("0:/wk_init.txt"),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+	if (ret==FR_OK)
+	{
+		FATS->f_read(file,script_buff,1024,&real_length);
+		FATS->f_close(file);
+		if (real_length==0) 
+		{
+			myfree(script_buff);
+			return 3;
+		}
+		else
+		{
+			runCScript (script_buff);
+			myfree(script_buff);
+		}
+	}
+	else
+	{
+		myfree(script_buff);
+		return 2;
+	}
+}
+
+
 
 
 

@@ -18,6 +18,8 @@ u8 read_json(TCHAR *file_name,u8 *buf,u16 buff_size);//读取json文件，buf是缓存区
 u8 write_config (void);
 u8 read_config (void);
 
+//运行系统初始化脚本
+u8 run_sysinit (void);
 
 #ifdef  __cplusplus
 	}

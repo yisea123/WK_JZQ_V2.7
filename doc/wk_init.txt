@@ -1,0 +1,15 @@
+local a=7;local b=5;
+while (a=a-1)
+{
+key_setcolor(b,200,0,200);
+key_senddata();
+sleep_ms(100);
+key_setcolor(b,0,0,0);
+key_senddata();
+sleep_ms(100);
+if (b==0)
+{
+b=6;
+};
+b=b-1;
+};

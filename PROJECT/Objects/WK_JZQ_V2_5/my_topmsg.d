@@ -66,4 +66,6 @@
 .\objects\wk_jzq_v2_5\my_topmsg.o: ..\HARDWARE\hard_irq.h
 .\objects\wk_jzq_v2_5\my_topmsg.o: ..\HARDWARE\W5500\w5500.h
 .\objects\wk_jzq_v2_5\my_topmsg.o: ..\HARDWARE\TIMER\timer.h
+.\objects\wk_jzq_v2_5\my_topmsg.o: ..\HARDWARE\LIGHT\light.h
+.\objects\wk_jzq_v2_5\my_topmsg.o: ..\SOFTWARE\FILE\file.h
 .\objects\wk_jzq_v2_5\my_topmsg.o: ..\MY_TASK\my_topmsg.h

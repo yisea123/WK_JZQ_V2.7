@@ -62,4 +62,5 @@
 .\objects\wk_jzq_v2_5\my_light.o: ..\SOFTWARE\DATA_MAP\data_map.h
 .\objects\wk_jzq_v2_5\my_light.o: ..\HARDWARE\LIGHT\light.h
 .\objects\wk_jzq_v2_5\my_light.o: ..\MY_TASK\my_messeg.h
+.\objects\wk_jzq_v2_5\my_light.o: ..\MY_TASK\my_topmsg.h
 .\objects\wk_jzq_v2_5\my_light.o: ..\MY_TASK\my_light.h

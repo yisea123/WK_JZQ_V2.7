@@ -61,4 +61,5 @@
 .\objects\wk_jzq_v2_6\my_idle.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\wk_jzq_v2_6\my_idle.o: ..\SOFTWARE\DATA_MAP\data_map.h
 .\objects\wk_jzq_v2_6\my_idle.o: ..\SYSTEM\IWDG\iwdg.h
+.\objects\wk_jzq_v2_6\my_idle.o: ..\SOFTWARE\FILE\file.h
 .\objects\wk_jzq_v2_6\my_idle.o: ..\MY_TASK\my_idle.h

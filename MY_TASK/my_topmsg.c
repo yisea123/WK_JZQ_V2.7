@@ -6,6 +6,7 @@
 #include "w5500.h"
 #include "timer.h"
 #include "light.h"
+#include "file.h"
 #include "my_topmsg.h"
 
 
@@ -42,7 +43,7 @@ void my_topmsg (void *t)
 	Key_Init();
 	Load_Config();
 	load_test_cfg();  
-	//write_config(); //写入配置到文件
+	
 
 	soft_timer_10ms=mymalloc(4*10);
 	mymemset(soft_timer_10ms,0,4*10);
@@ -111,10 +112,6 @@ void key_deal (void)
 			light[1]=1;
 			send_messeg(LCD_MESSEG,light);
 			
-//			light[0]=LIGHT_ROUND_LIGHT;
-//			light[2]=LIGHT_LIGHT_STOP;
-//			light[1]=LIGHT_LIGHT_RUNTO;
-//			send_messeg(LIT_MESSEG,light);//停止灯光按键反馈
 			
 			if (state[i])
 			{
@@ -130,10 +127,6 @@ void key_deal (void)
 			light[1]=2;
 			send_messeg(LCD_MESSEG,light);
 			
-//			light[0]=LIGHT_ROUND_LIGHT;
-//			light[2]=LIGHT_LIGHT_STOP;
-//			light[1]=LIGHT_LIGHT_RUNTO;
-//			send_messeg(LIT_MESSEG,light);//停止灯光按键反馈
 			if (state[i])
 			{
 				key_setcolor(i,key_color[0][i],key_color[1][i],key_color[2][i]);
@@ -144,13 +137,6 @@ void key_deal (void)
 		}
 		else if (key[i]==PRESS_DOWN)
 		{
-//			light[0]=LIGHT_ROUND_LIGHT;
-//			light[2]=LIGHT_LIGHT_STCOR;
-//			light[1]=LIGHT_LIGHT_RUNTO;
-//			light[3]=127;
-//			light[4]=255;
-//			light[5]=255;
-//			send_messeg(LIT_MESSEG,light);//开始灯光带按键反馈
 			
 			if (state[i]==0)
 			{
@@ -165,7 +151,6 @@ void key_deal (void)
 				key_setcolor(i,state[i],state[i],state[i]);
 				light[0]=LIGHT_UPDATE_KEY;
 				send_messeg(LIT_MESSEG,light);
-				//key_senddata();
 			}
 		}
 		else
@@ -182,16 +167,6 @@ void key_deal (void)
 		}
 		else if (key[0]==PRESS_LONG)//按键1长安
 		{
-//			if (statel[0]==0)
-//			{
-//				TaskPend(8);//挂起自动控制
-//				Load_down();
-//			}
-//			else
-//			{
-//				TaskRepend(8);//自动控制
-//				Load_up();
-//			}
 			statel[0]=!statel[0];
 		}
 
@@ -204,33 +179,6 @@ void key_deal (void)
 		}
 		else if (key[1]==PRESS_LONG)//按键2长安
 		{
-//			if (statel[1]==0)
-//			{
-//				meg[0]=3;meg[1]=4;//彩灯
-//				meg[2]=2;//闪烁
-//				meg[3]=200;meg[4]=100;meg[5]=50;//色彩值
-//				send_messeg(LIT_MESSEG,meg);//
-//				statel[1]=1;
-//				Lcd_SetHandstate(1);
-//			}
-//			else if (statel[1]==1)
-//			{
-//				meg[0]=3;meg[1]=3;//彩灯
-//				meg[2]=2;//闪烁
-//				meg[3]=200;meg[4]=100;meg[5]=50;//色彩值
-//				send_messeg(LIT_MESSEG,meg);//
-//				statel[1]=2;
-//				Lcd_SetHandstate(1);
-//			}
-//			else if (statel[1]==2)
-//			{
-//				meg[0]=3;meg[1]=4;//彩灯
-//				meg[2]=0;//停止
-//				meg[3]=200;meg[4]=100;meg[5]=50;//色彩值
-//				send_messeg(LIT_MESSEG,meg);//
-//				statel[1]=0;
-//				Lcd_SetHandstate(0);
-//			}
 		}
 
 
@@ -243,24 +191,6 @@ void key_deal (void)
 		}
 		else if (key[2]==PRESS_LONG)//按键3长安
 		{
-//			if (statel[2]==0)
-//			{
-//				Load_song3();//一首歌会占用很大的存储空间
-//			}
-//			else if (statel[2]==1)
-//			{
-//				Load_song1();
-//			}
-//			else if (statel[2]==2)
-//			{
-//				Load_song();
-//			}
-//			else if (statel[2]==3)
-//			{
-//				Load_song2();
-//			}
-			statel[2]++;
-			if (statel[2]>4) statel[2]=0;
 		}
 
 		if (key[3]==PRESS_SHORT) //按键4短按

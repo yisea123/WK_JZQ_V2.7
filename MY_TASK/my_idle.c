@@ -1,6 +1,7 @@
 
 #include "includes.h"
 #include "iwdg.h"
+#include "file.h"
 #include "my_idle.h"
 
 
@@ -11,9 +12,12 @@ u16 IDLETIMES[32]={0};
 void idle_task (void *t)
 {
 	u8 i=0;
-	#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	#if OS_CRITICAL_METHOD == 3         
 		OS_CPU_SR  cpu_sr;
 	#endif
+	
+	run_sysinit();		//运行系统初始化脚本
+	IWDG_Init(16000);
 	while(1)
 	{
 		for (i=0;i<TASK_MAX_NUM;i++)
