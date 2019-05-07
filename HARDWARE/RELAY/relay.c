@@ -2,6 +2,12 @@
 #include "relay.h"
 
 
+/*****************************************
+
+			继电器控制IO口初始化
+
+*****************************************/
+
 void Relay_Init (void)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;

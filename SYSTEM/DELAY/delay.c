@@ -23,7 +23,9 @@ void delay_init()
 	
 	SysTick->LOAD=(u32)MICRO_MS*fac_ms;//时间加载(SysTick->LOAD为24bit)
 
+	NVIC_SetPriority(SysTick_IRQn,0xf);//设置中断优先级为最低
 	SysTick->CTRL|=3;//使能计数器，开启中断
+	
 }								    
 	
 

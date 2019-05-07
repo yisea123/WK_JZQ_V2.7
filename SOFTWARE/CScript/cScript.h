@@ -116,7 +116,8 @@ typedef struct
 
 
 
-
+/******************************************************/
+							/*外部调用函数声明*/
 
 //运行脚本
 u32 runCScript (char *par);
@@ -124,11 +125,15 @@ u32 runCScript (char *par);
 //查找函数名的地址
 u32 findFunAddr (char *fun_name);
 
-//运行指定函数,最多可以设置4个参数
+//运行指定函数,最多可以设置8个参数
 u32 runFunction (char *Parameters);
 
 //通过索引得到函数名
 char *getFunNameByIndex (u16 index);
+
+/*********************************************************/
+
+
 
 
 #ifdef  __cplusplus

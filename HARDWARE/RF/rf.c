@@ -19,12 +19,13 @@
 
 
 
+/************************************************
 
-
-
-
+				文件说明：无线模块串口驱动
+				功能：维护一个循环缓冲区，通过标志头来区分消息
+				中断优先级：0,1
  
-
+**************************************************/
 
 
 
@@ -140,7 +141,7 @@ void RF_Init(u32 bound)
 	//Usart1 NVIC 配置
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0 ;//抢占优先级3
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;		//子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 

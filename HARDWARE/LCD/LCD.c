@@ -8,7 +8,7 @@
 		外部引用：无
 		实现方法：中断接收到缓存，阻塞式发送
 		使用方法：使用读取函数读取接收到的数据，发送函数发送
-
+		中断优先级：0,2
 ****************************************************/
 
 
@@ -110,7 +110,7 @@ void LCD_Init(u32 bound)
 	USART_Init(MY_USART, &USART_InitStructure);  //初始化串口
 
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; //使能串口2中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //先占优先级2级
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; //先占优先级0级
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2; //从优先级2级
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //使能外部中断通道
 	NVIC_Init(&NVIC_InitStructure); //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器

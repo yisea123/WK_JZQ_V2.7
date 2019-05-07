@@ -60,11 +60,27 @@
 
 
 
+
+
+
+/**************************************************************/
+									/*全局变量声明*/
+
 //脚本运行的变量栈
-cscript_stack cScriptStack={0};
+static cscript_stack cScriptStack={0};
 
-static	u8 *Arry=0;//临时数组，一个函数调用只能使用一个临时数组
+//临时数组，一个函数调用只能使用一个临时数组
+static	u8 *Arry=0;
 
+//递归调用层数
+static u8 NumberOfFloors=0;
+
+/***************************************************************/
+
+
+
+/***************************************************************/
+									/*内部调用函数声明*/
 
 //找到一个分号结尾的字符串并复制
 char* findSemicolon (char *outbuff,char *inbuff);
@@ -84,7 +100,10 @@ u32 getVariable (char *name);
 //计算
 u32 alculation (char *buf);
 
+//校验str的类型
+u8 checkStrType (char *str);
 
+/***********************************************************/
 
 
 //找到一个分号结尾的字符串并复制
@@ -492,26 +511,50 @@ u32 checkCategory (char *str)
 			ret=(u32)Arry;
 		}
 	}
+	else if (len=strlenByChar('!',str_par),len<2000)				//不等号判断
+	{
+		if (str_par[len+1]=='=')			//下一个是等号,判断不相等
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)!=checkCategory(&str_par[len+2]));
+		}
+		else
+		{
+			ret=0;//语句有错
+		}
+	}
+	else if (len=strlenByChar('>',str_par),len<2000)				//大于或大于等于
+	{
+		if (str_par[len+1]=='=')			//下一个是等号,判断不相等
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)>=checkCategory(&str_par[len+2]));
+		}
+		else
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)>checkCategory(&str_par[len+1]));
+		}
+	}
+	else if (len=strlenByChar('<',str_par),len<2000)				//小于或小于等于
+	{
+		if (str_par[len+1]=='=')			//下一个是等号,判断不相等
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)<=checkCategory(&str_par[len+2]));
+		}
+		else
+		{
+			str_par[len]=0;
+			ret=(checkCategory(str_par)<checkCategory(&str_par[len+1]));
+		}
+	}
 	else if (len=strlenByChar('=',str_par),len<2000)				//是个赋值语句
 	{
 		if (str_par[len+1]=='=')			//下一个也是等号,判断相等
 		{
 			str_par[len]=0;
 			ret=(checkCategory(str_par)==checkCategory(&str_par[len+2]));
-		}
-		else
-		{
-			mymemcpy(name,str_par,len);
-			cheVariable(name,(void *)checkCategory(str_par+len+1));
-			ret=getVariable(name);
-		}
-	}
-	else if (len=strlenByChar('!',str_par),len<2000)				//是个赋值语句
-	{
-		if (str_par[len+1]=='=')			//下一个是等号,判断不相等
-		{
-			str_par[len]=0;
-			ret=(checkCategory(str_par)!=checkCategory(&str_par[len+2]));
 		}
 		else
 		{
@@ -544,7 +587,6 @@ u32 checkCategory (char *str)
 			此为不可重入的函数，不能在多个线程中同时运行脚本
 
 ***************************************************/
-static u8 NumberOfFloors=0;
  
 
 u32 runCScript (char *par)
