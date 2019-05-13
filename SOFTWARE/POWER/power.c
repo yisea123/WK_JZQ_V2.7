@@ -3,6 +3,7 @@
 #include "timer.h"
 #include "beep.h"
 #include "file.h"
+#include "relay.h"
 #include "power.h"
 
 
@@ -31,7 +32,8 @@ void SysPowerOn (void)
 			
 void SysPowerOff (void)
 {
-	delay_us(1000);
+	Relay_Off();//关屏幕，防止重启后屏幕不开
+	sleep_ms(1000);
 	NVIC_SystemReset();
 }
 

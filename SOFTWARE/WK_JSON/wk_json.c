@@ -283,8 +283,9 @@ u8 send_json_adddevice (u8 * msg)
 		root = cJSON_CreateObject();
 		
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			cfg[i]);
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 		
@@ -415,8 +416,9 @@ void json_return (u8 deviceid,const char * cmdNum,const char *errType)
   root = cJSON_CreateObject();
 	
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			deviceid);
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 
@@ -673,8 +675,9 @@ void json_version (cJSON *root)
   root1 = cJSON_CreateObject();
 	
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			Get_MyAddr());
 	  cJSON_AddStringToObject(root1,"devSN",sn_str);
 		myfree(sn_str);
 
@@ -852,8 +855,9 @@ u8 send_json_cj (u8 *msg)
 	}
 	
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			id);
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 		
@@ -935,8 +939,9 @@ u8 send_json_kz (u8 *msg)
 	id=(msg[3]<<8)|msg[4];
 
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			id);
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 
@@ -1041,8 +1046,9 @@ u8 send_json_warn (u8 *msg)
 	id=(msg[3]<<8)|msg[4];
 
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			id);
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 
@@ -1121,8 +1127,9 @@ u8  send_json_limit (u8 *msg)
   root = cJSON_CreateObject();
 	
 		char *sn_str=mymalloc(64);
-		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11]);
+		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
+			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
+			Get_MyAddr());
 	  cJSON_AddStringToObject(root,"devSN",sn_str);
 		myfree(sn_str);
 

@@ -377,6 +377,33 @@ u8 RF_SetChannel(u8 channel)
 
 
 
+//收到进入ISP模式命令次数
+static u8 ISP_CMD_NUM=0;
+//进入ISP模式最大命令次数，超过这个次数则复位到ISP
+#define ISP_CMD_NUM_MAX 20
+
+void checkEnterISP (u8 data)
+{
+	if (data==0x7f)
+	{
+		ISP_CMD_NUM++;
+		if (ISP_CMD_NUM>ISP_CMD_NUM_MAX)
+		{
+			//这里复位到ISP
+			*(u32*)0x20000000=0xf0000005;
+			NVIC_SystemReset();
+		}
+	}
+	else
+	{
+		ISP_CMD_NUM=0;
+	}
+}
+
+
+
+
+
 
 
 void USART1_IRQHandler(void)                	//串口1中断服务程序
@@ -389,6 +416,7 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 		USART1_IDE=0;
 		
 		temp= (uint8_t)USART1->DR;//执行读操作自动清零中断标记
+		checkEnterISP(temp);//校验是否需要进入ISP
 		if (t<58) MY_CMD[t++]=temp;
 		if (RET_NUM<USART_REC_LEN)//如果缓冲池没满才接收
 		{

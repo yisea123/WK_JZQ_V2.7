@@ -64,4 +64,5 @@
 .\objects\wk_jzq_v2_6\power.o: ..\HARDWARE\TIMER\timer.h
 .\objects\wk_jzq_v2_6\power.o: ..\HARDWARE\BEEP\beep.h
 .\objects\wk_jzq_v2_6\power.o: ..\SOFTWARE\FILE\file.h
+.\objects\wk_jzq_v2_6\power.o: ..\HARDWARE\RELAY\relay.h
 .\objects\wk_jzq_v2_6\power.o: ..\SOFTWARE\POWER\power.h

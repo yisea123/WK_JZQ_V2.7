@@ -1125,7 +1125,7 @@ u16 Cmd_0x06 (u16 addr ,u8 state)
 			Get_Crc16(recv,recv[6]+7,crc);
 			if (crc[0]==recv[recv[6]+7]&&crc[1]==recv[recv[6]+8])//crc校验通过
 			{
-				if ((recv[4]==(data[4]|0x80)))//命令符合
+				if (recv[4]==(data[4]|0x80))//命令符合
 				{
 					return (recv[7]<<8)|recv[8];
 				}
