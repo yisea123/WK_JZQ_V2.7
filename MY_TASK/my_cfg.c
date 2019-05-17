@@ -94,7 +94,7 @@ void rf_cfg (u8 *rf_recv)
 	Get_Crc16(rf_recv,rf_recv[6]+7,crc);
 	if (crc[0]==rf_recv[rf_recv[6]+7]&&crc[1]==rf_recv[rf_recv[6]+8])//crc校验通过
 	{
-		if ((((rf_recv[2]<<8)|rf_recv[3])==Get_MyAddr())||(rf_recv[4]>=6&&rf_recv[4]<=8)||(rf_recv[4]==0x01))//地址符合
+		if ((((rf_recv[2]<<8)|rf_recv[3])==Get_MyAddr())||(((rf_recv[2]<<8)|rf_recv[3])==0))//地址符合
 		{
 			switch(rf_recv[4])
 			{
@@ -169,6 +169,7 @@ void cfg_0x01 (u8 * data)
 {
 	u8 ret_[40]={0};
 	u8 crc[2]={0};
+	u16 addr=Get_MyAddr();
 	u8 *date=(u8*)__DATE__;
 	u8 *time=(u8*)__TIME__;
 	u8 *temp;//临时指针
@@ -177,8 +178,8 @@ void cfg_0x01 (u8 * data)
 	u16 length=datelen+timelen+4+2;
 	ret_[0]=0xff;
 	ret_[1]=0xff;
-	ret_[2]=data[2];
-	ret_[3]=data[3];
+	ret_[2]=addr>>8;
+	ret_[3]=addr;
 	ret_[4]=0x80|data[4];
 	ret_[5]=length>>8;
 	ret_[6]=length;

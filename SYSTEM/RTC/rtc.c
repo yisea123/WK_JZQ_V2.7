@@ -50,8 +50,8 @@ u8 RTC_Init(void)
 		{
 			temp++;
 			delay_us(10);
+			if(temp>=250)return 1;//初始化时钟失败,晶振有问题	    
 		}
-		if(temp>=250)return 1;//初始化时钟失败,晶振有问题	    
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);		//设置RTC时钟(RTCCLK),选择LSE作为RTC时钟    
 		RCC_RTCCLKCmd(ENABLE);	//使能RTC时钟  
 		RTC_WaitForLastTask();	//等待最近一次对RTC寄存器的写操作完成

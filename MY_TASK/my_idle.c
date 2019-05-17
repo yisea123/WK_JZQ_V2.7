@@ -23,18 +23,19 @@ void idle_task (void *t)
 		for (i=0;i<TASK_MAX_NUM;i++)
 		{
 			IWDG_Feed();
-			OS_ENTER_CRITICAL();
-			if (getSysRunTime()- TCB_Table[i].LastTime>60*2)
-			{
-				if (TCB_Table[i].pTask)
-				{
-					IDLE|=0x80000000>>i;
-					LASTTIME[i]=TCB_Table[i].LastTime;
-					IDLETIMES[i]++;
-					//TaskRepend(i);
-				}
-			}
-			OS_EXIT_CRITICAL();
+			WFI_SET();
+//			OS_ENTER_CRITICAL();
+//			if (getSysRunTime()- TCB_Table[i].LastTime>60*2)
+//			{
+//				if (TCB_Table[i].pTask)
+//				{
+//					IDLE|=0x80000000>>i;
+//					LASTTIME[i]=TCB_Table[i].LastTime;
+//					IDLETIMES[i]++;
+//					//TaskRepend(i);
+//				}
+//			}
+//			OS_EXIT_CRITICAL();
 		}
 	}
 }

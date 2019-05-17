@@ -122,6 +122,8 @@ u16 *GetCfgData (void);
 
 //------------------------供外部调用的函数---------------------------
 
+//初始化采集器
+void InitCJData (void);
 
 //获取采集器数据首地址
 cjq_data *GetCJDataAddr (void);
