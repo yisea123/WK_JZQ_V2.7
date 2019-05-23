@@ -13,6 +13,7 @@
 #include "key.h"
 #include "sysinfo.h"
 #include "cScript.h"
+#include "swd.h"
 #include "debug.h"
 
 
@@ -157,6 +158,10 @@ void dbg_Interpreter(u8 *recvbuff,void (*sendstr) (char *str))
 	else if (samestr((u8*)"run",recvbuff))
 	{
 		dbg_run(recvbuff+3); 
+	}
+	else if (samestr((u8*)"swd",recvbuff))
+	{
+		dbg_swd(recvbuff+3); 
 	}
 	else
 	{
@@ -421,6 +426,9 @@ void dbg_help(void)
 	dbg_sendstr((char*)ptxt);
 
 	ptxt="\t输入\"sysinfo\"获取板子信息\r\n";
+	dbg_sendstr((char*)ptxt);
+
+	ptxt="\t输入\"swd\"调试swd接口\r\n";
 	dbg_sendstr((char*)ptxt);
 
 	ptxt="\t输入\"set [设置项] [参数]\"修改集中器的配置\r\n";
@@ -1263,6 +1271,152 @@ void dbg_send_udp (char *str)
 
 
 
+
+
+
+
+
+//定义ICP操作
+#define ICP_CMD_ADDR 				(0x20001000)//ICP命令
+#define ICP_ADDR_ADDR				(0x20001004)//ICP在flash中存储的位置
+#define ICP_DATASIZE_ADDR 	(0x20001008)//本次要拷贝的数据大小
+
+#define ICP_RUN   (0x00000001)	//数据已经通过swd写入内存，可以开始拷贝
+#define ICP_RUNED	(0x00000000)	//这一次拷贝完成，可以开始下一次拷贝
+#define ICP_DOWN  (0x00000002)	//数据写入完成，开始运行
+
+
+
+
+
+
+
+
+//调试swd相关功能
+void dbg_swd (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *ptxt=0;
+	u32 id=0;
+	u8 err=0;
+	if (*buff==' ')
+	{
+		buff++;
+		if (samestr("init",buff))
+		{
+			SWD_Init();
+			ptxt="初始化SWD接口已完成\r\n";
+			dbg_sendstr(ptxt);
+		}
+		else if (samestr("idcode",buff))
+		{
+			SWD_LineReset();
+			id=SWD_ReadReg(SWD_REG_DP|SWD_REG_IDCODE,&err);
+			sprintf (txtbuff,"得到的设备id是：%#X\r\n",id);
+			dbg_sendstr(txtbuff);
+		}
+		else if (samestr("loader",buff))
+		{
+			FRESULT ret;
+			UINT real_length=0;
+			u8 *sram=mymalloc(4096);
+			
+			ptxt="正在加载loader\r\n";
+			dbg_sendstr(ptxt);
+			ret=FATS->f_open(file,_T("0:/loader.bin"),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+			if (ret==FR_OK)
+			{
+				if (file->fsize<=4096)
+				{
+					FATS->f_read(file,sram,file->fsize,&real_length);
+					
+					id=SWD_Cm3Halt(1);
+					id=SWD_WriteSram(0x20000000,(u32*)sram,real_length/4);
+					id=SWD_WriteCm3Reg(CM3_REG_SP,*(u32*)sram);
+					id=SWD_WriteCm3Reg(CM3_REG_PC,((u32*)sram)[1]);
+					id=SWD_Cm3Halt(0);
+					sprintf (txtbuff,"Loader文件已写入：%#X\r\n",id);
+					dbg_sendstr(txtbuff);
+				}
+				else
+				{
+					sprintf (txtbuff,"Loader文件太大：%u\r\n",(u32)file->fsize);
+					dbg_sendstr(txtbuff);
+				}
+			}
+			else
+			{
+				sprintf (txtbuff,"打开文件失败：%#X\r\n",ret);
+				dbg_sendstr(txtbuff);
+			}
+			FATS->f_close(file);
+			myfree(sram);
+		}
+		else if (samestr("program",buff))//编程
+		{
+			u32 data=0;
+			u32 flash_addr=0x08000000;
+			u32 all_len=0;
+			u32 icp_cmd=0;
+			FRESULT ret;
+			UINT real_length=0;
+			u8 *sram=mymalloc(4096);
+			ptxt="正在下载。。。\r\n";
+			dbg_sendstr(ptxt);
+			ret=FATS->f_open(file,_T("0:/app.bin"),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+			if (ret==FR_OK)
+			{
+				all_len=file->fsize;
+				while(1)
+				{
+					if (all_len>2048)
+					{
+						FATS->f_read(file,sram,2048,&real_length);	
+						all_len-=2048;
+					}
+					else if (all_len)
+					{
+						FATS->f_read(file,sram,all_len,&real_length);	
+					}
+					else
+					{
+						data=ICP_DOWN;
+						id=SWD_WriteSram(ICP_CMD_ADDR,&icp_cmd,1);//程序下载完成
+						break;
+					}
+					data=flash_addr;
+					id=SWD_WriteSram(ICP_ADDR_ADDR,&data,1);//设置下载到flash的地址
+					data=real_length;
+					id=SWD_WriteSram(ICP_DATASIZE_ADDR,&data,1);//设置程序的大小
+					
+					id=SWD_WriteSram(0x20003000,(u32*)sram,real_length/4);//加载程序到缓冲区
+					flash_addr+=real_length;
+					data=ICP_RUN;
+					id=SWD_WriteSram(ICP_CMD_ADDR,&icp_cmd,1);//设置传送完成标志位
+					delay_ms(50);
+					id=SWD_ReadSram(ICP_CMD_ADDR,&icp_cmd,1);//检查程序是否写入到flash
+				}
+			}
+			else
+			{
+			}
+			FATS->f_close(file);
+			myfree(sram);
+		}
+	}
+	else
+	{
+		ptxt="输入\"swd init\"初始化接口\r\n";
+		dbg_sendstr(ptxt);
+		
+		ptxt="输入\"swd idcode\"得到目标设备的idcode\r\n";
+		dbg_sendstr(ptxt);
+
+		ptxt="输入\"swd loader\"传送BootLoader到目标板\r\n";
+		dbg_sendstr(ptxt);
+	}
+	myfree(txtbuff);
+}
 
 
 

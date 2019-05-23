@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_3</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -787,6 +787,11 @@
               <FileName>cScript.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
+            </File>
+            <File>
+              <FileName>swd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\SWD\swd.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1699,6 +1704,11 @@
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
             </File>
+            <File>
+              <FileName>swd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\SWD\swd.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2172,7 +2182,7 @@
             <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>0</OneElfS>
+            <OneElfS>1</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -2187,7 +2197,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2609,6 +2619,11 @@
               <FileName>cScript.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SOFTWARE\CScript\cScript.c</FilePath>
+            </File>
+            <File>
+              <FileName>swd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SOFTWARE\SWD\swd.c</FilePath>
             </File>
           </Files>
         </Group>

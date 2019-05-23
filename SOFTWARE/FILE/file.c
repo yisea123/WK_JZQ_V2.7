@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "cscript.h"
+#include "swd.h"
 #include "file.h"
 
 //读取SD卡中存储的配置信息，0，成功，1，失败
@@ -144,6 +145,18 @@ u8 run_sysinit (void)
 		return 2;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

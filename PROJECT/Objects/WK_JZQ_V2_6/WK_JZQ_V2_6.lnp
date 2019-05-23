@@ -70,6 +70,7 @@
 ".\objects\wk_jzq_v2_6\debug.o"
 ".\objects\wk_jzq_v2_6\ntp.o"
 ".\objects\wk_jzq_v2_6\cscript.o"
+".\objects\wk_jzq_v2_6\swd.o"
 ".\objects\wk_jzq_v2_6\my_topmsg.o"
 ".\objects\wk_jzq_v2_6\my_lcd.o"
 ".\objects\wk_jzq_v2_6\my_rf.o"

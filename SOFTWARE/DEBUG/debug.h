@@ -124,6 +124,9 @@ void dbg_print (char *str);
 //udp字符串发送接口
 void dbg_send_udp (char *str);
 
+//执行swd
+void dbg_swd (u8 *buff);
+
 /**********执行指令****************/
 
 

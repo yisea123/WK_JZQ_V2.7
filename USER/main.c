@@ -43,7 +43,7 @@ __align(8) u32 rf_looptack[256];
 __align(8) u32 my_lighttack[128];
 //u32 my_rf_handtack[256];
 //u32 my_rf_dealtack[64];
-__align(8) u32 my_w5500tack[256];
+__align(8) u32 my_w5500tack[256+128];
 __align(8) u32 my_autotack[128];
 //u32 my_cfgtack[128];
 //__align(8) u32 my_iottack[256];
@@ -70,7 +70,7 @@ int main(void)
 	CreateTaskN (my_lcd, 					0, my_lcdtack,		128,				2)	;	 				
 	CreateTaskN (my_rf_loop, 			0, rf_looptack,		256,				3)	;	 				
 	CreateTaskN (my_light, 				0, my_lighttack,	128,				4)	;		
-	CreateTaskN (my_w5500, 				0, my_w5500tack,	256,				7)	;		
+	CreateTaskN (my_w5500, 				0, my_w5500tack,	256+128,				7)	;		
 	CreateTaskN (my_autocontrol, 	0, my_autotack,		128,				8)	;		
 //	CreateTaskN (my_iot, 					0, my_iottack,		256,		 	 10)	;		
 	CreateTaskN (idle_task, 			0, my_idletack,		 256,			 31)	;		
