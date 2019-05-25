@@ -221,6 +221,11 @@ const fun_list FUN_LIST[]={
 	{dbg_key,"dbg_key"},
 	{dbg_mem,"dbg_mem"},
 	{dbg_print,"dbg_print"},
+
+	{dbg_swdinit,"dbg_swdinit"},
+	{dbg_swdidcode,"dbg_swdidcode"},
+	{dbg_swdloader,"dbg_swdloader"},
+	{dbg_swdprogram,"dbg_swdprogram"},
 	
 	{addSoftTimerIrq10ms,"addSoftTimerIrq10ms"},
 	{delSoftTimerIrq10ms,"delSoftTimerIrq10ms"},

@@ -898,6 +898,11 @@ u8 send_json_cj (u8 *msg)
 			cJSON_AddNumberToObject(js_collect,"tvoc",data->tvoc);
 			cJSON_AddNumberToObject(js_collect,"pm25",data->pm2_5);
 			cJSON_AddNumberToObject(js_collect,"co2",data->co2);
+			
+															//临时加的两个参数2019.5.24
+			cJSON_AddNumberToObject(js_collect,"pm10",1);
+			cJSON_AddNumberToObject(js_collect,"co",1);
+			cJSON_AddNumberToObject(js_collect,"hcho",1);
 		}
 	
 

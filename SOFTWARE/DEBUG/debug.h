@@ -127,6 +127,18 @@ void dbg_send_udp (char *str);
 //执行swd
 void dbg_swd (u8 *buff);
 
+//swd初始化
+void dbg_swdinit (u8 *buff);
+
+//swd连接目标设备
+void dbg_swdidcode (u8 *buff);
+
+//swd加载loader文件
+void dbg_swdloader (u8 *buff);
+
+//swd下载数据
+void dbg_swdprogram (u8 *buff);
+
 /**********执行指令****************/
 
 

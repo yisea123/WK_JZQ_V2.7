@@ -1297,33 +1297,117 @@ void dbg_swd (u8 *buff)
 {
 	char *txtbuff=mymalloc(512);
 	char *ptxt=0;
-	u32 id=0;
-	u8 err=0;
 	if (*buff==' ')
 	{
 		buff++;
 		if (samestr("init",buff))
 		{
-			SWD_Init();
-			ptxt="初始化SWD接口已完成\r\n";
-			dbg_sendstr(ptxt);
+			dbg_swdinit (buff);
 		}
 		else if (samestr("idcode",buff))
 		{
-			SWD_LineReset();
-			id=SWD_ReadReg(SWD_REG_DP|SWD_REG_IDCODE,&err);
-			sprintf (txtbuff,"得到的设备id是：%#X\r\n",id);
-			dbg_sendstr(txtbuff);
+			dbg_swdidcode (buff);
 		}
 		else if (samestr("loader",buff))
 		{
+			if (*(buff+6)==' ')
+			{
+				dbg_swdloader (buff+7);
+			}
+			else
+			{
+				dbg_swdloader (0);
+			}
+		}
+		else if (samestr("program",buff))//编程
+		{
+			if (*(buff+7)==' ')
+			{
+				dbg_swdprogram (buff+8);
+			}
+			else
+			{
+				dbg_swdprogram (0);
+			}
+		}
+	}
+	else
+	{
+		ptxt="输入\"swd init\"初始化接口\r\n";
+		dbg_sendstr(ptxt);
+		
+		ptxt="输入\"swd idcode\"得到目标设备的idcode\r\n";
+		dbg_sendstr(ptxt);
+
+		ptxt="输入\"swd loader\"传送BootLoader到目标板\r\n";
+		dbg_sendstr(ptxt);
+
+		ptxt="输入\"swd loader [文件路径]\"传送指定BootLoader到目标板\r\n";
+		dbg_sendstr(ptxt);
+
+		ptxt="输入\"swd program\"下载程序到目标板\r\n";
+		dbg_sendstr(ptxt);
+		
+		ptxt="输入\"swd program [文件路径]\"下载指定程序到目标板\r\n";
+		dbg_sendstr(ptxt);
+	}
+	myfree(txtbuff);
+}
+
+
+//swd初始化
+void dbg_swdinit (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *ptxt=0;
+	SWD_Init();
+	ptxt="初始化SWD接口已完成\r\n";
+	dbg_sendstr(ptxt);
+	myfree(txtbuff);
+	
+}
+
+
+//swd连接目标设备
+void dbg_swdidcode (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	u32 id=0;
+	u8 err;
+	SWD_LineReset();
+	id=SWD_ReadReg(SWD_REG_DP|SWD_REG_IDCODE,&err);
+	sprintf (txtbuff,"得到的设备id是：%#X\r\n",id);
+	dbg_sendstr(txtbuff);
+	myfree(txtbuff);
+}
+
+
+
+//swd加载loader文件,参数是要下载的程序名指针，0,为默认文件
+void dbg_swdloader (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *file_name=0;
+	u32 id=0;
+	u8 timeout=0;
+	
 			FRESULT ret;
 			UINT real_length=0;
+			u32 data=0;
+			u32 icp_cmd=0;
 			u8 *sram=mymalloc(4096);
+			if (buff)
+			{
+				file_name=(char*)buff;
+			}
+			else
+			{
+				file_name="0:/loader.bin";
+			}
 			
-			ptxt="正在加载loader\r\n";
-			dbg_sendstr(ptxt);
-			ret=FATS->f_open(file,_T("0:/loader.bin"),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+			sprintf (txtbuff,"正在加载Loader：%s\r\n",file_name);
+			dbg_sendstr(txtbuff);
+			ret=FATS->f_open(file,_T(file_name),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
 			if (ret==FR_OK)
 			{
 				if (file->fsize<=4096)
@@ -1332,11 +1416,32 @@ void dbg_swd (u8 *buff)
 					
 					id=SWD_Cm3Halt(1);
 					id=SWD_WriteSram(0x20000000,(u32*)sram,real_length/4);
+					data=3;
+					id=SWD_WriteSram(ICP_CMD_ADDR,&data,1);//程序下载完成
 					id=SWD_WriteCm3Reg(CM3_REG_SP,*(u32*)sram);
 					id=SWD_WriteCm3Reg(CM3_REG_PC,((u32*)sram)[1]);
 					id=SWD_Cm3Halt(0);
-					sprintf (txtbuff,"Loader文件已写入：%#X\r\n",id);
-					dbg_sendstr(txtbuff);
+					timeout=0;
+					do {
+						delay_ms(50);
+						id=SWD_ReadSram(ICP_CMD_ADDR,&icp_cmd,1);//检查程序是否写入到flash
+						if (icp_cmd==ICP_RUNED)
+						{
+							sprintf (txtbuff,"Loader文件已写入：%#X\r\n",id);
+							dbg_sendstr(txtbuff);
+							break;
+						}
+						else
+						{
+							timeout++;
+							if (timeout>10)
+							{
+								sprintf (txtbuff,"Loader文件写入超时：%#X\r\n",id);
+								dbg_sendstr(txtbuff);
+								break;
+							}
+						}
+					}while (1);
 				}
 				else
 				{
@@ -1351,72 +1456,136 @@ void dbg_swd (u8 *buff)
 			}
 			FATS->f_close(file);
 			myfree(sram);
-		}
-		else if (samestr("program",buff))//编程
-		{
+	myfree(txtbuff);
+}
+
+
+
+//swd下载数据,参数是要下载的程序名指针，0,为默认文件
+void dbg_swdprogram (u8 *buff)
+{
+	char *txtbuff=mymalloc(512);
+	char *file_name=0;
+	u32 id=0;
+	u8 timeout=0;
 			u32 data=0;
 			u32 flash_addr=0x08000000;
 			u32 all_len=0;
 			u32 icp_cmd=0;
+			u16 packet_num=0;
 			FRESULT ret;
 			UINT real_length=0;
 			u8 *sram=mymalloc(4096);
-			ptxt="正在下载。。。\r\n";
-			dbg_sendstr(ptxt);
-			ret=FATS->f_open(file,_T("0:/app.bin"),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+			if (buff)
+			{
+				file_name=(char*)buff;
+			}
+			else
+			{
+				file_name="0:/app.bin";
+			}
+			sprintf (txtbuff,"正在下载：%s\r\n",file_name);
+			dbg_sendstr(txtbuff);
+			ret=FATS->f_open(file,_T(file_name),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
 			if (ret==FR_OK)
 			{
 				all_len=file->fsize;
 				while(1)
 				{
-					if (all_len>2048)
+					packet_num++;
+					if (all_len>1024)
 					{
-						FATS->f_read(file,sram,2048,&real_length);	
-						all_len-=2048;
+						FATS->f_read(file,sram,1024,&real_length);	
+						//mymemset(sram,packet_num,2048);real_length=2048;
+						if (real_length!=1024)
+						{
+							sprintf (txtbuff,"文件读取错误：%#X\r\n",real_length);
+							dbg_sendstr(txtbuff);
+							break;
+						}
 					}
 					else if (all_len)
 					{
 						FATS->f_read(file,sram,all_len,&real_length);	
+						//mymemset(sram,packet_num,all_len);real_length=all_len;
+						if (real_length!=all_len)
+						{
+							sprintf (txtbuff,"文件读取错误：%#X\r\n",real_length);
+							dbg_sendstr(txtbuff);
+							break;
+						}
+						
 					}
 					else
 					{
-						data=ICP_DOWN;
+						icp_cmd=ICP_DOWN;
 						id=SWD_WriteSram(ICP_CMD_ADDR,&icp_cmd,1);//程序下载完成
+						sprintf (txtbuff,"下载完成：%#X\r\n",id);
+						dbg_sendstr(txtbuff);
 						break;
 					}
+
 					data=flash_addr;
 					id=SWD_WriteSram(ICP_ADDR_ADDR,&data,1);//设置下载到flash的地址
+					
+//					id=SWD_ReadSram(ICP_ADDR_ADDR,&data,1);
+//					sprintf (txtbuff,"第 %d 个包地址是：%#X:%#X\r\n",packet_num,flash_addr,data);
+//					dbg_sendstr(txtbuff);		
+
 					data=real_length;
 					id=SWD_WriteSram(ICP_DATASIZE_ADDR,&data,1);//设置程序的大小
 					
+//					id=SWD_ReadSram(ICP_DATASIZE_ADDR,&data,1);
+//					sprintf (txtbuff,"第 %d 个包大小是：%d\r\n",packet_num,data);
+//					dbg_sendstr(txtbuff);		
+
 					id=SWD_WriteSram(0x20003000,(u32*)sram,real_length/4);//加载程序到缓冲区
-					flash_addr+=real_length;
-					data=ICP_RUN;
+					icp_cmd=ICP_RUN;
 					id=SWD_WriteSram(ICP_CMD_ADDR,&icp_cmd,1);//设置传送完成标志位
-					delay_ms(50);
-					id=SWD_ReadSram(ICP_CMD_ADDR,&icp_cmd,1);//检查程序是否写入到flash
+					timeout=0;
+					do {
+						sleep_ms(50);
+						id=SWD_ReadSram(ICP_CMD_ADDR,&icp_cmd,1);//检查程序是否写入到flash
+						if (icp_cmd==ICP_RUNED)
+						{
+							sprintf (txtbuff,"下载了第 %d 个包：%#X:%d\r\n",packet_num,flash_addr,real_length);
+							dbg_sendstr(txtbuff);		
+							break;
+						}
+						else
+						{
+							timeout++;
+							if (timeout>10)
+							{
+								sprintf (txtbuff,"程序下载超时：%#X\r\n",id);
+								dbg_sendstr(txtbuff);
+								break;
+							}
+						}
+					} while (1);
+					if (timeout>10)
+					{
+						break;
+					}
+					else
+					{
+						flash_addr+=real_length;
+						all_len-=real_length;
+					}
 				}
 			}
 			else
 			{
+				sprintf (txtbuff,"打开文件失败：%#X\r\n",ret);
+				dbg_sendstr(txtbuff);
 			}
 			FATS->f_close(file);
 			myfree(sram);
-		}
-	}
-	else
-	{
-		ptxt="输入\"swd init\"初始化接口\r\n";
-		dbg_sendstr(ptxt);
-		
-		ptxt="输入\"swd idcode\"得到目标设备的idcode\r\n";
-		dbg_sendstr(ptxt);
-
-		ptxt="输入\"swd loader\"传送BootLoader到目标板\r\n";
-		dbg_sendstr(ptxt);
-	}
 	myfree(txtbuff);
 }
+
+
+
 
 
 

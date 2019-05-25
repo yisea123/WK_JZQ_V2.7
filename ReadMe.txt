@@ -315,5 +315,15 @@
 2019.5.23
 	成功用集中器读取目标设备的IDCODE
 	成功用集中器下载程序到目标板的SRAM
+2019.5.24
+	给目标板下载程序流程：
+		swd init
+		swd idcode
+		swd loader 0:/ICP_SRAM_led.bin
+		swd program 0:/boot.bin
+		swd program 0:/2019.5.16 KZQ_V3_5.bin
+2019.5.25
+	出现了会鬼畜重启的bug，没找到原因
+	给其他板子下载程序功能正常，提取了api，可以用脚本调用
 
 
