@@ -633,18 +633,37 @@ u8 RED_LIGHT=0;
 u8 GREEN_LIGHT=0;
 u8 BLUE_LIGHT=0;
 
-
+static u8 g_LightPower=1;
 
 //设置灯光带的颜色
 void light_setcolor(u8 red,u8 green,u8 blue)
 {
-	RED_LIGHT=red;
-	GREEN_LIGHT=green;
-	BLUE_LIGHT=blue;
-	
-	TIM3->CCR4=red;
-	TIM3->CCR3=green;
+	if (g_LightPower)
+	{
+		RED_LIGHT=red;
+		GREEN_LIGHT=green;
+		BLUE_LIGHT=blue;
+		
+		TIM3->CCR4=red;
+		TIM3->CCR3=green;
+	}
 }
+
+
+
+//1，打开灯带，0，关闭灯带2019.6.7
+void light_power (u8 state)
+{
+	if (state==0)
+	{
+		light_setcolor(0,0,0);
+	}
+	g_LightPower=state;
+}
+
+
+
+
 
 
 #else /*ifdef JZQ_V2_3*/															/*V2.3板子的灯光驱动*/
@@ -1073,15 +1092,22 @@ void led_setall (u8 red,u8 green,u8 blue)
 }
 
 
+//只有打开灯带电源时才能亮灯带，2019.6.7
+static u8 g_LightPower=1;
+
+
 void led_senddata (void)
 {
 	u16 i=0;
-	sm16703_reset();
-	for (i=0;i<LED_NUM;i++)
+	if (g_LightPower)
 	{
-		sm16703_send (LED_COLOR[0][i] ,LED_COLOR[1][i] ,LED_COLOR[2][i] );
+		sm16703_reset();
+		for (i=0;i<LED_NUM;i++)
+		{
+			sm16703_send (LED_COLOR[0][i] ,LED_COLOR[1][i] ,LED_COLOR[2][i] );
+		}
+		LIGHT_1=0;
 	}
-	LIGHT_1=0;
 }
 
 
@@ -1374,6 +1400,18 @@ void light_setcolor(u8 red,u8 green,u8 blue)
 {
 //	led_setall (red,green,blue);
 //	led_senddata( );
+}
+
+
+//1，打开灯带，0，关闭灯带2019.6.7
+void light_power (u8 state)
+{
+	if (state==0)
+	{
+		led_resetall();
+		led_senddata();
+	}
+	g_LightPower=state;
 }
 
 

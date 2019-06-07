@@ -764,6 +764,7 @@ void	lcd_messeg_03 (u8 *meg)
 				light[2]=LIGHT_LCD_STATE;
 				send_messeg(LIT_MESSEG,light);
 				LCD_POWER=0;
+				light_power(1);//打开灯带
 				sleep_ms(1000);
 				lcd_page (PAGE_MAIN);
 				delay_ms(30);
@@ -777,6 +778,7 @@ void	lcd_messeg_03 (u8 *meg)
 				send_messeg(LIT_MESSEG,light);
 				delay_ms(200);
 				LCD_POWER=1;
+				light_power(0);//关闭灯带
 			}
 		}
 	}

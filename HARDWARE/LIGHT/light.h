@@ -82,6 +82,10 @@ void key_senddataby (u8 **colors);
 void light_setcolor(u8 red,u8 green,u8 blue);
 
 
+//1，打开灯带，0，关闭灯带2019.6.7
+void light_power (u8 state);
+
+
 
 
 #ifdef  __cplusplus
