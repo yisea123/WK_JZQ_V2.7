@@ -125,37 +125,44 @@ run local a=1000;local b=30;
 
 新版集中器按键灯闪烁
 run local a=7;local b=5;
-while (a=a-1)
-{
-key_setcolor(b,200,0,200);
-key_senddata();
-sleep_ms(100);
-key_setcolor(b,0,0,0);
-key_senddata();
-sleep_ms(100);
-if (b==0)
-{
-b=6;
-};
-b=b-1;
-};
+	while (a=a-1)
+	{
+	key_setcolor(b,200,0,200);
+	key_senddata();
+	sleep_ms(100);
+	key_setcolor(b,0,0,0);
+	key_senddata();
+	sleep_ms(100);
+	if (b==0)
+	{
+	b=6;
+	};
+	b=b-1;
+	};
 
 
 模拟按键按下
 run local a=400;local b=6;
-while (a=a-1)
-{
-Set_Key(b,3);
-sleep_ms(100);
-Set_Key(b,1);
-sleep_ms(100);
-b=b-1;
-if (b==0)
-{
-b=6;
-};
-};
+	while (a=a-1)
+	{
+	Set_Key(b,3);
+	sleep_ms(100);
+	Set_Key(b,1);
+	sleep_ms(100);
+	b=b-1;
+	if (b==0)
+	{
+	b=6;
+	};
+	};
 
+测试网络传输稳定性
+run 
+	while (1)
+	{
+	sleep_ms(1000);
+	dbg_print("网络传输测试");
+	};
 
 
 	

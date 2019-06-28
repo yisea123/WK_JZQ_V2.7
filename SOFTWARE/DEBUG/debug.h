@@ -10,7 +10,7 @@
 
 
 
-
+#define dbg_printf(fmat,...) do{char *str=mymalloc(128);fprintf (str,fmat,__VA_ARGS__);myfree(str);}while(0);
 
 
 

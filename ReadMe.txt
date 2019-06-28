@@ -321,11 +321,13 @@
 		swd idcode
 		swd loader 0:/ICP_SRAM_led.bin
 		swd program 0:/boot.bin
-		swd program 0:/2019.5.16 KZQ_V3_5.bin
+		swd program 0:/UART_TO_485.bin
 2019.5.25
 	出现了会鬼畜重启的bug，没找到原因
 	给其他板子下载程序功能正常，提取了api，可以用脚本调用
 2019.6.7
 	添加关闭灯带函数，在关屏时会同时关掉灯带
+2019.6.27
+	更改网口SPI驱动，尝试解决网络断开问题
 
 
