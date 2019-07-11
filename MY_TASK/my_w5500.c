@@ -60,7 +60,6 @@ void my_w5500 (void * t)
 	a.free_fn=myfree;
 	cJSON_InitHooks(&a);
 	SOCKET0_SetFocus(OSPrioHighRdy);
-	SOCKET1_SetFocus(OSPrioHighRdy);
 	SOCKET2_SetFocus(OSPrioHighRdy);
 	
 	//添加定时器
@@ -73,6 +72,9 @@ void my_w5500 (void * t)
 	u16 rest_time_w5500=0;
 	u16 rest_time_sys=0;
 	
+	u32 *debug_task=mymalloc (4*256);
+	CreateTaskN (my_debug_task, 	0, debug_task,		256,		 	 10)	;		
+
 	
 	while(1)
 	{
@@ -116,10 +118,28 @@ void my_w5500 (void * t)
 			{
 			}
 		}
-		my_debug ( );		//调试信息输出
 		wk_client();
 	}
 }
+
+
+
+//调试线程
+void my_debug_task ( void *t)
+{
+	SOCKET1_SetFocus(OSPrioHighRdy);
+	while (1)
+	{
+		TaskGetMsg();
+		my_debug ( );		//调试信息输出
+	}
+	
+}
+
+
+
+
+
 
 
 
@@ -179,45 +199,68 @@ void wk_client(void)
 	if (checkSocketState(0,IR_CON))//连接成功发送上线消息
 	{
 			m_send[0]=4;//模拟收到了发送上线消息
-			send_json_adddevice(m_send);
+			//send_json_adddevice(m_send);
+		dbg_print ("端口0 TCP连接成功");
 	}
 	if (checkSocketState(0,IR_RECV))//如果有数据等待接收
 	{
 		server_data ();
+	}
+	if (checkSocketState(0,IR_DISCON))//连接被断开
+	{
+		socket_close(0);//关闭端口
+		//dbg_print ("端口0 TCP连接被断开");
+	}
+	if (checkSocketState(0,IR_TIMEOUT))//超时
+	{
+		socket_close(0);//关闭端口
+		dbg_print ("端口0 通信超时");
 	}
 	
 	
 			/*端口0网络故障处理*/
 	if ((net_get_comstate(0)!=SOCK_ESTABLISHED))//如果连接断开
 	{		
-		if (tcp_connect(0,4545,SERVER_IP,SERVER_PORT)==FALSE)
+		u8 ip[4]={0};u16 port=0;
+		net_get_unsenddir (ip,&port); 
+		if ((socket_close (0)==TRUE)&&((!SAME_IP(ip,SERVER_IP))||(SERVER_PORT!=port)))//如果目标IP是可以送达的
 		{
-			if (net_check_gateway()==TRUE)
+			if (tcp_connect(0,4545,SERVER_IP,SERVER_PORT)==FALSE)
 			{
-				DBG_INTER_STATE=1;//连接上网关
-				//serch_server();//查找服务器
-				check_gateway_fail_time=0;
-			}
-			else
-			{
-				check_gateway_fail_time++;
-				if (check_gateway_fail_time>5)
+				if (net_check_gateway()==TRUE)
 				{
-					DBG_INTER_STATE=0;
-					
-					//if (getDhcpState())
+					DBG_INTER_STATE=1;//连接上网关
+					//serch_server();//查找服务器
+					check_gateway_fail_time=0;
+				}
+				else
+				{
+					check_gateway_fail_time++;
+					if (check_gateway_fail_time>5)
 					{
-						if (dhcp_retry()==TRUE)//自动获取IP地址
+						DBG_INTER_STATE=0;
+						
+						//if (getDhcpState())
 						{
-							check_gateway_fail_time=0;
+							if (dhcp_retry()==TRUE)//自动获取IP地址
+							{
+								check_gateway_fail_time=0;
+							}
 						}
 					}
 				}
 			}
+			else
+			{
+				DBG_INTER_STATE=2;//连接上服务器
+			}
 		}
 		else
 		{
-			DBG_INTER_STATE=2;//连接上服务器
+			char *str=mymalloc (256);
+			sprintf (str,"端口0 关闭失败或目标地址不可达：%d,%d,%d,%d:%d",ip[0],ip[1],ip[2],ip[3],port);
+			dbg_print (str);
+			myfree(str);
 		}
 	}
 

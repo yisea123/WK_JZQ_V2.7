@@ -15,6 +15,8 @@
 
 void my_w5500 (void * t);
 
+//调试线程
+void my_debug_task ( void *t);
 
 
 				//温控客户端函数接口

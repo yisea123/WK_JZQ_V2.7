@@ -340,6 +340,32 @@ unsigned char Read_W5500_1Byte(unsigned short reg)
 	return i;//返回读取到的寄存器数据
 }
 
+
+/*******************************************************************************
+* 函数名  : Read_W5500_nByte
+* 描述    : 通过SPI1向指定地址寄存器读n个字节数据
+* 输入    : reg:16位寄存器地址,*dat_ptr:待写入数据缓冲区指针,size:待写入的数据长度
+* 输出    : 无
+* 返回值  : 无
+* 说明    : 无
+*******************************************************************************/
+void Read_W5500_nByte(unsigned short reg, unsigned char *dat_ptr, unsigned short size)
+{
+	unsigned short i;
+
+	GPIO_ResetBits(W5500_SCS_PORT, W5500_SCS);//置W5500的SCS为低电平	
+		
+	SPI1_Send_Short(reg);//通过SPI1写16位寄存器地址
+	SPI1_Send_Byte(VDM|RWB_READ|COMMON_R);//通过SPI1写控制字节,N个字节数据长度,写数据,选择通用寄存器
+
+	for(i=0;i<size;i++)//循环将缓冲区的size个字节数据写入W5500
+	{
+		*dat_ptr++=SPI1_Send_Byte(0);//写一个字节数据
+	}
+
+	GPIO_SetBits(W5500_SCS_PORT, W5500_SCS); //置W5500的SCS为高电平
+}
+
 /*******************************************************************************
 * 函数名  : Read_W5500_SOCK_1Byte
 * 描述    : 读W5500指定端口寄存器的1个字节数据
@@ -931,6 +957,22 @@ u8 checkNetstate (u8 state)
 	}
 
 }
+
+//查询网络状况,不清除
+u8 checkNetstateN (u8 state)
+{
+	if (NET_STATE&state)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+
+}
+
+
 
 //查询网络是否有指定状态，有则返回1,，无返回0
 u8 checkSocketStateN (u8 socket,u8 state)

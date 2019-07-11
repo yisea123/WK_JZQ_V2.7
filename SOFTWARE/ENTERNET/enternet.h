@@ -9,6 +9,10 @@
 #endif
 
 
+//两个IP地址相同时返回真
+#define SAME_IP(ip1,ip2) ((ip1[0]==ip2[0])&&(ip1[1]==ip2[1])&&(ip1[2]==ip2[2])&&(ip1[3]==ip2[3]))		
+		
+		
 
 //网络参数
 extern u8 Sub_Mask[4];
@@ -66,6 +70,13 @@ u8 tcp_close(SOCKET s);
 //关闭udp连接
 u8 udp_close(SOCKET s);
 
+//判断端口状态并关闭
+u8 socket_close (SOCKET s);
+
+//读取无法抵达的IP地址，端口号
+u8 net_get_unsenddir (u8 *ip,u16 *port);
+
+
 //设置网络参数
 void net_set_getway(u8 *getwayip);
 void net_set_sub_mask(u8 *mask);
@@ -92,6 +103,7 @@ u8 net_check_parameters(void);
 
 //用于测试的，在这个函数内改变各项网络参数
 void net_test(void);
+
 
 
 

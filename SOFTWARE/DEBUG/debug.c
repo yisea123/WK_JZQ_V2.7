@@ -1289,6 +1289,7 @@ void dbg_run (u8 *buff)
 //dbg打印函数,执行脚本时调用
 void dbg_print (char *str)
 {
+	if (dbg_sendstr==0) return ;
 	dbg_sendstr(str);	
 	dbg_sendstr("\r\n");	
 }

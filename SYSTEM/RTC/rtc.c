@@ -5,6 +5,12 @@
 //正点原子@ALIENTEK
 //2010/6/6
 	   
+		 
+		 
+		 
+static u8 RTC_INITED=0;//实时时钟是否已经初始化
+		 
+		 
 static _calendar_obj calendar;//时钟结构体 
 /*
 void set_clock(u16 divx)
@@ -38,7 +44,7 @@ static void RTC_NVIC_Config(void)
 u8 RTC_Init(void)
 {
 	//检查是不是第一次配置时钟
-	u8 temp=0;
+	u16 temp=0;
  
 	if (BKP_ReadBackupRegister(BKP_DR1) != 0x5050)		//从指定的后备寄存器中读出数据:读出了与写入的指定数据不相乎
 	{	 			
@@ -49,8 +55,8 @@ u8 RTC_Init(void)
 		while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)	//检查指定的RCC标志位设置与否,等待低速晶振就绪
 		{
 			temp++;
-			delay_us(10);
-			if(temp>=250)return 1;//初始化时钟失败,晶振有问题	    
+			delay_us(1000);
+			if(temp>=2500)return 1;//初始化时钟失败,晶振有问题	    
 		}
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);		//设置RTC时钟(RTCCLK),选择LSE作为RTC时钟    
 		RCC_RTCCLKCmd(ENABLE);	//使能RTC时钟  
@@ -73,6 +79,7 @@ u8 RTC_Init(void)
 	}
 	RTC_NVIC_Config();//RCT中断分组设置		    				     
 	RTC_Get();//更新时间	
+	RTC_INITED=1;//实时时钟已初始化
 	return 0; //ok
 
 }		 				    
@@ -122,6 +129,9 @@ u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
 {
 	u16 t;
 	u32 seccount=0;
+	
+	if (RTC_INITED==0) return 1;
+	
 	if(syear<1970||syear>2099)return 1;	   
 	for(t=1970;t<syear;t++)	//把所有年份的秒钟相加
 	{
@@ -229,6 +239,7 @@ _calendar_obj* RTC_GetTimeObj ( void )
 
 u8 RTC_SetTimeBySec (u32 sec)
 {
+	if (RTC_INITED==0) return 1;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//使能PWR和BKP外设时钟  
 	PWR_BackupAccessCmd(ENABLE);	//使能RTC和后备寄存器访问 
 	RTC_SetCounter(sec);	//设置RTC计数器的值

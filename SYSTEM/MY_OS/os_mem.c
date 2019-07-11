@@ -17,7 +17,7 @@ void os_mem_init (void)
 
 
 
-
+//分配的内存都是双字对齐的
 #define MEM_BASE ((u8 *)(0x20000000+SYS_MEM_SIZE+MEM_ALLOC_TABLE_SIZE*2))
 #define MEMMAP_BASE ((u16 *)(0x20000000+SYS_MEM_SIZE))
 

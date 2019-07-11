@@ -70,6 +70,12 @@ u8 udp_init(SOCKET s,u16 mycom)
 {
 	u8 ret=FALSE;
 
+	u8 temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+	if(temp!=SOCK_CLOSED)
+	{
+		return FALSE;
+	}
+	
 	//设置端口0的端口号
 	Write_W5500_SOCK_2Byte(s, Sn_PORT,mycom);
 
@@ -95,6 +101,12 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 	{
 		return FALSE;//ip地址不合法，失败
 	}
+	u8 temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+	if(temp!=SOCK_CLOSED)
+	{
+		return FALSE;
+	}
+	
 	
 	
 	//设置端口0的端口号
@@ -103,7 +115,9 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 	Write_W5500_SOCK_2Byte(s, Sn_DPORTR, com);
 	//设置端口0目的(远程)IP地址
 	Write_W5500_SOCK_4Byte(s, Sn_DIPR, ip);			
- 
+	//设置50秒发送一次心跳包
+	Write_W5500_SOCK_1Byte(s,Sn_KPALVTR, 10);
+	
 	Write_W5500_SOCK_1Byte(s,Sn_MR,MR_TCP);//设置socket为TCP模式
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_OPEN);//打开Socket
 	u16 i=20;
@@ -114,6 +128,7 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 		{  
 			break;
 		}
+		
 	}while(--i);
 	if (i==0)
 	{
@@ -123,10 +138,28 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 	i=2000;
 	do
 	{
-		delay_us(500);//延时5ms
-		if(Read_W5500_SOCK_1Byte(s,Sn_SR)==SOCK_ESTABLISHED)//如果socket连接成功
+		Delay(5);//延时5ms
+		u8 temp=0;
+		temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+		if(temp==SOCK_ESTABLISHED)//如果socket连接成功
 		{  
 			break;
+		}
+		if (temp==SOCK_CLOSED)		//连接关闭了
+		{
+			return FALSE;
+		}
+		if (checkSocketStateN(s,IR_TIMEOUT))//超时
+		{
+			return FALSE;
+		}
+		if (checkNetstateN (UNREACH))//目标地址不可达 
+		{
+			return FALSE;
+		}
+		if (checkSocketStateN(s,IR_DISCON))//连接被断开
+		{
+			return FALSE;
 		}
 	}while(--i);
 	
@@ -151,9 +184,17 @@ u8 tcp_send(SOCKET s,u8 *databuff,u16 size)
 //断开tcp连接
 u8 tcp_close(SOCKET s)
 {
-	OS_ENTER_ONLYME();
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_DISCON);
-	OS_EXIT_ONLYME();
+	u16 i=20;
+	do
+	{
+		Delay(5);//延时5ms
+		if(Read_W5500_SOCK_1Byte(s,Sn_SR)==SOCK_CLOSED)//如果socket关闭成功
+		{  
+			break;
+		}
+	}while(--i);
+	if (i==0) return FALSE;
 	return TRUE;//返回TRUE,设置成功
 
 }
@@ -180,6 +221,49 @@ u8 udp_close(SOCKET s)
 
 }
 
+//判断端口状态并关闭
+u8 socket_close (SOCKET s)
+{
+	u8 temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+	if (temp==SOCK_CLOSED)
+	{
+		return TRUE;
+	}
+	else if ((temp==SOCK_INIT)||(temp==SOCK_LISTEN)||(temp==SOCK_UDP)||(temp==SOCK_MACRAW))
+	{
+		return udp_close(s);
+	}
+	else if ((temp==SOCK_SYNSEND)||(temp==SOCK_ESTABLISHED)||(temp==SOCK_SYNRECV))
+	{
+		return tcp_close(s);
+	}
+	else
+	{
+		for (u16 i=0;i<20;i++)
+		{
+			delay_ms (5);
+			temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+			if (temp==SOCK_CLOSED) return TRUE;
+		}
+		return FALSE;
+	}
+}
+ 
+
+
+//读取无法抵达的IP地址，端口号
+u8 net_get_unsenddir (u8 *ip,u16 *port)
+{
+	u8 port_s[2]={0};
+	Read_W5500_nByte (UIPR,ip,4);
+	Read_W5500_nByte (UPORT,port_s,2);
+	*port=(port_s[0]<<8)|port_s[1];
+	return TRUE;
+}
+
+
+
+
 
 
 		//接收数据
@@ -197,11 +281,18 @@ u8 socket_recv(SOCKET s,u8 *databuff)
 			//等待发送完成 
 u8 net_wailt_sended(u8 socket)
 { 
+	u16 i=0;
 	if (socket==0)
 	{
 		while(!(checkSocketState(socket,IR_SEND_OK)))
 		{
-			delay_ms(1);
+			delay_ms(100);
+			i++;
+			if (checkSocketState(socket,IR_TIMEOUT))
+			{
+				return FALSE;
+			}
+			if (i>20) return FALSE;
 		}
 		return TRUE;
 	}
