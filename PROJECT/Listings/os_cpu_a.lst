@@ -145,10 +145,10 @@ ARM Macro Assembler    Page 3
                        *******************************/  
    94 0000000E         
    95 0000000E         OSStartHighRdy
-   96 0000000E 4C29            LDR              R4, =NVIC_SYSPRI2 ; set the Pen
+   96 0000000E 4C26            LDR              R4, =NVIC_SYSPRI2 ; set the Pen
                                                             dSV exception prior
                                                             ity
-   97 00000010 4D29            LDR              R5, =NVIC_PENDSV_PRI ;ÕâÀïÉèÖÃÈ
+   97 00000010 4D26            LDR              R5, =NVIC_PENDSV_PRI ;ÕâÀïÉèÖÃÈ
                                                             ÎÎñÇÐ»»ÖÐ¶ÏÓÅÏÈ¼¶Îª
                                                             ×îµÍ
    98 00000012 6025            STR              R5, [R4]
@@ -158,7 +158,7 @@ ARM Macro Assembler    Page 3
                                                              switch call
   101 00000018 F384 8809       MSR              PSP, R4
   102 0000001C         
-  103 0000001C 4C27            LDR              R4, =OSRunning ; OSRunning = TR
+  103 0000001C 4C24            LDR              R4, =OSRunning ; OSRunning = TR
                                                             UE,ÓÐ¡®=¡¯»ñÈ¡±äÁ¿µ
                                                             ØÖ·£¬Ã»ÓÐ¡®=¡¯£¬»ñÈ
                                                             ¡±äÁ¿Öµ£¬Ïàµ±ÓÚR4=&
@@ -168,7 +168,7 @@ ARM Macro Assembler    Page 3
   105 00000022 7025            STRB             R5, [R4]    ;Ïàµ±ÓÚ*R4=R5
   106 00000024         
   107 00000024         ;ÇÐ»»µ½×î¸ßÓÅÏÈ¼¶µÄÈÎÎñ
-  108 00000024 4C26            LDR              R4, =NVIC_INT_CTRL ;rigger the 
+  108 00000024 4C23            LDR              R4, =NVIC_INT_CTRL ;rigger the 
                                                             PendSV exception (c
                                                             auses context switc
                                                             h)
@@ -203,7 +203,7 @@ ARM Macro Assembler    Page 4
   125 00000030         
   126 00000030         OSCtxSw
   127 00000030 B430            PUSH             {R4, R5}
-  128 00000032 4C23            LDR              R4, =NVIC_INT_CTRL ;´¥·¢PendSVÒ
+  128 00000032 4C20            LDR              R4, =NVIC_INT_CTRL ;´¥·¢PendSVÒ
                                                             ì³£ (causes context
                                                              switch)
   129 00000034 F04F 5580       LDR              R5, =NVIC_PENDSVSET
@@ -225,7 +225,7 @@ ARM Macro Assembler    Page 4
   143 0000003E         
   144 0000003E         OSIntCtxSw
   145 0000003E B430            PUSH             {R4, R5}
-  146 00000040 4C1F            LDR              R4, =NVIC_INT_CTRL ;´¥·¢PendSVÒ
+  146 00000040 4C1C            LDR              R4, =NVIC_INT_CTRL ;´¥·¢PendSVÒ
                                                             ì³£ (causes context
                                                              switch)
   147 00000042 F04F 5580       LDR              R5, =NVIC_PENDSVSET
@@ -275,7 +275,7 @@ ARM Macro Assembler    Page 5
                                                             ¯±£´æR4-R11£¬ÆäÓà¼Ä
                                                             ´æÆ÷ÒÑ×Ô¶¯±£´æ
   170 0000005C         
-  171 0000005C 4919            LDR              R1, =OSTCBCur ; OSTCBCur->OSTCB
+  171 0000005C 4916            LDR              R1, =OSTCBCur ; OSTCBCur->OSTCB
                                                             StkPtr = SP;
   172 0000005E 6809            LDR              R1, [R1]    ;//±£´æÐÂ¶ÑÕ»µØÖ·£¬
                                                             ÈÎÎñ±»ÇÐ»»
@@ -288,7 +288,7 @@ ARM Macro Assembler    Page 5
   176 00000062         PendSV_Handler_Nosave
   177 00000062 B500            PUSH             {R14}       ; Save LR exc_retur
                                                             n value
-  178 00000064 4818            LDR              R0, =OSTaskSwHook 
+  178 00000064 4815            LDR              R0, =OSTaskSwHook 
                                                             ; OSTaskSwHook();
   179 00000066 6800            LDR              R0, [R0]
   180 00000068 B100            CBZ              R0,PendSV_Handler_NoTaskSwHook 
@@ -298,15 +298,15 @@ ARM Macro Assembler    Page 5
   182 0000006C         PendSV_Handler_NoTaskSwHook
   183 0000006C F85D EB04       POP              {R14}       ;Ã»ÓÃµ½Ñ½£¬£¬
   184 00000070         
-  185 00000070 4816            LDR              R0, =OSPrioCur ; OSPrioCur = OS
+  185 00000070 4813            LDR              R0, =OSPrioCur ; OSPrioCur = OS
                                                             PrioHighRdy;
-  186 00000072 4917            LDR              R1, =OSPrioHighRdy
+  186 00000072 4914            LDR              R1, =OSPrioHighRdy
   187 00000074 780A            LDRB             R2, [R1]
   188 00000076 7002            STRB             R2, [R0]
   189 00000078         
-  190 00000078 4812            LDR              R0, =OSTCBCur ; OSTCBCur  = OST
+  190 00000078 480F            LDR              R0, =OSTCBCur ; OSTCBCur  = OST
                                                             CBHighRdy;
-  191 0000007A 4916            LDR              R1, =OSTCBHighRdy
+  191 0000007A 4913            LDR              R1, =OSTCBHighRdy
   192 0000007C 680A            LDR              R2, [R1]
   193 0000007E 6002            STR              R2, [R0]
   194 00000080         
@@ -348,24 +348,19 @@ ARM Macro Assembler    Page 6
   214 000000A2 4770            BX               LR
   215 000000A4         
   216 000000A4         
-  217 000000A4         ;ÔËÐÐÖ¸¶¨µØÖ·µÄº¯Êý
-  218 000000A4         BlxExternFun
-  219 000000A4 B500            PUSH             {R14}
-  220 000000A6 B420            PUSH             {R5}
-  221 000000A8         ;LDR  R5,[SP,#0x08];4¸ö²ÎÊý
-  222 000000A8 9D06            LDR              R5,[SP,#0x18] ;8¸ö²ÎÊý
-  223 000000AA 47A8            BLX              R5
-  224 000000AC BC20            POP              {R5}
-  225 000000AE F85D EB04       POP              {R14}
-  226 000000B2 4770            BX               LR
-  227 000000B4         
-  228 000000B4         
-  229 000000B4         
-  230 000000B4         
-  231 000000B4                 ALIGN
-  232 000000B4         
-  233 000000B4         
-  234 000000B4                 END
+  217 000000A4         
+  218 000000A4         
+  219 000000A4         ;ÔËÐÐÖ¸¶¨µØÖ·µÄº¯Êý
+  220 000000A4         BlxExternFun
+  221 000000A4 F8DD F010       LDR              PC,[SP,#0x10]
+  222 000000A8         
+  223 000000A8         
+  224 000000A8         
+  225 000000A8         
+  226 000000A8                 ALIGN
+  227 000000A8         
+  228 000000A8         
+  229 000000A8                 END
               E000ED20 
               FFFF0000 
               00000000 
@@ -376,7 +371,7 @@ ARM Macro Assembler    Page 6
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=.\objects\wk_jzq_v2_6\os_cpu_a.d -o.\objects\wk_jzq_v2_6\os_cpu_a.
+ork --depend=.\objects\wk_jzq_v2_3\os_cpu_a.d -o.\objects\wk_jzq_v2_3\os_cpu_a.
 o -IF:\´¨~\GitHub\WK_JZQ_V2.7\PROJECT\RTE -ID:\Keil_v5\ARM\PACK\Keil\STM32F1xx_
 DFP\1.0.5\Device\Include -ID:\Keil_v5\ARM\CMSIS\Include --predefine="__UVISION_
 VERSION SETA 514" --predefine="STM32F10X_HD SETA 1" --list=.\listings\os_cpu_a.
@@ -399,7 +394,7 @@ BlxExternFun 000000A4
 
 Symbol: BlxExternFun
    Definitions
-      At line 218 in file ..\SYSTEM\CPU_PORT\os_cpu_a.asm
+      At line 220 in file ..\SYSTEM\CPU_PORT\os_cpu_a.asm
    Uses
       At line 26 in file ..\SYSTEM\CPU_PORT\os_cpu_a.asm
 Comment: BlxExternFun used once

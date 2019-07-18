@@ -1638,6 +1638,8 @@ void	cmd_byudp (u8 *cmd)
 	if ((cmd[1]==0xff)&&(cmd[0]==0xff))
 	{
 		Get_cmd (cmd_send,cmd);
+		if (DBG_IAP==0)
+			TaskPend(7);
 		DBG_IAP=1;
 	}
 }

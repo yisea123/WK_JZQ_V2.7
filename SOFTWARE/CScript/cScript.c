@@ -737,7 +737,6 @@ u32 runFunction (char *Parameters)
 		}
 	}
 	
-	//ret=BlxExternFun(par_value[0],par_value[1],par_value[2],par_value[3],fun_addr|1);
 	ret=BlxExternFun(par_value[0],par_value[1],par_value[2],par_value[3],
 		par_value[4],par_value[5],par_value[6],par_value[7],
 		fun_addr|1);

@@ -214,16 +214,11 @@ GetRBIT16
 	BX		LR
 
 
+
+
 ;运行指定地址的函数
 BlxExternFun
-	PUSH    {R14}
-	PUSH    {R5}
-	;LDR		R5,[SP,#0x08];4个参数
-	LDR		R5,[SP,#0x18];8个参数
-	BLX 	R5
-	POP     {R5}
-	POP     {R14}
-	BX  	LR
+	LDR		PC,[SP,#0x10]
 
 
 
