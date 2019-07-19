@@ -95,7 +95,7 @@ void RTC_IRQHandler(void)
 	if(RTC_GetITStatus(RTC_IT_ALR)!= RESET)//闹钟中断
 	{
 		RTC_ClearITPendingBit(RTC_IT_ALR);		//清闹钟中断	  	   
-  	} 				  								 
+  } 				  								 
 	RTC_ClearITPendingBit(RTC_IT_SEC|RTC_IT_OW);		//清闹钟中断
 	RTC_WaitForLastTask();	  	    						 	   	 
 }

@@ -26,6 +26,14 @@ void PingCalculationDelayIRQ (void)
 
 u16 ping_auto(uint8 s, uint8 *addr)
 {
+	
+	//先关闭端口s
+	if (socket_close(s)==FALSE) 
+	{
+		return (u16)-1;
+	}
+	
+	
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_CLOSE);
 	Write_W5500_SOCK_1Byte(s,Sn_PROTO,IPPROTO_ICMP);
 	Write_W5500_SOCK_1Byte(s,Sn_MR,Sn_MR_IPRAW);//打开Socket*/

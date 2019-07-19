@@ -20,8 +20,8 @@ void my_iot (void *t)
 	char *buff=mymalloc(2048);
 	char *ptxt=0;
 	addSoftTimerIrq10ms(IOT_Hander);
-	SOCKET3_SetFocus(OSPrioHighRdy);
-	SOCKET4_SetFocus(OSPrioHighRdy);
+	SOCKET3_SetFocus(OS_GET_PRIOHIGH());
+	SOCKET4_SetFocus(OS_GET_PRIOHIGH());
 	while(1)
 	{
 		if (net_get_comstate(3)!=SOCK_UDP)

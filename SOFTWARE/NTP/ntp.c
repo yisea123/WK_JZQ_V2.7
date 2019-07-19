@@ -28,6 +28,14 @@ u32 ntp_gettime (u8 socket,u8 *serverip)
 	
 	mymemset(senddata,0,48);
 	senddata[0]=(NTPformat.leap<<6)|(NTPformat.version<<3)|NTPformat.mode; 
+	
+	//�ȹرն˿�s
+	if (socket_close(socket)==FALSE) 
+	{
+		myfree(senddata);
+		return time;
+	}
+	
 	while (udp_init(socket,123)!=TRUE);
 	udp_send(socket,serverip,123,senddata,48);
 	myfree(senddata);

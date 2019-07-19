@@ -9,6 +9,7 @@
 #include "power.h"
 #include "hard_irq.h"
 #include "timer.h"
+#include "my_topmsg.h"
 #include "my_w5500.h"
 
 
@@ -59,8 +60,8 @@ void my_w5500 (void * t)
 	a.malloc_fn=mymalloc;
 	a.free_fn=myfree;
 	cJSON_InitHooks(&a);
-	SOCKET0_SetFocus(OSPrioHighRdy);
-	SOCKET2_SetFocus(OSPrioHighRdy);
+	SOCKET0_SetFocus(OS_GET_PRIOHIGH());
+	SOCKET2_SetFocus(OS_GET_PRIOHIGH());
 	
 	//添加定时器
 	addTimerIrq10ms(w5500_rest_timer_irq);
@@ -127,7 +128,7 @@ void my_w5500 (void * t)
 //调试线程
 void my_debug_task ( void *t)
 {
-	SOCKET1_SetFocus(OSPrioHighRdy);
+	SOCKET1_SetFocus(OS_GET_PRIOHIGH());
 	while (1)
 	{
 		TaskGetMsg();
@@ -187,6 +188,15 @@ void w5500_rest_timer_irq (void)
 
 
 
+static u32 AddDev_Delay=0;
+
+void send_adddev_timer_irq (void)
+{
+	AddDev_Delay++;
+}
+
+
+
 
 
 		//温控客户端事件处理
@@ -198,8 +208,8 @@ void wk_client(void)
 	/*中断消息处理*/
 	if (checkSocketState(0,IR_CON))//连接成功发送上线消息
 	{
-			m_send[0]=4;//模拟收到了发送上线消息
-			//send_json_adddevice(m_send);
+		AddDev_Delay=0;
+		addSoftTimerIrq10ms (send_adddev_timer_irq);
 		dbg_print ("端口0 TCP连接成功");
 	}
 	if (checkSocketState(0,IR_RECV))//如果有数据等待接收
@@ -209,23 +219,36 @@ void wk_client(void)
 	if (checkSocketState(0,IR_DISCON))//连接被断开
 	{
 		socket_close(0);//关闭端口
-		//dbg_print ("端口0 TCP连接被断开");
+		delSoftTimerIrq10ms (send_adddev_timer_irq);
+		AddDev_Delay=0;
+		dbg_print ("端口0 TCP连接被断开");
 	}
 	if (checkSocketState(0,IR_TIMEOUT))//超时
 	{
 		socket_close(0);//关闭端口
+		delSoftTimerIrq10ms (send_adddev_timer_irq);
+		AddDev_Delay=0;
 		dbg_print ("端口0 通信超时");
 	}
 	
+	//连接上服务器10秒之后开始发送上线消息
+	if (AddDev_Delay>10*100)
+	{
+		m_send[0]=4;//模拟收到了发送上线消息
+		send_json_adddevice(m_send);
+		delSoftTimerIrq10ms (send_adddev_timer_irq);
+		AddDev_Delay=0;
+	}
 	
-			/*端口0网络故障处理*/
+	
+	/*端口0网络故障处理*/
 	if ((net_get_comstate(0)!=SOCK_ESTABLISHED))//如果连接断开
 	{		
 		u8 ip[4]={0};u16 port=0;
 		net_get_unsenddir (ip,&port); 
 		if ((socket_close (0)==TRUE)&&((!SAME_IP(ip,SERVER_IP))||(SERVER_PORT!=port)))//如果目标IP是可以送达的
 		{
-			if (tcp_connect(0,4545,SERVER_IP,SERVER_PORT)==FALSE)
+			if (tcp_connect(0,Get_MyIP()->nativePort,SERVER_IP,SERVER_PORT)==FALSE)
 			{
 				if (net_check_gateway()==TRUE)
 				{

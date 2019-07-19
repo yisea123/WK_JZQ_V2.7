@@ -56,10 +56,21 @@ u32 delay_ms(u16 nms)
  #if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
 		 OS_CPU_SR  cpu_sr;
  #endif
-	OS_ENTER_CRITICAL(); 
-	TCB_Table[OSPrioHighRdy].MYDelay_ms=nms/MICRO_MS+1;//根据延时毫秒数设置节拍
-	OS_EXIT_CRITICAL();
-	return TaskGetMsg();
+	if (OSRunning)
+	{
+		OS_ENTER_CRITICAL(); 
+		TCB_Table[OSPrioHighRdy].MYDelay_ms=nms/MICRO_MS+1;//根据延时毫秒数设置节拍
+		OS_EXIT_CRITICAL();
+		return TaskGetMsg();
+	}
+	else
+	{
+		while (nms--)
+		{
+			delay_us(1000);
+		}
+		return 0;
+	}
 } 
 
 
@@ -69,14 +80,26 @@ u32 sleep_ms(u16 nms)
  #if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
 		 OS_CPU_SR  cpu_sr;
  #endif
-	u32 msg;
-	OS_ENTER_CRITICAL(); 
-	TCB_Table[OSPrioHighRdy].MYDelay_ms=nms/MICRO_MS+1;//根据延时毫秒数设置节拍
-	OS_EXIT_CRITICAL();
-	do{
-		msg|=TaskGetMsg();
-	}while((msg&DELAY_END)==0);
-	return msg;
+	
+	if (OSRunning)
+	{
+		u32 msg=0;
+		OS_ENTER_CRITICAL(); 
+		TCB_Table[OSPrioHighRdy].MYDelay_ms=nms/MICRO_MS+1;//根据延时毫秒数设置节拍
+		OS_EXIT_CRITICAL();
+		do{
+			msg|=TaskGetMsg();
+		}while((msg&DELAY_END)==0);
+		return msg;
+	}
+	else
+	{
+		while (nms--)
+		{
+			delay_us(1000);
+		}
+		return 0;
+	}
 } 
 
 
@@ -90,10 +113,10 @@ static u32 SYS_RUNTIME=0;
 void RunTime_IRQHandler (void)
 {
 	static u16 micro_ms_t=0;//最小时间片个数
-	micro_ms_t++;
-	if (MICRO_MS*micro_ms_t>=1000)
+	micro_ms_t+=MICRO_MS;
+	if (micro_ms_t>=1000)
 	{
-		micro_ms_t=0;
+		micro_ms_t-=1000;
 		SYS_RUNTIME++;
 	}
 }
@@ -110,8 +133,7 @@ u32 getSysRunTime(void)
 void cpuBreakIRQ (void)
 {
 	static u16 cpu=0;
-	extern u8 OS_ONLYME;
-	if (OS_ONLYME)
+	if (OS_GET_ONLYME())
 	{
 		cpu++;
 		if (cpu>=500)
@@ -147,7 +169,6 @@ void SysTick_Handler (void)
 	}
 	RunTime_IRQHandler();
 	//CheckTaskUsege();在这里校验堆栈会占用大量中断时间
-	//cpuBreakIRQ();
 }
 
 

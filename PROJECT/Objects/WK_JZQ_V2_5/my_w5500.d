@@ -70,4 +70,5 @@
 .\objects\wk_jzq_v2_5\my_w5500.o: ..\SOFTWARE\POWER\power.h
 .\objects\wk_jzq_v2_5\my_w5500.o: ..\HARDWARE\hard_irq.h
 .\objects\wk_jzq_v2_5\my_w5500.o: ..\HARDWARE\TIMER\timer.h
+.\objects\wk_jzq_v2_5\my_w5500.o: ..\MY_TASK\my_topmsg.h
 .\objects\wk_jzq_v2_5\my_w5500.o: ..\MY_TASK\my_w5500.h

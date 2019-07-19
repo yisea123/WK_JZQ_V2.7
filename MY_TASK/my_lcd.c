@@ -77,7 +77,7 @@ void my_lcd (void * t)
 	u8 buf[30]={0};u16 reclen;
 	u16 i=0;
 	u8 meg[MESSEG_DATA]={0};
-	LCD_SetFocus(OSPrioHighRdy); 
+	LCD_SetFocus(OS_GET_PRIOHIGH()); 
 	Relay_Init();
 	LCD_Init(9600);
 	my_lcd_init();

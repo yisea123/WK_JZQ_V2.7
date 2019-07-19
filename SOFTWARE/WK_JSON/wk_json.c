@@ -15,30 +15,40 @@ u8 DBG_COPY_TO_S1CK=0;
 
 
 
-				//数据发送到服务器接口函数
-void server_send_data(u8 *databuff)
+//数据发送到服务器接口函数
+u8 server_send_data(u8 *databuff) 
 {
+	u8 ret=0;
 	u16 size=strlen((const char *)databuff);
-	tcp_send(0,databuff,size);	
+	ret=tcp_send(0,databuff,size);	
 	delay_us(500);//tcp需要等待发送完成
-	tcp_send(0,"_#_",3);		
-
+	ret=tcp_send(0,"_#_",3);		
 	delay_us(500);//短暂延时保证数据正常发送
+	
 	if (DBG_COPY_TO_S1CK==1)
 	{
-		udp_send(1,DBG_IP,DBG_PORT,"发送：",6);
-		udp_send(1,DBG_IP,DBG_PORT,databuff,size);
-		udp_send(1,DBG_IP,DBG_PORT,"\r\n",2);
+		//TCP发送成功才复制到调试端口
+		if (ret==0)
+		{
+			udp_send(1,DBG_IP,DBG_PORT,"发送：",6);
+			udp_send(1,DBG_IP,DBG_PORT,databuff,size);
+			udp_send(1,DBG_IP,DBG_PORT,"\r\n",2);
+		}
 	}
 	else if (DBG_COPY_TO_S1CK==2)
 	{
-		tcp_send(2,"发送：",6);		
-		delay_us(500);//tcp需要等待发送完成
-		tcp_send(2,databuff,size);		
-		delay_us(500);//tcp需要等待发送完成
-		tcp_send(2,"\r\n",2);		
+		//TCP发送成功才复制到调试端口
+		if (ret==0)
+		{
+			tcp_send(2,"发送：",6);		
+			delay_us(500);//tcp需要等待发送完成
+			tcp_send(2,databuff,size);		
+			delay_us(500);//tcp需要等待发送完成
+			tcp_send(2,"\r\n",2);		
+			delay_us(500);//短暂延时保证数据正常发送
+		}
 	}
-	delay_us(300);//短暂延时保证数据正常发送
+	return ret;
 }
 
 
@@ -282,7 +292,7 @@ u8 send_json_adddevice (u8 * msg)
 		cJSON *root;
 		root = cJSON_CreateObject();
 		
-		char *sn_str=mymalloc(64);
+		char *sn_str=mymalloc(256);
 		sprintf (sn_str,"WK%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%04X",
 			MCU_SN[0],MCU_SN[1],MCU_SN[2],MCU_SN[3],MCU_SN[4],MCU_SN[5],MCU_SN[6],MCU_SN[7],MCU_SN[8],MCU_SN[9],MCU_SN[10],MCU_SN[11],
 			cfg[i]);
@@ -330,8 +340,10 @@ u8 send_json_adddevice (u8 * msg)
 		
 		out=cJSON_PrintUnformatted(root);	
 		cJSON_Delete(root);
-		server_send_data((u8*)out);//发送数据，自动写入回车换行
+		u8 ret=server_send_data((u8*)out);//发送数据，自动写入回车换行
 		myfree(out);
+		if (ret!=0) return ret;//发送数据失败，返回
+		
 		for (j=0;j<100;j++)
 		{
 			delay_ms(5);

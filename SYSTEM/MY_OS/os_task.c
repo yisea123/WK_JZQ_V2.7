@@ -28,8 +28,16 @@ INT32U  OSIntExit=8;			//中断退出函数
 			//在这里统计任务栈使用情况
 void (*OSTaskSwHook)(void) =0;//CheckHighRdyTaskUsege;
 
+
+/*********************本文件静态变量***********************/
+
+
 INT8U  OS_ONLYME=0;//禁止调度标志
 
+ 
+ 
+/*********************本文件静态变量End********************/ 
+ 
  
 //定义任务结构体
 OS_TCB TCB_Table[TASK_MAX_NUM]={0};
@@ -387,7 +395,7 @@ void TaskIntSendMsg(u8 pro,INT32U msg)
 	
 	
 	//发送消息之后进行任务调度
-	if (OS_ONLYME) return;//此时不可进行调度
+	if (OS_GET_ONLYME()) return;//此时不可进行调度
 	OS_ENTER_CRITICAL();
 	tt=GetZeroNum(TASK_Free);
 	if (tt<OSPrioHighRdy)//如果当前任务优先级最高，强行跳转
@@ -420,7 +428,8 @@ u8 TaskSendMsg(u8 pro,INT32U msg)
 	}
 	OS_EXIT_CRITICAL();
  
-	
+	if (OS_GET_ONLYME()) return 0;//此时不可进行调度
+
 	//发送消息之后进行任务调度
 	ToggleTasks();
 	return 1;
@@ -456,12 +465,19 @@ INT32U TaskGetMsg(void)
 	OS_EXIT_CRITICAL();
 	
 					//高优先级任务主动释放CPU在这里进行任务跳转
-	ToggleTasks();
-	while(!TASK_Free){};
-	OS_ENTER_CRITICAL(); 
-	msg=TCB_Table[OSPrioHighRdy].MYWork;
-	TCB_Table[OSPrioHighRdy].MYWork=0;//清除自身的消息
-	OS_EXIT_CRITICAL();	
+	if (OS_GET_ONLYME()==0)
+	{
+		ToggleTasks();
+		while(!TASK_Free){};
+		OS_ENTER_CRITICAL(); 
+		msg=TCB_Table[OSPrioHighRdy].MYWork;
+		TCB_Table[OSPrioHighRdy].MYWork=0;//清除自身的消息
+		OS_EXIT_CRITICAL();	
+	}
+	else
+	{
+		msg=IN_ONLYME;  
+	}
 	return msg;
 }
 
@@ -490,8 +506,37 @@ void OS_Exit_Onlyme(void)
 		ONLYME_PRO=TASK_MAX_NUM;
 	OS_EXIT_CRITICAL();
 	
-	
+	if (OS_GET_ONLYME()) return;//此时不可进行调度
+
 	ToggleTasks();
+}
+
+
+//获取不可调度宏
+__INLINE INT8U OS_Get_Onlyme ( void )
+{ 
+	#if OS_CRITICAL_METHOD == 3          // Allocate storage for CPU status register 
+	 OS_CPU_SR  cpu_sr;
+	#endif
+	INT8U ret=0;
+	OS_ENTER_CRITICAL(); 
+	ret=OS_ONLYME;
+	OS_EXIT_CRITICAL();
+	return ret;
+}
+
+
+//获取当前任务优先级
+__INLINE INT32U OS_Get_PrioHighRdy ( void )
+{
+	#if OS_CRITICAL_METHOD == 3          // Allocate storage for CPU status register 
+	 OS_CPU_SR  cpu_sr;
+	#endif
+	INT32U ret=0;
+	OS_ENTER_CRITICAL(); 
+	ret=OSPrioHighRdy;
+	OS_EXIT_CRITICAL();
+	return ret;
 }
 
 

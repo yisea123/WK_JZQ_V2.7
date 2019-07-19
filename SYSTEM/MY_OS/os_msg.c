@@ -183,7 +183,7 @@ msgerr Msg_Send (u8 to_task_pro,msgdata *msg,u8 msgtype, u8 msgflag,u16 reterr,c
 		msgerr err;
 		err.errType=msgQueueIsFull;//缓冲区已满
 		err.errStr=msgErrToStr(err.errType);
-		err.msgfrom=OSPrioHighRdy;//消息源头
+		err.msgfrom=OS_GET_PRIOHIGH();//消息源头
 		err.msgto=to_task_pro;//消息送达地
 		err.extErrType=my_messeg[MESSEG_NUM-1].msgto;//一般消息阻塞是因为某个任务没有接收，所以获取最后一个消息的目的地
 		return err;
@@ -201,7 +201,7 @@ msgerr Msg_Send (u8 to_task_pro,msgdata *msg,u8 msgtype, u8 msgflag,u16 reterr,c
 			msgerr err;
 			err.errType=msgSameType;
 			err.errStr=msgErrToStr(err.errType);
-			err.msgfrom=OSPrioHighRdy;//消息源头
+			err.msgfrom=OS_GET_PRIOHIGH();//消息源头
 			err.msgto=to_task_pro;//消息送达地
 			err.extErrType=t;//同类消息的位置
 			return err;
@@ -210,7 +210,7 @@ msgerr Msg_Send (u8 to_task_pro,msgdata *msg,u8 msgtype, u8 msgflag,u16 reterr,c
 
 
 	my_messeg[i].msgto=to_task_pro;
-	my_messeg[i].msgfrom=OSPrioHighRdy;
+	my_messeg[i].msgfrom=OS_GET_PRIOHIGH();
 	my_messeg[i].msgtype=msgtype;
 	my_messeg[i].msgflag=msgflag;
 	my_messeg[i].exterr=reterr;
@@ -257,7 +257,7 @@ msgerr Msg_Wait (u32 msg_type,msgdata *msg,u8 *datatype,u8 *msgflag)
 				case TASK_MSG:
 					for (i=0;i<MESSEG_NUM;i++)//查找有没有空位
 					{
-						if (my_messeg[i].msgto==OSPrioHighRdy) break;
+						if (my_messeg[i].msgto==OS_GET_PRIOHIGH()) break;
 					}
 					*msgflag=my_messeg[i].msgflag;
 					*datatype=my_messeg[i].msgtype;
@@ -306,7 +306,7 @@ msgerr Msg_Get (u32 msg_type,msgdata *msg,u8 *datatype,u8 *msgflag)
 	msgerr err={0};
 	for (i=0;i<MESSEG_NUM;i++)//查找有没有空位
 	{
-		if (my_messeg[i].msgto==OSPrioHighRdy) break;
+		if (my_messeg[i].msgto==OS_GET_PRIOHIGH()) break;
 	}
 	if (i<MESSEG_NUM)
 	{

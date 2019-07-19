@@ -51,58 +51,75 @@ typedef unsigned int   OS_CPU_SR;		/* Define size of CPU status register*/
 
 
 
-
-
-
-
-
-
-
+/*********************内核相关宏定义*****************************/
 
 //定义栈的增长方向.
 //CM3中,栈是由高地址向低地址增长的,所以OS_STK_GROWTH设置为1
-#define  OS_STK_GROWTH        1      /* Stack grows from HIGH to LOW memory on ARM    */
+#define  OS_STK_GROWTH        1      
+
 //任务切换宏,由汇编实现.
 #define  OS_TASK_SW()         OSCtxSw()
 
-/*
-*******************************************************************************
-*                               PROTOTYPES
-*                           (see OS_CPU_A.ASM)
-*******************************************************************************
-*/
 //OS_CRITICAL_METHOD = 1 :直接使用处理器的开关中断指令来实现宏 
 //OS_CRITICAL_METHOD = 2 :利用堆栈保存和恢复CPU的状态 
 //OS_CRITICAL_METHOD = 3 :利用编译器扩展功能获得程序状态字，保存在局部变量cpu_sr
-
 #define  OS_CRITICAL_METHOD   3	 	//进入临界段的方法
 
+//进入中断屏蔽临界区
 #if OS_CRITICAL_METHOD == 3
 #define  OS_ENTER_CRITICAL()  {cpu_sr = OS_CPU_SR_Save();}
 #define  OS_EXIT_CRITICAL()   {OS_CPU_SR_Restore(cpu_sr);}
 #endif
 
-void       OSCtxSw(void);
-void       OSIntCtxSw(void);
-void       OSStartHighRdy(void);
 
-void       OSPendSV(void);
+/********************内核相关宏定义End**************************/
 
 
-OS_CPU_SR GetZeroNum(OS_CPU_SR t);//计算前导零个数
-OS_CPU_SR GetRBIT16(OS_CPU_SR t);//16位的按位反转
+
+/******************汇编函数定义***************************/
+
+//任务中产生任务切换
+void OSCtxSw(void);
+
+//中断中产生任务切换
+void OSIntCtxSw(void);
+
+//从最高优先级开始任务调度
+void OSStartHighRdy(void);
+
+//软件中断服务函数
+void OSPendSV(void);
+
+//计算前导零个数
+OS_CPU_SR GetZeroNum(OS_CPU_SR t);
+
+//16位的按位反转
+OS_CPU_SR GetRBIT16(OS_CPU_SR t);
 
 //跳转至指定地址
 OS_CPU_SR BlxExternFun (OS_CPU_SR a,OS_CPU_SR b,OS_CPU_SR c,OS_CPU_SR d,
 					OS_CPU_SR e,OS_CPU_SR f,OS_CPU_SR g,OS_CPU_SR h,OS_CPU_SR addr);
 
+#if OS_CRITICAL_METHOD == 3u
 
-
-#if OS_CRITICAL_METHOD == 3u                      /* See OS_CPU_A.ASM                                  */
-		OS_CPU_SR OS_CPU_SR_Save(void);
-		void       OS_CPU_SR_Restore(OS_CPU_SR cpu_sr);
+	//保存中断屏蔽状态
+	OS_CPU_SR OS_CPU_SR_Save(void);
+	
+	//恢复中断屏蔽状态
+	void OS_CPU_SR_Restore(OS_CPU_SR cpu_sr);
 #endif
 
+
+/******************汇编函数定义End***************************/
+
+
+/*****************C函数定义***************************/
+
+//任务堆栈初始化
+OS_STK *OSTaskStkInit (void (*task)(void *p_arg), void *p_arg, OS_STK *ptos, INT16U opt);
+
+
+/******************C函数定义End************************/
 
 
 #ifdef __cplusplus

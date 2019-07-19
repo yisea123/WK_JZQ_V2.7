@@ -24,6 +24,7 @@
 #define  TASK_MSG 		0x02000000
 #define  SOFT_MSG			0x04000000				//软件设备，例如软件定时器
 #define  DELAY_END		0x80000000
+#define  IN_ONLYME		0x40000000				//处于不可调度宏之中，不能进行主动任务切换
 #define  GET_MSGTYPE(msg,type) (((msg)&(MSG_TYPE))==(type))//消息类型判定宏
 
 

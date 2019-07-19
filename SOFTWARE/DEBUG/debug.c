@@ -282,7 +282,12 @@ void dbg_info (void)
 	sprintf (txtbuff,"温控报警容差值：%d\r\n",getWarnTolerance());
 	dbg_sendstr((char*)txtbuff);
 
-	sprintf(txtbuff,"集中器已运行 %d 秒\r\n",getSysRunTime());
+	u32 get_sec=getSysRunTime();
+	u16 day=get_sec/(24*60*60);
+	u8 hour=(get_sec%(24*60*60))/(60*60);
+	u8 min=(get_sec%(60*60))/(60);
+	u8 sec=(get_sec%(60));
+	sprintf(txtbuff,"集中器已运行 %d 天 %d 小时 %d 分 %d 秒\r\n",day,hour,min,sec);
 	dbg_sendstr((char*)txtbuff);
 	
 	sprintf(txtbuff,"系统时间：-- %d年 - %d月 - %d日 -- %d : %d : %d -- \r\n",

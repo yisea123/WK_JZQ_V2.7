@@ -52,7 +52,7 @@ void my_rf_loop (void * t)
 	RF_M1=0;
 	RF_Init(115200);
 	
-	USART1_SetFocus(OSPrioHighRdy);
+	USART1_SetFocus(OS_GET_PRIOHIGH());
 	
 	
 	RF_SetChannel(Get_MyChanel()); 
@@ -459,7 +459,7 @@ void my_rf_hand (void * t)
 		}
 		else
 		{
-			USART1_SetFocus(OSPrioHighRdy);
+			USART1_SetFocus(OS_GET_PRIOHIGH());
 			TaskPend(3);
 			if ((msg[0]!=0)&&(msg[1]==2)) 
 			{

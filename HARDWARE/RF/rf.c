@@ -416,7 +416,7 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 u16 RF1_tx_bytes( uint8_t* TxBuffer, uint8_t Length )
 {
 	
-	if (USART1_GetFocus()!=OSPrioHighRdy) return 0;//不是焦点进程调用无效
+	if (USART1_GetFocus()!=OS_GET_PRIOHIGH()) return 0;//不是焦点进程调用无效
 	if (!Length) return 0;
 	while( Length-- )
 	{

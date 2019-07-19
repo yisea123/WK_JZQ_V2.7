@@ -367,7 +367,7 @@ void cfg_retern (u8 cmd,u16 err)
 void into_cfg(void)
 {
 	u8 meg[MESSEG_DATA]={0};
-	USART1_SetFocus(OSPrioHighRdy);
+	USART1_SetFocus(OS_GET_PRIOHIGH());
 //	TaskPend(5);//挂起消息循环
 //	TaskPend(3);//挂起消息循环
 	meg[0]=1;meg[1]=1;//灯

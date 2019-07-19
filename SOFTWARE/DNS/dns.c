@@ -370,6 +370,13 @@ uint8 dns_query(uint8 s, uint8 * name,u8 * ip)
 	struct dhdr ddd={0};
 	u8 ret=0;
 	u8 i=0;
+	//�ȹرն˿�0
+	if (socket_close(s)==FALSE) 
+	{
+		myfree(buff);
+		return ret;
+	}
+	
 	if (udp_init(s,444)==TRUE)
 	{
 		lens=dns_makequery(0,name,buff,2048);

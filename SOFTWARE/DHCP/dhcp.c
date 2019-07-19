@@ -314,6 +314,13 @@ u8 dhcp_retry(void)
 		return 0;
 	} 
 	
+	//先关闭端口0
+	if (socket_close(0)==FALSE) 
+	{
+		myfree(discover);
+		return 0;
+	}
+	
 	u8 ret=0;
 	u8 i=200;
 				//发送IP地址获取请求

@@ -42,7 +42,7 @@ void json_return (u8 deviceid,const char * cmdNum,const char *errType);
 
 				//交换数据
 void server_read_data(u8 *databuff);
-void server_send_data(u8 *databuff);
+u8 server_send_data(u8 *databuff);
 
 				//发送采集器数据
 u8 send_json_cj (u8 *msg);

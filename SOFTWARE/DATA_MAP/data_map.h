@@ -137,7 +137,7 @@ void Set_MyAddr(u16 addr);
 //设置设备参数，格式是按照设备地址高8位，低8位，类型,len,设备个数
 void Set_Device(u8 * data,u16 len);
 
-//设置ip地址
+//设置ip地址结构体
 void Set_MyIP (u8 *data);
 
 //获取ip地址结构体

@@ -135,7 +135,7 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 		return FALSE;
 	}
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_CONNECT);//设置Socket为Connect模式
-	i=2000;
+	i=20000;//TCP超时时间为31.8秒，这里延时100秒
 	do
 	{
 		Delay(5);//延时5ms
@@ -145,7 +145,7 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 		{  
 			break;
 		}
-		if (temp==SOCK_CLOSED)		//连接关闭了
+		if (checkNetstateN (UNREACH))//目标地址不可达 
 		{
 			return FALSE;
 		}
@@ -153,11 +153,11 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 		{
 			return FALSE;
 		}
-		if (checkNetstateN (UNREACH))//目标地址不可达 
+		if (checkSocketStateN(s,IR_DISCON))//连接被断开
 		{
 			return FALSE;
 		}
-		if (checkSocketStateN(s,IR_DISCON))//连接被断开
+		if (temp==SOCK_CLOSED)		//连接关闭了
 		{
 			return FALSE;
 		}
@@ -175,17 +175,24 @@ u8 tcp_connect(SOCKET s,u16 mycom,u8 *ip,u16 com)
 //通过tcp发送数据
 u8 tcp_send(SOCKET s,u8 *databuff,u16 size)
 {
-	OS_ENTER_ONLYME();
-	Write_SOCK_Data_Buffer(s, databuff,size);
-	OS_EXIT_ONLYME();
-	return 0;
+	if (net_get_comstate(s)==SOCK_ESTABLISHED)
+	{
+		OS_ENTER_ONLYME();
+		Write_SOCK_Data_Buffer(s, databuff,size);
+		OS_EXIT_ONLYME();
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 //断开tcp连接
 u8 tcp_close(SOCKET s)
 {
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_DISCON);
-	u16 i=20;
+	u16 i=2000;
 	do
 	{
 		Delay(5);//延时5ms
@@ -233,18 +240,19 @@ u8 socket_close (SOCKET s)
 	{
 		return udp_close(s);
 	}
-	else if ((temp==SOCK_SYNSEND)||(temp==SOCK_ESTABLISHED)||(temp==SOCK_SYNRECV))
+	else if ((temp==SOCK_SYNSEND)||(temp==SOCK_ESTABLISHED)||(temp==SOCK_SYNRECV)||(temp==SOCK_CLOSE_WAIT))
 	{
 		return tcp_close(s);
 	}
 	else
 	{
-		for (u16 i=0;i<20;i++)
-		{
-			delay_ms (5);
-			temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
-			if (temp==SOCK_CLOSED) return TRUE;
-		}
+//		do
+//		{
+//			delay_ms (5);
+//			temp=Read_W5500_SOCK_1Byte(s,Sn_SR);
+//			if (temp==SOCK_CLOSED) return TRUE;
+//			if (temp==SOCK_CLOSE_WAIT) Write_W5500_SOCK_1Byte(s,Sn_CR,SN_DISCON);
+//		}while (temp==SOCK_CLOSE_WAIT);
 		return FALSE;
 	}
 }

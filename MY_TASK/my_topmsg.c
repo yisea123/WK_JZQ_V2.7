@@ -349,6 +349,12 @@ void load_test_cfg(void)
 		Save_Config();
 	}
 	
+	//指定一个合理的本机端口号
+	if ((Get_MyIP()->nativePort==0)||(Get_MyIP()->nativePort==12))
+	{
+		Get_MyIP()->nativePort=4545;
+	}
+	
 }
 
 
