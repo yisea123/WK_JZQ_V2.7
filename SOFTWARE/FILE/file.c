@@ -1,4 +1,5 @@
 #include "includes.h"
+#include "beep.h"
 #include "cscript.h"
 #include "swd.h"
 #include "file.h"
@@ -149,6 +150,39 @@ u8 run_sysinit (void)
 
 
 
+//播放文件里的beep音乐
+u8 run_beep (const char *name_str)
+{
+	FRESULT ret;
+	UINT real_length=0;
+	char *beep_buff=mymalloc(1024);
+	if (fats_state()==0) 
+	{
+		myfree(beep_buff);
+		return 1;
+	}
+	ret=FATS->f_open(file,_T(name_str),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
+	if (ret==FR_OK)
+	{
+		FATS->f_read(file,beep_buff,1024,&real_length);
+		FATS->f_close(file);
+		if (real_length==0) 
+		{
+			myfree(beep_buff);
+			return 3;
+		}
+		else
+		{ 
+			beep_playBy (beep_buff);//播放指定旋律的音乐
+			myfree(beep_buff);
+		}
+	}
+	else
+	{
+		myfree(beep_buff);
+		return 2;
+	}
+}
 
 
 

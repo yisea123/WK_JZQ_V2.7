@@ -55,6 +55,8 @@ u16 strlenByChar (char a,char *inbuff);
 u16 findStr (char *str,char *tofind);
 
 //返回一对闭合字符串的长度
+//从left开始到right结束包括边界的长度
+//例如：findPair ('{','}',"12{1234}");返回6
 u16 findPair (char left,char right,char *str);
 
 									/*字符串处理函数End*/

@@ -194,6 +194,7 @@ u16 findPair (char left,char right,char *str)
 	u16 n_len_l=0;
 	u16 n_len_r=0;
 	u16 n_len=0;
+	char *str_ptr=str+strlenByChar (left,str);
 	char *n_str=str;
 	u8 brackets=0;
 	do
@@ -222,7 +223,7 @@ u16 findPair (char left,char right,char *str)
 		
 	}while(*n_str);
 	if (brackets==0)//闭合的
-		return n_str-str;
+		return n_str-str_ptr;
 	else
 		return 0;//没有闭合
 }

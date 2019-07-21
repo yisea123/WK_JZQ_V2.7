@@ -16,6 +16,7 @@
 #include "power.h"
 #include "ntp.h"
 #include "debug.h"
+#include "file.h"
 
 #include "my_topmsg.h"
 #include "my_lcd.h"
@@ -129,6 +130,7 @@ const fun_list FUN_LIST[]={
 	{Load_song3,"Load_song3"},
 	{Load_up,"Load_up"},
 	{Load_down,"Load_down"},
+	{beep_playBy,"beep_playBy"},
 	
 	{Get_Key,"Get_Key"},
 	{Set_Key,"Set_Key"},
@@ -255,7 +257,7 @@ const fun_list FUN_LIST[]={
 
 	{err_to_str,"err_to_str"},
 
-//	{,""},
+	{run_beep,"run_beep"},  
 //	{,""},
 //	{,""},
 //	{,""},

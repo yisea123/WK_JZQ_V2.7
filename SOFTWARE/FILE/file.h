@@ -21,6 +21,9 @@ u8 read_config (void);
 //运行系统初始化脚本
 u8 run_sysinit (void);
 
+//播放文件里的beep音乐
+u8 run_beep (const char *name_str);
+
 #ifdef  __cplusplus
 	}
 #endif

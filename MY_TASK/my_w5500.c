@@ -244,9 +244,10 @@ void wk_client(void)
 	/*端口0网络故障处理*/
 	if ((net_get_comstate(0)!=SOCK_ESTABLISHED))//如果连接断开
 	{		
-		u8 ip[4]={0};u16 port=0;
-		net_get_unsenddir (ip,&port); 
-		if ((socket_close (0)==TRUE)&&((!SAME_IP(ip,SERVER_IP))||(SERVER_PORT!=port)))//如果目标IP是可以送达的
+		//u8 ip[4]={0};u16 port=0;
+		//net_get_unsenddir (ip,&port); 
+		//if ((socket_close (0)==TRUE)&&((!SAME_IP(ip,SERVER_IP))||(SERVER_PORT!=port)))//如果目标IP是可以送达的
+		if (socket_close (0)==TRUE)
 		{
 			if (tcp_connect(0,Get_MyIP()->nativePort,SERVER_IP,SERVER_PORT)==FALSE)
 			{
@@ -281,7 +282,7 @@ void wk_client(void)
 		else
 		{
 			char *str=mymalloc (256);
-			sprintf (str,"端口0 关闭失败或目标地址不可达：%d,%d,%d,%d:%d",ip[0],ip[1],ip[2],ip[3],port);
+			sprintf (str,"端口0 关闭失败");//或目标地址不可达：%d,%d,%d,%d:%d",ip[0],ip[1],ip[2],ip[3],port);
 			dbg_print (str);
 			myfree(str);
 		}

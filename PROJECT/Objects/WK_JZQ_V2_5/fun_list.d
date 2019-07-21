@@ -77,6 +77,7 @@
 .\objects\wk_jzq_v2_5\fun_list.o: ..\SOFTWARE\POWER\power.h
 .\objects\wk_jzq_v2_5\fun_list.o: ..\SOFTWARE\NTP\ntp.h
 .\objects\wk_jzq_v2_5\fun_list.o: ..\SOFTWARE\DEBUG\debug.h
+.\objects\wk_jzq_v2_5\fun_list.o: ..\SOFTWARE\FILE\file.h
 .\objects\wk_jzq_v2_5\fun_list.o: ..\MY_TASK\my_topmsg.h
 .\objects\wk_jzq_v2_5\fun_list.o: ..\MY_TASK\my_lcd.h
 .\objects\wk_jzq_v2_5\fun_list.o: ..\MY_TASK\my_rf.h

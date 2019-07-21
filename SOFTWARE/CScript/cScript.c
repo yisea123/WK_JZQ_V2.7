@@ -490,10 +490,18 @@ u32 checkCategory (char *str)
 		{
 			str_par=getStr(str_par);
 			u8 lenstr=strlen(str_par);
-			if (lenstr>32) lenstr=32;
-			mymemcpy(Arry,str_par,lenstr);
-			Arry[lenstr]=0;//½Ø¶Ï×Ö·û´®
-			ret=(u32)Arry;
+			if (Arry)
+			{
+				if (lenstr>32) lenstr=32;
+				mymemcpy(Arry,str_par,lenstr);
+				Arry[lenstr]=0;//½Ø¶Ï×Ö·û´®
+				ret=(u32)Arry;
+			}
+			else
+			{
+				str_par[lenstr]=0;
+				ret=(u32)str_par;
+			}
 		}
 		else if (str_type==strTypeVar)
 		{
@@ -703,6 +711,7 @@ u32 runFunction (char *Parameters)
 		
 		//Çø·Öº¯Êý²ÎÊý
 		u8 brackets=0;
+		u8 quotes=0;
 		while (*par)
 		{
 			if (*par=='(')
@@ -713,7 +722,15 @@ u32 runFunction (char *Parameters)
 			{
 				brackets--;
 			}
-			if (brackets==0)//
+			if (*par=='\"')
+			{
+				quotes++;
+			}
+			else if (*par=='\"')
+			{
+				quotes--;
+			}
+			if ((brackets==0)&&(quotes==0))
 			{
 				if (*par==',')
 				{

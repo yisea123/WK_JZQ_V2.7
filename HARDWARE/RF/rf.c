@@ -214,6 +214,7 @@ u16 RF_Get (u8 *buff,u16 len)
 	{
 		buff[getlen]=Get_BuffData();
 		getlen++;
+		if (getlen>=len) break;//防止数组越界
 	}
 	return getlen;
 }

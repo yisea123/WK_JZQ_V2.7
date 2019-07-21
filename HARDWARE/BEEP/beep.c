@@ -1204,7 +1204,7 @@ void Load_down(void)
 
 
 //最高8分之一音，音调的频率
-static u16 *sond=0;
+static u32 *sond=0;
 
 //time,8是一个全音，16是两个全音
 void set_jianpu(jianpu *j,char *tone_,char *time_)
@@ -1258,7 +1258,7 @@ void Beep_Play (jianpu *jianpu_)
 	
 	if (BEEP_BUSY==1) return;//正在播放，返回
 	BEEP_BUSY=1;//设置为忙
-	sond=mymalloc(300*2);
+	sond=mymalloc(300*4);
 	if (sond==0) return;//没有分配到内存，退出
 	while(jianpu_->tone[0])
 	{
@@ -1271,9 +1271,11 @@ void Beep_Play (jianpu *jianpu_)
 		{
 			sond[i*2]=sond[i*2]*2;
 		}
-		sond[i*2+1]=8/(jianpu_->time[2]-'0');
+		if (sond[i*2])
+			sond[i*2]=100000/sond[i*2];//设置音调周期
+		sond[i*2+1]=8/(jianpu_->time[2]-'0');//以八分之一节拍为最小单位，所有节拍都要是这个时长的倍数
 		sond[i*2+1]=sond[i*2+1]*(jianpu_->time[0]-'0');
-
+		sond[i*2+1]*=10000;//设置时长，八分之一音的时长是1/10秒
 		jianpu_++;
 		i++;
 	}
@@ -1281,6 +1283,37 @@ void Beep_Play (jianpu *jianpu_)
 	//TIM_Cmd(TIM2,ENABLE); 
 	addTimerIrq10us(Beep_Run);
 }
+
+
+
+//播放缓存里的旋律
+u8 beep_playBy (char *buff)
+{
+	u8 tone_len=0;
+	char *buff_ptr=buff;
+	char *next_ptr=buff_ptr;
+	if (buff==0) return 1;
+	jianpu *j=mymalloc(sizeof(jianpu)*300);
+	jianpu *jj=j;
+	while(*next_ptr)
+	{
+		next_ptr=next_ptr+strlenByChar('{',next_ptr);//重新定位初始指针
+		tone_len=strlenByChar('}',next_ptr);
+		next_ptr[tone_len]=0;
+		next_ptr[strlenByChar(',',next_ptr)]=0;
+		set_jianpu(jj,next_ptr+1,next_ptr+tone_len-3);
+		jj++;
+		next_ptr+=tone_len+1;
+	}
+	jianpu_end(jj);
+	Beep_Play(j);
+	myfree(j);
+	return 0;
+}
+
+
+
+
 
 
 //结束蜂鸣器音乐
@@ -1293,33 +1326,29 @@ void Beep_End (void)
 	delTimerIrq10us(Beep_Run);
 }
 
-	
+
+
+
 void Beep_Run(void)
 {
 	static u16 i=0;
-	static u32 time =0;//音调长度
-	static u32 sondtime=0;//音调调整时长
+	static u32 time =0;//音调时长计时
+	static u32 sondtime=0;//音调一个周期时长计时
 	if (sond)
 	{
-		u32 temp=100000/sond[i*2];
-		sondtime++;
 		time++;
-		if (temp)
-		{
-			if (sondtime>temp-5)//((temp)>25?(temp-10):(temp/2)))
-				BEEP=1;
-			else 
-				BEEP=0;
-		}
-		else//支持间歇
+		sondtime++;
+		if (sondtime>5)//超过周期的一半，
 		{
 			BEEP=0;
+			if (sondtime>=sond[i*2])
+			{
+				sondtime=0;
+				if (sond[i*2]) BEEP=1;
+			}
 		}
-		if (sondtime>=100000/sond[i*2])
-		{
-			sondtime=0;
-		}
-		if (time>=sond[i*2+1]*10000)
+		
+		if (time>=sond[i*2+1])//这个音的时长结束
 		{
 			i++;
 			time=0;
@@ -1328,13 +1357,16 @@ void Beep_Run(void)
 				i=0;
 				time=0;
 				sondtime=0;
-				myfree(sond);
-				sond=0;
-				BEEP=0;
-				BEEP_BUSY=0;
-				delTimerIrq10us(Beep_Run);
+				Beep_End();
 			}
 		}
+	}
+	else //没有音频信息，关闭定时器
+	{
+		i=0;
+		time=0;
+		sondtime=0;
+		Beep_End();
 	}
 }
 

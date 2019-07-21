@@ -60,6 +60,7 @@
 .\objects\wk_jzq_v2_5\file.o: ..\SOFTWARE\JSON\cjson.h
 .\objects\wk_jzq_v2_5\file.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\wk_jzq_v2_5\file.o: ..\SOFTWARE\DATA_MAP\data_map.h
+.\objects\wk_jzq_v2_5\file.o: ..\HARDWARE\BEEP\beep.h
 .\objects\wk_jzq_v2_5\file.o: ..\SOFTWARE\CScript\cscript.h
 .\objects\wk_jzq_v2_5\file.o: ..\SOFTWARE\SWD\swd.h
 .\objects\wk_jzq_v2_5\file.o: ..\SOFTWARE\FILE\file.h
