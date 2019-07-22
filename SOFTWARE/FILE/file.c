@@ -155,7 +155,9 @@ u8 run_beep (const char *name_str)
 {
 	FRESULT ret;
 	UINT real_length=0;
-	char *beep_buff=mymalloc(1024);
+	char *beep_buff=mymalloc(2048);
+	if (beep_buff==0) return 5;
+	mymemset (beep_buff,0,2048);
 	if (fats_state()==0) 
 	{
 		myfree(beep_buff);
@@ -164,7 +166,7 @@ u8 run_beep (const char *name_str)
 	ret=FATS->f_open(file,_T(name_str),FA_OPEN_ALWAYS|FA_READ|FA_WRITE);
 	if (ret==FR_OK)
 	{
-		FATS->f_read(file,beep_buff,1024,&real_length);
+		FATS->f_read(file,beep_buff,2048,&real_length);
 		FATS->f_close(file);
 		if (real_length==0) 
 		{

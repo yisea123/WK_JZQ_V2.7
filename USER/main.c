@@ -65,7 +65,6 @@ int main(void)
 	
 	
 	
-	
 	CreateTaskN (my_topmsg, 			0, my_keytack,		128,				0)	;					
 	CreateTaskN (my_lcd, 					0, my_lcdtack,		128,				2)	;	 				
 	CreateTaskN (my_rf_loop, 			0, rf_looptack,		256,				3)	;	 				
