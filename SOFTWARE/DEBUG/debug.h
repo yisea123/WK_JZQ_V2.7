@@ -64,13 +64,15 @@ extern u8 DBG_COPY_TO_S1CK;
 
 
 
+//调试初始化
+void debug_init (void );
 
 //调试函数调用入口
 void my_debug (void);
 
 void dbg_Interpreter(u8 *recvbuff,void (*sendstr) (char *str));
 
-	//板子信息
+//板子信息
 void dbg_info (void);
 
 void dbg_err (u8 errtype);

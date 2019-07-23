@@ -1,5 +1,6 @@
 #include "includes.h"
 #include "w5500.h"
+#include "uart.h"
 #include "enternet.h"
 #include "dhcp.h"
 #include "my_messeg.h"
@@ -73,8 +74,6 @@ void my_w5500 (void * t)
 	u16 rest_time_w5500=0;
 	u16 rest_time_sys=0;
 	
-	u32 *debug_task=mymalloc (4*256);
-	CreateTaskN (my_debug_task, 	0, debug_task,		256,		 	 10)	;		
 
 	
 	while(1)
@@ -121,20 +120,6 @@ void my_w5500 (void * t)
 		}
 		wk_client();
 	}
-}
-
-
-
-//调试线程
-void my_debug_task ( void *t)
-{
-	SOCKET1_SetFocus(OS_GET_PRIOHIGH());
-	while (1)
-	{
-		TaskGetMsg();
-		my_debug ( );		//调试信息输出
-	}
-	
 }
 
 

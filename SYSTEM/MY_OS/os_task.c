@@ -359,6 +359,7 @@ void ToggleTasks(void)
 	#endif
 	INT32U tt=TASK_MAX_NUM;
 	OS_ENTER_CRITICAL(); 
+	if (OSRunning==0) return ;
 	tt=GetZeroNum(TASK_Free);
 	if (tt!=OSPrioHighRdy)//如果有其他就绪任务
 	{
@@ -489,8 +490,11 @@ void OS_Enter_Onlyme(void)
 		OS_CPU_SR  cpu_sr;
 	#endif
 	OS_ENTER_CRITICAL(); 
-	OS_ONLYME++;
-	ONLYME_PRO=OSPrioHighRdy;					//找出造成CPU独占的任务
+	if (OSRunning)
+	{
+		OS_ONLYME++;
+		ONLYME_PRO=OSPrioHighRdy;					//找出造成CPU独占的任务
+	}
 	OS_EXIT_CRITICAL();
 	
 }
@@ -501,13 +505,16 @@ void OS_Exit_Onlyme(void)
 	 OS_CPU_SR  cpu_sr;
 	#endif
 	OS_ENTER_CRITICAL(); 
-	if (OS_ONLYME) OS_ONLYME--;
-	if (!OS_ONLYME)
-		ONLYME_PRO=TASK_MAX_NUM;
+	if (OSRunning)
+	{
+		if (OS_ONLYME) OS_ONLYME--;
+		if (!OS_ONLYME)
+			ONLYME_PRO=TASK_MAX_NUM;
+	}
 	OS_EXIT_CRITICAL();
 	
 	if (OS_GET_ONLYME()) return;//此时不可进行调度
-
+	
 	ToggleTasks();
 }
 

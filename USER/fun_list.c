@@ -180,12 +180,13 @@ const fun_list FUN_LIST[]={
 	{dns_query,"dns_query"},//uint8 dns_query(uint8 s, uint8 * name,u8 *ip); 获取域名的IP地址
 
 	{udp_send,"udp_send"},//
-	{udp_init,"udp_init"},//
+	{udp_init,"udp_init"},//u8 udp_init(SOCKET s,u16 mycom);  udp初始化
 	{tcp_connect,"tcp_connect"},//
 	{tcp_send,"tcp_send"},//
 	{socket_recv,"socket_recv"},//
 	{tcp_close,"tcp_close"},//
-	{udp_close,"udp_close"},//
+	{udp_close,"udp_close"},//u8 udp_close(SOCKET s);
+	{socket_close,"socket_close"},//u8 socket_close (SOCKET s); 判断端口状态并关闭
 	{net_set_getway,"net_set_getway"},//
 	{net_set_sub_mask,"net_set_sub_mask"},//
 	{net_set_myip,"net_set_myip"},//

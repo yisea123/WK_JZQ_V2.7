@@ -1,6 +1,7 @@
 #include "includes.h"
 #include "power.h"
 #include "w5500.h"
+#include "uart.h"
 #include "enternet.h"
 #include "dns.h"
 #include "ping.h"
@@ -43,11 +44,11 @@ void _ttywrch(int ch)
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
 {      
-	while((USART1->SR&0X40)==0){}//循环发送,直到发送完毕   
-    USART1->DR = (u8) ch;      
+	while((UART4->SR&0X40)==0){}//循环发送,直到发送完毕   
+    UART4->DR = (u8) ch;      
 	return ch;
 }
-#endif 
+#endif
 
 
 
@@ -61,7 +62,38 @@ static u16 NativeDbgPort=12;
 static u8 DBG_IAP=0;
 void my_debug (void)
 {
-	
+		debug_init ();
+
+		do
+		{
+			if (checkSocketState(1,IR_RECV))//如果有数据等待接收
+			{
+				u8 *recvbuff=mymalloc(2048);
+				memset(recvbuff,0,2048);//清空内存中的数据
+				Read_SOCK_Data_Buffer(1, recvbuff);
+
+				//重新设置调试主机目标地址
+				mymemcpy(DBG_IP,recvbuff,4);
+				DBG_PORT=(recvbuff[4]<<8)|recvbuff[5];
+
+				if (DBG_PORT==7010)
+				{
+					IWDG_Feed();
+					cmd_byudp (recvbuff+8); 
+				}
+				else 
+				{
+					dbg_Interpreter(recvbuff+8,dbg_send_udp);//命令解释器
+				}
+				myfree(recvbuff);
+			}
+		}while (DBG_IAP);
+}
+
+
+//调试初始化
+void debug_init (void )
+{
 	if (net_get_comstate(1)==SOCK_CLOSED)
 	{
 		if (udp_init(1,NativeDbgPort))
@@ -69,32 +101,11 @@ void my_debug (void)
 			//dbg_booting();
 		}
 	}
-	
-	do
-	{
-		if (checkSocketState(1,IR_RECV))//如果有数据等待接收
-		{
-			u8 *recvbuff=mymalloc(2048);
-			memset(recvbuff,0,2048);//清空内存中的数据
-			Read_SOCK_Data_Buffer(1, recvbuff);
 
-			//重新设置调试主机目标地址
-			mymemcpy(DBG_IP,recvbuff,4);
-			DBG_PORT=(recvbuff[4]<<8)|recvbuff[5];
-
-			if (DBG_PORT==7010)
-			{
-				IWDG_Feed();
-				cmd_byudp (recvbuff+8); 
-			}
-			else 
-			{
-				dbg_Interpreter(recvbuff+8,dbg_send_udp);//命令解释器
-			}
-			myfree(recvbuff);
-		}
-	}while (DBG_IAP);
 }
+
+
+
 
 /*****************************************************
 

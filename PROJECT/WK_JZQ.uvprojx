@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_3</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD;..\HARDWARE\UART</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -703,6 +703,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\HARD_IRQ.c</FilePath>
             </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\UART\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -852,6 +857,11 @@
               <FileName>my_w5500.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\MY_TASK\my_w5500.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MY_TASK\my_debug.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1281,7 +1291,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_5</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD;..\HARDWARE\UART</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1619,6 +1629,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\HARD_IRQ.c</FilePath>
             </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\UART\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1768,6 +1783,11 @@
               <FileName>my_w5500.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\MY_TASK\my_w5500.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MY_TASK\my_debug.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2197,7 +2217,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER,JZQ_V2_6</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD</IncludePath>
+              <IncludePath>..\CORE;..\HARDWARE\BEEP;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\LIGHT;..\HARDWARE\RELAY;..\HARDWARE\RF;..\HARDWARE\SD_CARD;..\HARDWARE\STMFLASH;..\HARDWARE\TIMER;..\HARDWARE\W25QXX;..\HARDWARE\W5500;..\MY_TASK;..\SOFTWARE\BAIDU_IOT;..\SOFTWARE\CRC8_16;..\SOFTWARE\DATA_MAP;..\SOFTWARE\DATA_TYPE;..\SOFTWARE\DHCP;..\SOFTWARE\DNS;..\SOFTWARE\ENTERNET;..\SOFTWARE\FILE;..\SOFTWARE\JSON;..\SOFTWARE\mqttsrc;..\SOFTWARE\PING;..\SOFTWARE\POWER;..\SOFTWARE\WK_JSON;..\STM32F10x_FWLib\inc;..\SYSTEM\CONFIG;..\SYSTEM\CPU_PORT;..\SYSTEM\DELAY;..\SYSTEM\MALLOC;..\SYSTEM\MY_OS;..\SYSTEM\SYS;..\SYSTEM\MY_FUN;..\SOFTWARE\CMD;..\SOFTWARE\DEBUG;..\..\WK_JZQ_V2.6;..\SYSTEM\RTC;..\SOFTWARE\NTP;..\SYSTEM\IWDG;..\HARDWARE;..\USER;..\SOFTWARE\CScript;..\SOFTWARE\SWD;..\HARDWARE\UART</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2535,6 +2555,11 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\HARD_IRQ.c</FilePath>
             </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\UART\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2684,6 +2709,11 @@
               <FileName>my_w5500.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\MY_TASK\my_w5500.c</FilePath>
+            </File>
+            <File>
+              <FileName>my_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MY_TASK\my_debug.c</FilePath>
             </File>
           </Files>
         </Group>

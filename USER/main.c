@@ -10,6 +10,7 @@
 #include "my_iot.h"
 #include "my_idle.h"
 #include "my_topmsg.h"
+#include "my_debug.h"
 
 
 
@@ -73,6 +74,10 @@ int main(void)
 	CreateTaskN (my_autocontrol, 	0, my_autotack,		128,				8)	;		
 //	CreateTaskN (my_iot, 					0, my_iottack,		256,		 	 10)	;		
 	CreateTaskN (idle_task, 			0, my_idletack,		 256,			 31)	;		
+	
+	u32 *debug_task=mymalloc (4*256);
+	CreateTaskN (my_debug_task, 	0, debug_task,		256,		 	 10)	;		
+
 	OSStart ( ); 
 	SysPowerOff();
   

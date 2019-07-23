@@ -1,6 +1,7 @@
 
 #include "includes.h"
 #include "iwdg.h"
+#include "uart.h"
 #include "file.h"
 #include "my_idle.h"
 
@@ -18,6 +19,14 @@ void idle_task (void *t)
 	
 	run_sysinit();		//运行系统初始化脚本
 	IWDG_Init(16000);
+	
+	
+	while(1)
+	{
+		IWDG_Feed();
+	}
+	
+	
 	while(1)
 	{
 		for (i=0;i<TASK_MAX_NUM;i++)
