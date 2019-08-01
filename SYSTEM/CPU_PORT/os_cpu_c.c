@@ -70,6 +70,24 @@ OS_STK *OSTaskStkInit (void (*task)(void *p_arg), void *p_arg, OS_STK *ptos, INT
 
 
 
+//获取指定优先级的任务上下文
+Task_Context *OS_TaskGetContext (u8 pro)
+{
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
+	Task_Context *p=0;
+	OS_ENTER_CRITICAL();
+	if (pro<TASK_MAX_NUM)
+		p=(Task_Context *)TCB_Table[pro].pMYStack;
+	OS_EXIT_CRITICAL();
+	return p;
+}
+
+
+
+
+
 
 
 /*----------------------- (C) COPYRIGHT @ 2012 liycobl -----------------  end of file -----------------*/

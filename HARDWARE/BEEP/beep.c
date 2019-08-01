@@ -1246,7 +1246,7 @@ void Beep_Set_Multiple (u32 multiple)
 void Beep_Play (jianpu *jianpu_)
 {
 	u16 i=0;
-	u16 frequency[8]={0,2615/4,2935/4,3295/4,3490/4,3920/4,4400/4,4940/4};
+	u16 frequency[8]={0,2615,2935,3295,3490,3920,4400,4940};
 	
 	
 	for (u8 m=0;m<8;m++)
@@ -1338,7 +1338,7 @@ void Beep_Run(void)
 	{
 		time++;
 		sondtime++;
-		if (sondtime>5)//超过周期的一半，
+		if (sondtime>sond[i*2]/2)//超过周期的一半，
 		{
 			BEEP=0;
 			if (sondtime>=sond[i*2])

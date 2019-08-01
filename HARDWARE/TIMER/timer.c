@@ -112,7 +112,7 @@ void TIME2_Init(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE); //时钟使能
 	
 	//定时器TIM4初始化
-	TIM_TimeBaseStructure.TIM_Period = 10-1; //10us
+	TIM_TimeBaseStructure.TIM_Period = 20-1; //10us
 	TIM_TimeBaseStructure.TIM_Prescaler =72-1; //设置用来作为TIMx时钟频率除数的预分频值
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式

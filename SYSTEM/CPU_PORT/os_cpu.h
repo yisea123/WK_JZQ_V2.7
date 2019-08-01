@@ -51,6 +51,37 @@ typedef unsigned int   OS_CPU_SR;		/* Define size of CPU status register*/
 
 
 
+
+/***********************任务上下文结构体****************************/
+
+
+typedef struct 
+{
+	OS_CPU_SR R4;
+	OS_CPU_SR R5;
+	OS_CPU_SR R6;
+	OS_CPU_SR R7;
+	OS_CPU_SR R8;
+	OS_CPU_SR R9;
+	OS_CPU_SR R10;
+	OS_CPU_SR R11;
+	OS_CPU_SR R0;
+	OS_CPU_SR R1;
+	OS_CPU_SR R2;
+	OS_CPU_SR R3;
+	OS_CPU_SR R12;
+	OS_CPU_SR LR;
+	OS_CPU_SR PC;
+
+	//OS_CPU_SR SP;
+} Task_Context;
+
+
+
+/*********************任务上下文结构体End****************************/
+
+
+
 /*********************内核相关宏定义*****************************/
 
 //定义栈的增长方向.
@@ -73,6 +104,12 @@ typedef unsigned int   OS_CPU_SR;		/* Define size of CPU status register*/
 
 
 /********************内核相关宏定义End**************************/
+
+
+
+
+
+
 
 
 
@@ -113,13 +150,24 @@ OS_CPU_SR BlxExternFun (OS_CPU_SR a,OS_CPU_SR b,OS_CPU_SR c,OS_CPU_SR d,
 /******************汇编函数定义End***************************/
 
 
+
+
+
+
+
 /*****************C函数定义***************************/
 
 //任务堆栈初始化
 OS_STK *OSTaskStkInit (void (*task)(void *p_arg), void *p_arg, OS_STK *ptos, INT16U opt);
 
+//获取指定优先级的任务上下文
+Task_Context *OS_TaskGetContext (u8 pro);
 
 /******************C函数定义End************************/
+
+
+
+
 
 
 #ifdef __cplusplus

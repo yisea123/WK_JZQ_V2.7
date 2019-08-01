@@ -144,7 +144,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -183,7 +182,7 @@
           <Type>0</Type>
           <LineNumber>241</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134321028</Address>
+          <Address>134321664</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -192,14 +191,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>F:\宸潂\GitHub\WK_JZQ_V2.7\SOFTWARE\ENTERNET\enternet.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WK_JZQ_V2_3\../SOFTWARE/ENTERNET/enternet.c\241</Expression>
+          <Expression></Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
           <LineNumber>256</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134321060</Address>
+          <Address>134321696</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -208,7 +207,39 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>F:\宸潂\GitHub\WK_JZQ_V2.7\SOFTWARE\ENTERNET\enternet.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\WK_JZQ_V2_3\../SOFTWARE/ENTERNET/enternet.c\256</Expression>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>32</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134302062</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>F:\宸潂\GitHub\WK_JZQ_V2.7\MY_TASK\my_debug.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>84</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134300768</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>F:\宸潂\GitHub\WK_JZQ_V2.7\USER\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -216,6 +247,11 @@
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>TCB_Table</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>s</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -229,16 +265,16 @@
       <MemoryWindow2>
         <Mm>
           <WinNumber>2</WinNumber>
-          <SubType>0</SubType>
-          <ItemText>data_buff</ItemText>
+          <SubType>1</SubType>
+          <ItemText>0x2000123c</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow2>
       <MemoryWindow3>
         <Mm>
           <WinNumber>3</WinNumber>
-          <SubType>0</SubType>
-          <ItemText>readbuff</ItemText>
+          <SubType>1</SubType>
+          <ItemText>0x20001200</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow3>
@@ -330,7 +366,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>1</IsCurrentTarget>
+        <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>18</CpuCode>
       <Books>
@@ -552,7 +588,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>0</IsCurrentTarget>
+        <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>18</CpuCode>
       <Books>

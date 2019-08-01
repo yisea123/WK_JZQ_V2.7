@@ -167,7 +167,7 @@ void dbg_Interpreter(u8 *recvbuff,void (*sendstr) (char *str))
 	{
 		dbg_mqtt(recvbuff); 
 	}
-	else if (samestr((u8*)"task ",recvbuff))
+	else if (samestr((u8*)"task",recvbuff))
 	{
 		dbg_task(recvbuff+5); 
 	}
@@ -483,10 +483,7 @@ void dbg_help(void)
 	ptxt="\t输入\"set [设置项] [参数]\"修改集中器的配置\r\n";
 	dbg_sendstr((char*)ptxt);
 
-	ptxt="\t输入\"task getidle\"查询运行异常的任务\r\n";
-	dbg_sendstr((char*)ptxt);
-
-	ptxt="\t输入\"task getusege\"查询任务栈使用情况\r\n";
+	ptxt="\t输入\"task [查询参数]\"查询任务运行情况\r\n";
 	dbg_sendstr((char*)ptxt);
 
 	ptxt="\t向广播地址发送\"whos\"查询接入网络的集中器\r\n";
@@ -628,6 +625,7 @@ void dbg_task (u8 *buff)
 {
 	u32 lasttime=0;u32 dietimes=0;
 	char *txtbuff=mymalloc(512);
+	if (*buff==' ') buff++;
 	if ( samestr((u8*)"getidle",buff))
 	{
 		sprintf(txtbuff,"运行异常的任务：%08X\r\n",getIdleTask());
@@ -654,6 +652,56 @@ void dbg_task (u8 *buff)
 				dbg_sendstr(txtbuff);
 			}
 		}
+	}
+	else if ( samestr((u8*)"context ",buff))
+	{
+		u8 pro=str2num (buff+8);
+		sprintf(txtbuff,"任务%d的上下文：\r\n",pro);
+		dbg_sendstr(txtbuff);
+		Task_Context *s;
+		s=OS_TaskGetContext(pro);
+		
+		sprintf(txtbuff,"\tPC:%08X\r\n",s->PC);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tLR:%08X\r\n",s->LR);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR12:%08X\r\n",s->R12);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR3:%08X\r\n",s->R3);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR2:%08X\r\n",s->R2);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR1:%08X\r\n",s->R1);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR0:%08X\r\n",s->R0);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR11:%08X\r\n",s->R11);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR10:%08X\r\n",s->R10);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR9:%08X\r\n",s->R9);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR8:%08X\r\n",s->R8);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR7:%08X\r\n",s->R7);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR6:%08X\r\n",s->R6);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR5:%08X\r\n",s->R5);
+		dbg_sendstr(txtbuff);
+		sprintf(txtbuff,"\tR4:%08X\r\n",s->R4);
+		dbg_sendstr(txtbuff);
+	}
+	else
+	{
+		sprintf(txtbuff,"输入 \"task getusege\" 查询任务栈使用情况\r\n");
+		dbg_sendstr(txtbuff);
+		
+		sprintf(txtbuff,"输入 \"task getidle\" 查询任务调度情况\r\n");
+		dbg_sendstr(txtbuff);
+		
+		sprintf(txtbuff,"输入 \"task context [优先级]\" 查询指定任务优先级的上下文\r\n");
+		dbg_sendstr(txtbuff);
 	}
 	myfree(txtbuff);
 }

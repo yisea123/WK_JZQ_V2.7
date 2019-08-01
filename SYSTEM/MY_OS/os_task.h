@@ -73,7 +73,7 @@ extern				INT32U  OSRunning    ;           // External referencesÏµÍ³ÕıÔÚÔËĞĞ±êÖ
 extern        INT32U  OSPrioCur;
 extern        INT32U  OSPrioHighRdy;
 extern       pOS_TCB  OSTCBCur;							//ÈÎÎñ½á¹¹Ìå£¬¶ÑÕ»µØÖ·ÔÚÊ×Î»
-extern       pOS_TCB OSTCBHighRdy;
+extern       pOS_TCB  OSTCBHighRdy;
 extern        INT32U  OSIntNesting;
 extern        INT32U  OSIntExit;
 

@@ -78,6 +78,11 @@ int main(void)
 	u32 *debug_task=mymalloc (4*256);
 	CreateTaskN (my_debug_task, 	0, debug_task,		256,		 	 10)	;		
 
+	
+	
+	
+	
+	
 	OSStart ( ); 
 	SysPowerOff();
   
