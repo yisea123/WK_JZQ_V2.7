@@ -42,6 +42,13 @@ u8 addTimerIrq10ms (void (*irq)(void))
 {
 	for (u8 i=0;i<10;i++)
 	{
+		if (IrqBy10ms[i]==irq)
+		{
+			return 1;//已有相同函数
+		}
+	}
+	for (u8 i=0;i<10;i++)
+	{
 		if (IrqBy10ms[i]==0)
 		{
 			IrqBy10ms[i]=irq;

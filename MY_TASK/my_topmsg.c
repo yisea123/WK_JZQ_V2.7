@@ -380,9 +380,11 @@ void soft_timer_run (void)
 {
 	if (soft_timer_10ms)
 	{
-		for(u8 i=0;*(soft_timer_10ms+i);i++)
+		//for(u8 i=0;*(soft_timer_10ms+i);i++)
+		for(u8 i=0;i<10;i++)
 		{
-			(*(soft_timer_10ms+i))();
+			if (*(soft_timer_10ms+i))
+				(*(soft_timer_10ms+i))();
 		}
 	}
 }
@@ -393,14 +395,29 @@ void soft_timer_run (void)
 //0成功，1失败
 u8 addSoftTimerIrq10ms (void (*irq)(void))
 {
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
+	
+	OS_ENTER_CRITICAL();
+	for (u8 i=0;i<10;i++)
+	{
+		if (soft_timer_10ms[i]==irq)
+		{
+			OS_EXIT_CRITICAL();
+			return 1;//已有相同函数
+		}
+	}
 	for (u8 i=0;i<10;i++)
 	{
 		if (soft_timer_10ms[i]==0)
 		{
 			soft_timer_10ms[i]=irq;
-			return 0;
+			OS_EXIT_CRITICAL();
+			return 0;//已添加
 		}
 	}
+	OS_EXIT_CRITICAL();
 	return 1;
 	
 }
@@ -409,14 +426,21 @@ u8 addSoftTimerIrq10ms (void (*irq)(void))
 //清除10ms定时器终端服务函数
 u8 delSoftTimerIrq10ms (void (*irq)(void))
 {
+#if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
+	OS_CPU_SR  cpu_sr;
+#endif
+	
+	OS_ENTER_CRITICAL();
 	for (u8 i=0;i<10;i++)
 	{
 		if (soft_timer_10ms[i]==irq)
 		{
 			soft_timer_10ms[i]=0;
+			OS_EXIT_CRITICAL();
 			return 0;
 		}
 	}
+	OS_EXIT_CRITICAL();
 	return 1;
 }
 

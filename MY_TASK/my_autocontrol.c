@@ -1,6 +1,7 @@
 
 #include "includes.h"
 #include "my_messeg.h"
+#include "my_topmsg.h"
 #include "my_autocontrol.h"
 //自动控制实现文件
 
@@ -38,6 +39,8 @@
 	#define __USE_OLD   1
 #endif
 
+//自动关中断报警中断计时函数
+void warn_auto_off_irq ( void);
 
 
 u8 ctrl_temp (float now_temp);
@@ -50,6 +53,7 @@ u8 ctrl_air (float now_tvoc);
 void my_autocontrol (void * t)
 {
 	u8 m_send[MESSEG_DATA]={0};
+	u32 msg=0;
 	cjq_data *cj_data;
 	float now_temp;//环境值变量改为浮点型，比较时比较小数，2018.11.19
 	float now_humi;
@@ -59,7 +63,8 @@ void my_autocontrol (void * t)
 	delay_ms(3000);//系统运行3秒钟之后开始执行
 	while (1)
 	{
-		delay_ms(getAutoCtrlFrequency()*1000+1);//每30秒执行一次自动判断
+		msg=sleep_ms(getAutoCtrlFrequency()*1000+1);//每30秒执行一次自动判断
+		if ((msg&DELAY_END)==0) continue;
 		if (cj_data->cjqId==0) continue;
 		now_temp=cj_data->temp;//传入小数，2018.11.19
 		now_humi=cj_data->humi;
@@ -77,7 +82,7 @@ void my_autocontrol (void * t)
 		if (en_warning)		//灯带异常指示
 		{
 			m_send[0]=3;
-			m_send[1]=5;
+			m_send[1]=6;
 			m_send[3]=100;m_send[4]=0;m_send[5]=0;
 			send_messeg (LIT_MESSEG,m_send);
 			en_warning=0;
@@ -85,9 +90,10 @@ void my_autocontrol (void * t)
 		else
 		{
 			m_send[0]=3;
-			m_send[1]=5;
+			m_send[1]=6;
 			m_send[3]=0;m_send[4]=100;m_send[5]=0;
 			send_messeg (LIT_MESSEG,m_send);
+			addSoftTimerIrq10ms (warn_auto_off_irq);//亮起过后自动关闭
 		}	
 
 	}
@@ -327,6 +333,25 @@ u8 ctrl_air (float now_tvoc)
 	}
 	return warning;
 }
+
+
+//自动关中断报警中断计时函数
+void warn_auto_off_irq ( void)
+{
+	static u16 time=0;
+	u8 m_send[MESSEG_DATA]={0};
+	time++;
+	if (time>=100*4)//3秒之后关闭
+	{
+		m_send[0]=3;
+		m_send[1]=6;
+		m_send[3]=0;m_send[4]=0;m_send[5]=0;
+		send_messeg (LIT_MESSEG,m_send);
+		time=0;
+		delSoftTimerIrq10ms (warn_auto_off_irq);
+	}
+}
+
 
 
 

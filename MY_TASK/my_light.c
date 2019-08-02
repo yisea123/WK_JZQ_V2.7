@@ -25,6 +25,14 @@
 ***************************************/
 
 
+//灯带的实时颜色
+static u8 red,green,blue;
+
+
+//等待呼吸效果中断
+void light_breathing_irq ( void);
+
+
 u8 needUpData=0;
 void sendColorData (void)
 {
@@ -59,6 +67,7 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 			}
 			else if (mode==6)//渐变至纯色
 			{
+				
 				//light_runto(messeg);  
 			}
 		}
@@ -74,7 +83,7 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 				key_around (messeg[2],messeg[1]);
 				needUpData=1;
 			}
-			else if (messeg[0]==LIGHT_ROUND_LIGHT)
+			else if (messeg[0]==LIGHT_ROUND_LIGHT)//灯带
 			{
 				mode=messeg[1];
 				if (mode<=4)
@@ -87,7 +96,9 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 				}
 				else if (mode==6)
 				{
-					light_runto(messeg);  
+					red=messeg[3];green=messeg[4];blue=messeg[5];
+					addSoftTimerIrq10ms (light_breathing_irq);
+					//light_runto(messeg);  
 				}
 			}
 			else if (messeg[0]==LIGHT_UPDATE_KEY)//更新一次按键灯
@@ -100,8 +111,6 @@ void my_light (void * t)//这个任务出现了独占CPU的情况2018.12.20
 }
 
 
-//灯带的实时颜色
-static u8 red,green,blue;
 
 
 
@@ -439,6 +448,52 @@ void led_run (u8 *meg)
 		}
 	}
 }
+
+
+//等待呼吸效果中断
+void light_breathing_irq ( void)
+{
+	static u8 red_;
+	static u8 green_;
+	static u8 blue_;
+	static u8 bit=0;
+	bit++;
+	if (bit<2) {return;}
+	else {bit=0;}
+	if (red_<red)
+	{
+		red_++;
+	}
+	else if (red_>red)
+	{
+		red_--;
+	}
+	
+	if (green_<green)
+	{
+		green_++;
+	}
+	else if (green_>green)
+	{
+		green_--;
+	}
+	
+	if (blue_<blue)
+	{
+		blue++;
+	}
+	else if (blue_>blue)
+	{
+		blue_--;
+	}
+	light_setcolor (red_,green_,blue_);
+	if ((red_==red)&&(green_==green)&&(blue_==blue))
+	{
+		delSoftTimerIrq10ms (light_breathing_irq);
+	}
+}
+
+
 
 
 /*****************************************************

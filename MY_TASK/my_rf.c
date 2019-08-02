@@ -137,6 +137,7 @@ void rf_loop (u16 i)
 					EN_CONFIG[i*2+1]|=DEVICEDOWN;
 					EN_CONFIG[i*2+1]&=~DEVICEUP;
 				}
+				Device_state_see((EN_CONFIG[i*2+1]&0x00ff),rf_recv[7+9],rf_recv[8+9]);
 			}else
 			{
 			}
