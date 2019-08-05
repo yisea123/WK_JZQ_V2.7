@@ -26,6 +26,7 @@ void my_debug_task ( void *t)
 	u32 msg=0;
 	uart_init(115200,rx_buff); 
 	SOCKET1_SetFocus(OS_GET_PRIOHIGH());
+	SOCKET2_SetFocus(OS_GET_PRIOHIGH());
 	sleep_ms(5000);
 	while (1)
 	{

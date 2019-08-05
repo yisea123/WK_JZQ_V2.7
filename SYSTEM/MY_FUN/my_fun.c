@@ -27,6 +27,10 @@ u32 str2num(u8 *str)
 			ret*=10;
 			ret+=*str-'0';
 		}
+		else
+		{
+			return 0;//参数中有非数字数据，返回0
+		}
 		str++;
 	}
 	return ret;

@@ -718,6 +718,14 @@ void dbg_ping (u8 *buff)
 		dbg_sendstr("请先关闭\"copy\"命令！！\r\n");
 		return;
 	}
+	if ((getip[0]==0)&&(getip[1]==0)&&(getip[2]==0)&&(getip[3]==0))
+	{
+		if (dns_query(2,buff,getip)!=1)
+		{
+			dbg_sendstr("获取 IP 地址失败T_T\r\n");
+			return;
+		}
+	}
 	pingtime=ping_auto(2,getip);
 	if (pingtime!=0xffff)
 	{
@@ -728,7 +736,10 @@ void dbg_ping (u8 *buff)
 	}
 	else
 	{
-		dbg_sendstr("Ping 操作失败T_T\r\n");
+		char *txt=mymalloc(200);
+		sprintf (txt,"ping IP地址 %d.%d.%d.%d 超时\r\n",getip[0],getip[1],getip[2],getip[3]);
+		dbg_sendstr(txt);
+		myfree(txt);
 	}
 	
 }

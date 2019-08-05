@@ -13,6 +13,9 @@
 
 /**************************局部函数定义******************************/
 
+//1ms计时器
+static void TIME5_Init(void);
+
 //10ms计时器
 static void TIME4_Init(void);
 
@@ -24,6 +27,7 @@ static void TIME2_Init(void);
 
 /*************************局部函数定义End*****************************/
 
+static void (*IrqBy1ms[10])(void)={0};
 static void (*IrqBy10ms[10])(void)={0};
 static void (*IrqBy10us[1])(void)={0};
 
@@ -34,7 +38,46 @@ void TimersInit (void)
 	TIME2_Init();
 	TIME3_Init();
 	TIME4_Init();
+	TIME5_Init();
 }
+
+
+//添加1ms的定时器中断服务函数
+u8 addTimerIrq1ms (void (*irq)(void))
+{
+	for (u8 i=0;i<10;i++)
+	{
+		if (IrqBy1ms[i]==irq)
+		{
+			return 1;//已有相同函数
+		}
+	}
+	for (u8 i=0;i<10;i++)
+	{
+		if (IrqBy1ms[i]==0)
+		{
+			IrqBy1ms[i]=irq;
+			return 0;
+		}
+	}
+	return 1;
+}
+
+//清除1ms定时器终端服务函数
+u8 delTimerIrq1ms (void (*irq)(void))
+{
+	for (u8 i=0;i<10;i++)
+	{
+		if (IrqBy1ms[i]==irq)
+		{
+			IrqBy1ms[i]=0;
+			return 0;
+		}
+	}
+	return 1;
+}
+
+
 
 
 //添加10ms的定时器中断服务函数
@@ -119,7 +162,7 @@ void TIME2_Init(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE); //时钟使能
 	
 	//定时器TIM4初始化
-	TIM_TimeBaseStructure.TIM_Period = 20-1; //10us
+	TIM_TimeBaseStructure.TIM_Period = 10-1; //10us
 	TIM_TimeBaseStructure.TIM_Prescaler =72-1; //设置用来作为TIMx时钟频率除数的预分频值
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
@@ -135,6 +178,14 @@ void TIME2_Init(void)
 	NVIC_Init(&NVIC_InitStructure);  //初始化NVIC寄存器
 
 	TIM_Cmd(TIM2, ENABLE);  //使能TIMx		
+}
+
+
+//设置定时器2的中断频率
+void timer2_SetPeriod (u16 us)
+{
+	TIM2->CNT=0;
+	TIM2->ARR=us-1;
 }
 
 
@@ -295,6 +346,60 @@ void TIM4_IRQHandler(void)   //TIM4中断
 
 
 
+
+/*************************************************
+
+				定时器5用于产生10ms的周期定时，分配较低的优先级
+
+***********************************************/
+
+void TIME5_Init(void)
+{
+  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE); //时钟使能
+	
+	//定时器TIM4初始化
+	TIM_TimeBaseStructure.TIM_Period = 10-1; //1ms
+	TIM_TimeBaseStructure.TIM_Prescaler =7200-1; //设置用来作为TIMx时钟频率除数的预分频值
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
+	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure); //根据指定的参数初始化TIMx的时间基数单位
+ 
+	TIM_ITConfig(TIM5,TIM_IT_Update,ENABLE ); //使能指定的TIM3中断,允许更新中断
+
+	//中断优先级NVIC设置
+	NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;  //TIM3中断
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;  //先占优先级0级
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;  //从优先级3级
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
+	NVIC_Init(&NVIC_InitStructure);  //初始化NVIC寄存器
+
+	TIM_Cmd(TIM5, ENABLE);  //使能TIMx		
+}
+
+
+
+
+
+void TIM5_IRQHandler(void)   //TIM4中断
+{
+	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)  //检查TIM3更新中断发生与否
+	{
+		TIM_ClearITPendingBit(TIM5, TIM_IT_Update  );  //清除TIMx更新中断标志 
+		BX_VOID_FUN(IrqBy1ms[0]);
+		BX_VOID_FUN(IrqBy1ms[1]);
+		BX_VOID_FUN(IrqBy1ms[2]);
+		BX_VOID_FUN(IrqBy1ms[3]);
+		BX_VOID_FUN(IrqBy1ms[4]);
+		BX_VOID_FUN(IrqBy1ms[5]);
+		BX_VOID_FUN(IrqBy1ms[6]);
+		BX_VOID_FUN(IrqBy1ms[7]);
+		BX_VOID_FUN(IrqBy1ms[8]);
+		BX_VOID_FUN(IrqBy1ms[9]);
+	}
+}
 
 
 

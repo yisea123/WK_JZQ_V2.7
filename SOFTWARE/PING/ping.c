@@ -11,7 +11,7 @@ static u16 PingDelay=0;
 //		统计Ping操作的网络延时
 void PingCalculationDelayIRQ (void)
 {
-	PingDelay+=10;
+	PingDelay+=1;
 }
 
 
@@ -46,7 +46,7 @@ u16 ping_auto(uint8 s, uint8 *addr)
 	Write_W5500_SOCK_4Byte(s, Sn_DIPR, addr);			
 	ping_request(s, addr);															/*发送Ping请求*/
 	PingDelay=0; 
-	addTimerIrq10ms(PingCalculationDelayIRQ);
+	addTimerIrq1ms(PingCalculationDelayIRQ);
 	u8 i=200;
 	do
 	{
@@ -57,7 +57,7 @@ u16 ping_auto(uint8 s, uint8 *addr)
 				break;
 		}
 	}while(--i);
-	delTimerIrq10ms(PingCalculationDelayIRQ);
+	delTimerIrq1ms(PingCalculationDelayIRQ);
 	Write_W5500_SOCK_1Byte(s,Sn_CR,SN_CLOSE);
 	if (i==0)
 	{

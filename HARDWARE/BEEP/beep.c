@@ -18,7 +18,14 @@
 static u8 BEEP_BUSY=0;//蜂鸣器正在播放，
 
 //播放蜂鸣器音乐中断
-void Beep_Run (void);
+void beep_run_irq (void);
+
+//蜂鸣器音调中断，每个中断翻转蜂鸣器状态
+void beep_tone_irq ( void);
+
+//蜂鸣器音调长度中断，每个中断播放下一个音调
+void beep_10ms_irq (void);
+
 
 void BEEP_Init(void)
 { 
@@ -1243,6 +1250,10 @@ void Beep_Set_Multiple (u32 multiple)
 }
 
 
+
+
+
+//解析符号文件为频率并播放
 void Beep_Play (jianpu *jianpu_)
 {
 	u16 i=0;
@@ -1272,16 +1283,17 @@ void Beep_Play (jianpu *jianpu_)
 			sond[i*2]=sond[i*2]*2;
 		}
 		if (sond[i*2])
-			sond[i*2]=100000/sond[i*2];//设置音调周期
+			sond[i*2]=1000000/sond[i*2];//设置音调周期
 		sond[i*2+1]=8/(jianpu_->time[2]-'0');//以八分之一节拍为最小单位，所有节拍都要是这个时长的倍数
 		sond[i*2+1]=sond[i*2+1]*(jianpu_->time[0]-'0');
-		sond[i*2+1]*=10000;//设置时长，八分之一音的时长是1/10秒
+		sond[i*2+1]*=10;//设置时长，八分之一音的时长是1/10秒
 		jianpu_++;
 		i++;
 	}
 	sond[i*2+1]=0;//标记时长为0，这时播放停止
-	//TIM_Cmd(TIM2,ENABLE); 
-	addTimerIrq10us(Beep_Run);
+	timer2_SetPeriod(sond[0*2]);
+	addTimerIrq10us(beep_tone_irq);
+	addTimerIrq10ms(beep_10ms_irq);
 }
 
 
@@ -1321,15 +1333,16 @@ void Beep_End (void)
 {
 	myfree(sond);
 	sond=0;
+	delTimerIrq10us(beep_tone_irq);
+	delTimerIrq10ms(beep_10ms_irq);
 	BEEP=0;
 	BEEP_BUSY=0;
-	delTimerIrq10us(Beep_Run);
 }
 
 
 
-
-void Beep_Run(void)
+//蜂鸣器播放中断，包括时长和音调调制
+void beep_run_irq(void)
 {
 	static u16 i=0;
 	static u32 time =0;//音调时长计时
@@ -1370,6 +1383,33 @@ void Beep_Run(void)
 	}
 }
 
+
+//蜂鸣器音调中断，每个中断翻转蜂鸣器状态
+void beep_tone_irq ( void)
+{
+	BEEP=!BEEP;
+}
+
+//蜂鸣器音调长度中断，每个中断播放下一个音调
+void beep_10ms_irq (void)
+{
+	static u16 i=0;
+	static u32 time =0;//音调时长计时
+	time++;
+	if (time>=sond[i*2+1])//这个音的时长结束
+	{
+		i++;
+		time=0;
+		BEEP=0;
+		timer2_SetPeriod(sond[i*2]);
+		if (sond[i*2+1]==0)
+		{
+			i=0;
+			time=0;
+			Beep_End();
+		}
+	}
+}
 
 
 

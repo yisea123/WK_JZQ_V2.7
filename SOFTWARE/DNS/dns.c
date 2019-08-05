@@ -369,7 +369,7 @@ uint8 dns_query(uint8 s, uint8 * name,u8 * ip)
 	u16 lens=0;
 	struct dhdr ddd={0};
 	u8 ret=0;
-	u8 i=0;
+	u16 i=0;
 	//�ȹرն˿�0
 	if (socket_close(s)==FALSE) 
 	{
@@ -381,9 +381,9 @@ uint8 dns_query(uint8 s, uint8 * name,u8 * ip)
 	{
 		lens=dns_makequery(0,name,buff,2048);
 		udp_send(s,DNS_SERVER,53,buff,lens);
-		for (i=0;i<10;i++)
+		for (i=0;i<1000;i++)
 		{
-			delay_ms(200);
+			delay_ms(1);
 			if(checkSocketState(s,IR_RECV))
 			{
 				Read_SOCK_Data_Buffer(s,buff);
@@ -396,7 +396,7 @@ uint8 dns_query(uint8 s, uint8 * name,u8 * ip)
 			}
 		}
 	}
-	if (i>=9) ret=0;
+	if (i>=999) ret=0;
 	myfree(buff);
 	return ret;
 }

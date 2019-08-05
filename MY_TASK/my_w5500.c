@@ -62,7 +62,6 @@ void my_w5500 (void * t)
 	a.free_fn=myfree;
 	cJSON_InitHooks(&a);
 	SOCKET0_SetFocus(OS_GET_PRIOHIGH());
-	SOCKET2_SetFocus(OS_GET_PRIOHIGH());
 	
 	//Ìí¼Ó¶¨Ê±Æ÷
 	addTimerIrq10ms(w5500_rest_timer_irq);
